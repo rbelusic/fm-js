@@ -1,0 +1,49 @@
+{
+  "name": "fm-js",
+  "version": "0.0.0",
+  "description": "fm-js is a simple and flexible HTML5 webapp framework based on observer pattern",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "js",
+    "web",
+    "application",
+    "framework",
+    "HTML5",
+    "RIA",
+    "event",
+    "listener",
+    "observer",
+    "pattern",
+    "model",
+    "view",
+    "state",
+    "REST",
+    "controller"
+  ],
+  "contributors": [
+    {
+      "name": "Roberto Belušić",
+      "email": "roberto.belusic@gmail.com"
+    },
+    {
+      "name": "Sandi Uran",
+      "email": "sandi.uran@gmail.com"
+    },
+    {
+      "name": "Ivan Šipka",
+      "email": "frkator@gmail.com"
+    }
+  ],
+  "license": "Apache",
+  "devDependencies": {
+    "bower": "~1.2.2",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat" : "~0.3.0"
+  }
+}

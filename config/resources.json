@@ -1,0 +1,4 @@
+[
+"<%=project_dir%>/html/**",
+"<%=project_dir%>/resources/**"
+]

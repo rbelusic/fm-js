@@ -1,0 +1,6 @@
+{
+  "name": "fm-js",
+  "dependencies": {
+    "jquery": "git://github.com/components/jquery.git#v1.8.3"
+  }
+}
