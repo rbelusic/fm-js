@@ -1,0 +1,46 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="../../js/fm-js-all.js"></script> 
+        <script src="demo.js"></script> 
+            
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <div>Press btns to increse / descrese count.</div>
+        <!-- Create host which holds new GenericValue data object    
+            GenericValue is DmObject with one (value) atribute
+            Eventualy this events ends up in application
+        --> 
+        <div data-fmml-host="Host"
+             data-fmml-object-class="GenericValue" 
+             data-fmml-object-attr-value="0"
+            >
+            <!-- init Attribute observer -->
+            Current value:
+            <span 
+                data-fmml-observer="Attribute" 
+                data-fmml-attr-name="value"
+                data-fmml-attr-type="number"
+                data-fmml-attr-decimals="0"
+                >                
+            </span>
+            <hr />
+            
+            <!-- init Event observers 
+                events are propagated first to host and then to app
+            -->
+            <button data-fmml-observer="Event"
+                    data-fmml-event-type="onIncreseValue" 
+                    >+</button>            
+            <button data-fmml-observer="Event"
+                    data-fmml-event-type="onDecreaseValue" 
+                    >-</button>            
+        </div>
+    </body>
+</html>

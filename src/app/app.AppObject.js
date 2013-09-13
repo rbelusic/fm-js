@@ -46,6 +46,10 @@ FM.AppObject.prototype.dmListDispose = function(lst) {
     lst.dispose();
     return true;
 }
+FM.AppObject.prototype.mlInit = function(node) {
+    return FM.MlHost.initChildNodes(this, node);
+}
+    
 
 FM.AppObject.prototype.onDiscardObjectData = function(sender,evdata) {
     this.discardData(
