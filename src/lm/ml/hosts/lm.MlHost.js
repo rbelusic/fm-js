@@ -55,13 +55,6 @@ FM.MlHost.prototype.run = function(dmObj) {
     var objRef = this.getAttr("data-fmml-object-ref",'');
     this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
     
-    //&& (className == '' || dmObj.getSubClassName() == className)
-    // Ovo rjesava BUG u BIGu prilikom ucitavanja SA DM objektom
-    // ako je setiran object-id u DOMu a ObjectSubClass je razliciti od object-class iz doma
-    // DM nije uredu, hvatamo ga...
-    // 
-    // provjeriti!!!
-    // 
     // object
     if(FM.isset(dmObj) && dmObj && (className == '' || dmObj.getSubClassName() == className)){
         this.setProperty('dmObjectCreated','false');
