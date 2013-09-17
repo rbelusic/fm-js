@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo 03</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="../../js/fm-js-all.js"></script> 
+        <script src="demo01.js"></script> 
+        <script src="demo02.js"></script> 
+        <script src="demo03.js"></script> 
+
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <span>Display list data in table</span>
+        <table 
+            data-fmml-host="GenericCollection"
+            data-fmml-list="staticListExample"
+            >
+            <thead>
+                <tr>
+                    <th>#</th> 
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>  
+            </thead>
+            <tbody class="fmmlListItems">
+                <tr class="fmmlListItemsTemplate" data-fmml-host="Host">
+                    <td data-fmml-observer="ListIndex"></td>
+                    <td data-fmml-observer="Attribute" data-fmml-attr-name="id"></td> 
+                    <td data-fmml-observer="Attribute" data-fmml-attr-name="name"></td>
+                    <td data-fmml-observer="Attribute" data-fmml-attr-name="description"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+        
+        <span>Display list item (using MlListOfValues extension) and run single item host on change</span>
+        <div data-fmml-host="Host" data-fmml-object-class="Object">
+            <!-- 
+            use 
+            data-fmml-list-text-template="[:name] - [:description]"
+            instead
+            data-fmml-list-text-attr="description"
+            for custom format
+            -->
+            <select data-fmml-observer="Attribute"
+                data-fmml-attr-name="id"
+                data-fmml-run-on-lov-change="single-demo-host"
+                data-fmml-extensions="MlListOfValues"
+                data-fmml-list="staticListExample"
+                data-fmml-list-id-attr="id"
+                data-fmml-list-text-attr="description"                
+                >
+            </select>
+        </div>
+        <div id="single-demo-host" 
+            data-fmml-host="Host" data-fmml-object-class="Object" data-xfmml-run-on-init="false"
+             >
+            ID:<span data-fmml-observer="Attribute" data-fmml-attr-name="id"></span>;
+            Name:<span data-fmml-observer="Attribute" data-fmml-attr-name="name"></span>;
+            Description:<span data-fmml-observer="Attribute" data-fmml-attr-name="description"></span>
+        </div>        
+    </body>
+</html>

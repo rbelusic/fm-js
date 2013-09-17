@@ -1,0 +1,44 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo 02</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="../../js/fm-js-all.js"></script> 
+        <script src="demo01.js"></script> 
+        <script src="demo02.js"></script> 
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <!-- Create host which holds Facebook page info aquired from facebook rest api
+        --> 
+        <div data-fmml-host="Host"
+             data-fmml-object-class="FacebookPage" 
+             data-fmml-object-id="facebook"
+            >
+            <!-- init Attribute observer -->
+            Facebook page info:
+            <br />
+            Username: <span 
+                data-fmml-observer="Attribute" 
+                data-fmml-attr-name="username"
+                >                
+            </span>
+            
+            <br />
+            About: <span 
+                data-fmml-observer="Attribute" 
+                data-fmml-attr-name="about"
+                >                
+            </span>
+            <br />
+            
+            Picture: <img src="" 
+                data-fmml-observer="Attribute" 
+                data-fmml-attr-name="cover.source"
+                />                
+        </div>
+    </body>
+</html>

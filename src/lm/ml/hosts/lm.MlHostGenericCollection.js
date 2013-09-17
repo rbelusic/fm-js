@@ -28,6 +28,9 @@ FM.MlHostGenericCollection.prototype.listOffset = 0;
 
 FM.MlHostGenericCollection.prototype.history = null;
 
+FM.MlHostGenericCollection.prototype.listItemsTemplate = null;
+FM.MlHostGenericCollection.prototype.listEmptyTemplate = null;
+
 FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);
     this.objectSubClass ="GenericCollection";
@@ -36,11 +39,23 @@ FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {
     this.selectedItems = {};
     this.maxSelected = -1;
     this.listOffset = 0;
+
+    this.listItemsTemplate = null;
+    this.listEmptyTemplate = null;
+
     // find items container
     this.listItemsContainer = this.node;
     var itmCont = $(this.node).find(".fmmlListItems");
     if(FM.isset(itmCont) && itmCont && FM.isset(itmCont[0])) {
         this.listItemsContainer = itmCont[0];
+        var itmTempl = $(this.listItemsContainer).find(".fmmlListItemsTemplate");
+        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
+            this.listItemsTemplate = FM.nodeToHtml(itmTempl[0]);
+        }
+        itmTempl = $(this.listItemsContainer).find(".fmmlListEmptyTemplate");
+        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
+            this.listEmptyTemplate = FM.nodeToHtml(itmTempl[0]);
+        }
     }
 
     // find list empty ode
@@ -124,43 +139,62 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
             attrs["objectClass"] = oObj.getSubClassName();
             attrs["data_id"] = oObj.getDataID();
             attrs["listIndex"] = curitm+1;
-
-            var tname = me.getAttr(
-                'data-fmml-list-items-template-base',
-                "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
-                );
-            tname = FM.applyTemplate(attrs,tname,false,true);
+            
             itmcnt++;
             console.log("_refreshItems (" + attrs["listIndex"] + "):");
-            FM.UtTemplate.getTemplate(me.getApp(),attrs,tname,function(isok,templ) {            
-                if(isok) {                
-                    me._createItmNode(oObj,attrs,templ);
-                }
-            });
+            
+            if(me.listItemsTemplate) {
+                me._createItmNode(oObj,attrs,me.listItemsTemplate);
+            } else {
+                var tname = me.getAttr(
+                    'data-fmml-list-items-template-base',
+                    "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
+                    );
+                tname = FM.applyTemplate(attrs,tname,false,true);
+                FM.UtTemplate.getTemplate(me.getApp(),attrs,tname,function(isok,templ) {            
+                    if(isok) {                
+                        me._createItmNode(oObj,attrs,templ);
+                    }
+                });
+            }
         }
     
         return maxitms > itmcnt;
     });
 
     var emptyTempl = this.getAttr('data-fmml-list-items-template-empty','');
-    if(maxitms > itmcnt && emptyTempl != '') {
-        console.log("_refreshItems (add empty rows on end):");
+    if(maxitms > itmcnt && (emptyTempl != '' || this.listEmptyTemplate)) {
         curitm++;
-        FM.UtTemplate.getTemplate(this.getApp(),{},emptyTempl,function(isok,templ) {                    
-            if(isok) {
-                while(maxitms > itmcnt) {
-                    curitm++;
-                    itmcnt++;
-                    var attrs = {
-                        itemsLayout: 'unknown',
-                        objectClass: 'unknown',
-                        data_id: 'unknown',
-                        listIndex: curitm
-                    };
-                    me._createItmNode(null,attrs,templ);                                        
+        console.log("_refreshItems (add empty rows on end):");
+        if(this.listEmptyTemplate) {
+            while(maxitms > itmcnt) {
+                curitm++;
+                itmcnt++;
+                var attrs = {
+                    itemsLayout: 'unknown',
+                    objectClass: 'unknown',
+                    data_id: 'unknown',
+                    listIndex: curitm
+                };
+                this._createItmNode(null,attrs,this.listEmptyTemplate);                                        
+            }            
+        } else {        
+            FM.UtTemplate.getTemplate(this.getApp(),{},emptyTempl,function(isok,templ) {                    
+                if(isok) {
+                    while(maxitms > itmcnt) {
+                        curitm++;
+                        itmcnt++;
+                        var attrs = {
+                            itemsLayout: 'unknown',
+                            objectClass: 'unknown',
+                            data_id: 'unknown',
+                            listIndex: curitm
+                        };
+                        me._createItmNode(null,attrs,templ);                                        
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     
     // empty list
@@ -277,8 +311,8 @@ FM.MlHostGenericCollection.prototype._createList = function(oObj) {
         H: this
     });
     var dmList = FM.isObject(dmconfName) && dmconfName ? 
-    dmconfName :
-    new FM.DmList(listOpt,dmconfName,this.getApp())
+        dmconfName :
+        new FM.DmList(listOpt,dmconfName,this.getApp())
     ;
     
     return dmList;

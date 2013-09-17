@@ -65,7 +65,7 @@ FM.MlHost.prototype.run = function(dmObj) {
     // object
     if(FM.isset(dmObj) && dmObj && (className == '' || dmObj.getSubClassName() == className)){
         this.setProperty('dmObjectCreated','false');
-        this.setDmObject(dmObj);    
+        this.setDmObject(dmObj);
     } else if(objRef != '' && FM.startsWith(objRef,'@')) {
         dmObj = FM.resolveAttrValue(null,"-",objRef,{
             A: this.getApp(),
@@ -111,8 +111,8 @@ FM.MlHost.prototype.run = function(dmObj) {
 FM.MlHost.prototype._checkMasterReload = function() {
     //this.log("_checkMasterReload:" + this.getID(),FM.logLevels.warn);
     var id = this.getAttr("data-fmml-object-id",'');
-    var ownerName = this.getAttr("data-fmml-owner-class",'');
     var className = this.getAttr("data-fmml-object-class",'');
+    
     if(this.getAttr('data-fmml-use-global-args') == 'true'){
         var args = FM.getArgs();
         if(id == '') id = FM.getAttr(args,'id','');

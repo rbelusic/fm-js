@@ -434,6 +434,14 @@ if(typeof(FM) == 'undefined') {
     }
 
 
+    FM.nodeToHtml = function(node) {
+        var el = document.createElement("p");
+        el.appendChild(node);
+        var retc = el.innerHTML;
+        el.removeChild(node);
+        return retc;
+    }
+    
     FM.findNodeWithAttr = function(node,attrName) {
         while(FM.isset(node) && node && !FM.isset(node[attrName])) {
             node = node.parentNode;

@@ -48,6 +48,44 @@ FM.DmList.prototype._init = function(attrs,config,app) {
     }
 
     this.setProperty('config',config ? config : {},false);
+    
+    // static predefined list
+    var data = this.getProperty('config.data',null);
+    if(data && FM.isArray(data)) {
+        this._addPredefinedData(data);
+    }
+    
+}
+
+
+FM.DmList.prototype._addPredefinedData = function(data) {
+    var responseObjectType = this.getProperty('config.responseObject',FM.DmGenericValue);
+    if(FM.isString(responseObjectType)) {
+        if(!FM.isset(window[responseObjectType]) || !FM.isFunction(window[responseObjectType])) {
+            responseObjectType = FM.DmGenericValue;
+        }
+    }
+    var added = [];
+    for(var i=0; i < data.length; i++) {
+        added.push(
+            new responseObjectType(
+                responseObjectType == FM.DmGenericValue ? 
+                {value: data[i]} : data[i]
+            )
+        );
+    }
+    
+    if (this.isStaticList()) { // Ako je static lista
+        var staticlist = this.getStaticList(); // uzmi cache za tip liste
+
+        if (FM.isset(staticlist)) {
+            staticlist[this.getDataHash()] = {Added: added, Updated: {}, Removed: {}};
+        }
+    }
+
+    return this.refreshList(
+        {Added: added, Updated: {}, Removed: {}},false
+    );
 }
 
 // -- func AJAX --------------------------------------------------------
@@ -293,12 +331,15 @@ FM.DmList.prototype.getData = function(getMore) {
     if (this.isStaticList()) { // Ako je static lista
         var staticlist = this.getStaticList(); // uzmi cache za tip liste
         
-        if (FM.isset(staticlist)) {
-            var cache = staticlist[this.getDataHash()]; // uzmi iz cachea rezultate za tocno ovu listu (get parametri)
+        if (staticlist) {
+            var cache = 
+                FM.isset(staticlist[this.getDataHash()]) ?
+                staticlist[this.getDataHash()] :  null
+            ; // uzmi iz cachea rezultate za tocno ovu listu (get parametri ili def - 0)
             
-            if (FM.isset(cache)) {
+            if (cache) {
                 return this.refreshList(cache); // refresh list with cached data    
-            }            
+            }         
         }
     }
 
@@ -794,7 +835,15 @@ FM.DmList.prototype.addResponseToList = function(response,onlyExisting,groupid,p
                 return false;
             }
         } else {
-            lstObj = new FM.DmGenericValue({value: respCol[respId]});
+            var objAttrs = respCol[respId];
+            var responseObjectType = this.getProperty('config.responseObject',FM.DmGenericValue);
+            if(FM.isString(responseObjectType)) {
+                if(!FM.isset(window[responseObjectType]) || !FM.isFunction(window[responseObjectType])) {
+                    responseObjectType = FM.DmGenericValue;
+                    objAttrs = {value: respCol[respId]};
+                }
+            }
+            lstObj = new responseObjectType(objAttrs);
         } 
         
         // osvjezimo listu
@@ -975,7 +1024,7 @@ FM.DmList.prototype.getStaticList = function() {
         return listconfig.staticlist;
     }
 
-    return; //error
+    return null; //error
 }
 
 // == static ===================================================================
