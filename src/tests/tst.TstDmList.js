@@ -27,7 +27,7 @@ FM.TstDmList.prototype._init = function(config) {
 }
 
 FM.TstDmList.prototype.tGet = function() {
-    this.log("tGet, DmList test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tGet, DmList test started.",FM.logLevels.info,this.getClassName());
     
     var oList = new FM.DmList({},{
         url: 'http://10.76.150.104:9151/status', 
@@ -40,7 +40,7 @@ FM.TstDmList.prototype.tGet = function() {
         auth: null,
         
         isErrorResponse: function(me,oAjax,response) {
-            me.log("tGet, isErrorResponse?",FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, isErrorResponse?",FM.logLevels.info,me.getClassName());
             if(!response || !FM.isset(response.getAttr)  || response.getAttr("value","") != 'OK') return true;
             return false;            
         },
@@ -55,19 +55,19 @@ FM.TstDmList.prototype.tGet = function() {
     var me = this;
     oList.addListener({
         onListStart: function(l,oArgs) {
-            me.log("tGet, onListStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs,FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onListStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs,FM.logLevels.info,me.getClassName());
         },
         onListError: function(l,oErr) {
-            me.log("tGet, onListError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onListError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tGet',false);
             
         },
         onListEnd: function(l,oData) {
-            me.log("tGet, onListEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData,FM.logLevels.info,me.getFullClassName());
-            me.log("tGet, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onListEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData,FM.logLevels.info,me.getClassName());
+            me.log("tGet, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getClassName());
             me.addResult('tGet',true);
         }        
     });    
@@ -76,7 +76,7 @@ FM.TstDmList.prototype.tGet = function() {
 }     
 
 FM.TstDmList.prototype.tGetList = function() {
-    this.log("tGetList, DmList test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tGetList, DmList test started.",FM.logLevels.info,this.getClassName());
     
     var oList = new FM.DmList({
         uids: '563771418'
@@ -92,7 +92,7 @@ FM.TstDmList.prototype.tGetList = function() {
         headers: {},
         auth: null,        
         isErrorResponse: function(me,oAjax,response) {            
-            me.log("tGet, isErrorResponse?",FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, isErrorResponse?",FM.logLevels.info,me.getClassName());
             if(!response || !FM.isset(response.getAttr)) return true;
             
             var fetchResponse = response.getAttr("value",null);
@@ -113,19 +113,19 @@ FM.TstDmList.prototype.tGetList = function() {
     var me = this;
     oList.addListener({
         onListStart: function(l,oArgs) {
-            me.log("tGetList, onListStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs,FM.logLevels.info,me.getFullClassName());
+            me.log("tGetList, onListStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs,FM.logLevels.info,me.getClassName());
         },
         onListError: function(l,oErr) {
-            me.log("tGetList, onListError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetList, onListError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tGetList',false);
             
         },
         onListEnd: function(l,oData) {
-            me.log("tGetList, onListEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData,FM.logLevels.info,me.getFullClassName());
-            me.log("tGetList, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetList, onListEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData,FM.logLevels.info,me.getClassName());
+            me.log("tGetList, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getClassName());
             me.addResult('tGetList',true);
         }        
     });    
@@ -134,7 +134,7 @@ FM.TstDmList.prototype.tGetList = function() {
 }
 
 FM.TstDmList.prototype.tPostJSONList = function() {
-    this.log("tPostJSONList, DmList test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tPostJSONList, DmList test started.",FM.logLevels.info,this.getClassName());
     
     var oList = new FM.DmList({
         username: 'ivana',
@@ -153,7 +153,7 @@ FM.TstDmList.prototype.tPostJSONList = function() {
         auth: null,
         
         isErrorResponse: function(me,oAjax,response) {
-            me.log("tPostJSONList, isErrorResponse?",FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONList, isErrorResponse?",FM.logLevels.info,me.getClassName());
             if(
                 !response || 
                 !FM.isset(response.getAttr) || 
@@ -176,19 +176,19 @@ FM.TstDmList.prototype.tPostJSONList = function() {
     var me = this;
     oList.addListener({
         onListStart: function(l,oArgs) {
-            me.log("tPostJSONList, onListStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs,FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONList, onListStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs,FM.logLevels.info,me.getClassName());
         },
         onListError: function(l,oErr) {
-            me.log("tPostJSONList, onListError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONList, onListError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tPostJSONList',false);
             
         },
         onListEnd: function(l,oData) {
-            me.log("tPostJSONList, onListEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData,FM.logLevels.info,me.getFullClassName());
-            me.log("tPostJSONList, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONList, onListEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData,FM.logLevels.info,me.getClassName());
+            me.log("tPostJSONList, onListEnd list size:" + l.getListSize(),FM.logLevels.info,me.getClassName());
             me.addResult('tPostJSONList',true);
         }        
     });    

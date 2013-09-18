@@ -12,17 +12,8 @@ FM.Object = function() {
 
 // ne extenda nista
 FM.extendClass(FM.Object,null);
+FM.Object.className = "Object";
 
-// properties
-FM.Object.prototype.objectSubClass = "";
-FM.Object.objectLogLevel = null;
-FM.Object.prototype.id = null;   
-FM.Object.prototype.enabled = true;
-FM.Object.prototype.listenersArr = null;
-FM.Object.prototype.prop = null;
-FM.Object.prototype.undoList = null;
-FM.Object.prototype.options = null;
-FM.Object.prototype.strictOptions = false;
     
 // methods
 
@@ -39,38 +30,6 @@ FM.Object.prototype.getClassName = function() {
         o = o.parent? o.parent : null;
     }
     return(o ? o.constructor.className : '');
-}
-
-/**
-* Get full (package and class name) FM class name
-* @public     
-* @function 
-* @returns {string} Returns package and name of the object
-*/   
-FM.Object.prototype.getFullClassName = function() {
-    var o=this;
-    while(o && !FM.isset(o.constructor.fullClassName)) {
-        o = o.parent? o.parent : null;
-    }
-    return(o ? o.constructor.fullClassName : '');
-}
-
-/**
-* Returns FM package name
-* @public
-* @function 
-* @returns {string} Returns package name of object
-*/
-FM.Object.prototype.getPackageName = function() {
-    var fcname = this.getFullClassName();
-    if(fcname == '') {
-        console.log("ERROR undefined full class name!");
-        console.log(this);                        
-    } else {
-        fcname = fcname.split('.');
-    }
-
-    return (fcname && FM.isset(fcname.length) && fcname.length > 1) ? fcname[0] : null;        
 }
 
 
@@ -457,12 +416,6 @@ FM.Object.prototype.isEnabled = function() {
 * @param {string} callerinfo 
 */
 FM.Object.prototype.log = function(msg,level,callerinfo) {
-    //return;
-    /*
-    if(level >= FM.getPackageLogLevel(this)) {
-        if(!FM.isset(callerinfo)) callerinfo = FM.getCallerInfo(1);
-        FM.log(this,msg,level,callerinfo);
-    }*/
     FM.log(this,msg,level,callerinfo);
 }                
 
@@ -489,7 +442,7 @@ FM.Object.prototype.setLogLevel = function(level) {
 * @function 
 */
 FM.Object.prototype.getLogLevel = function() {
-    return FM.logLevelNames[this.objectLogLevel != null ? this.objectLogLevel : FM.getPackageLogLevel(this)];
+    return this.objectLogLevel;
 
 }
 
@@ -506,6 +459,7 @@ FM.Object.prototype.dispose = function() {
 
 
 FM.Object.prototype._init = function(attrs,flds) {
+    // properties    
     this.objectSubClass = "Objects";            
     this.id =  null;    
     this.objectLogLevel = null;
@@ -533,8 +487,3 @@ FM.Object.prototype._init = function(attrs,flds) {
     
     this.setChanged(false,false);
 }
-
-
-// == static ===================================================================
-FM.Object.className = "Object";
-FM.Object.fullClassName = 'ob.Object';

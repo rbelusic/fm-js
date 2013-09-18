@@ -29,7 +29,7 @@ FM.TstAjax.prototype._init = function(config) {
 }
 
 FM.TstAjax.prototype.tGet = function() {
-    this.log("tGet, Ajax GET/TEXT test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tGet, Ajax GET/TEXT test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://10.76.150.104:9151/status', 
@@ -45,18 +45,18 @@ FM.TstAjax.prototype.tGet = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tGet, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tGet, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tGet',false);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tGet, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGet, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tGet',true);
         }        
     });    
@@ -65,7 +65,7 @@ FM.TstAjax.prototype.tGet = function() {
 }     
 
 FM.TstAjax.prototype.tGetErr = function() {
-    this.log("tGetErr, Ajax GET (invalid request) test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tGetErr, Ajax GET (invalid request) test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://www.index.hr', 
@@ -81,18 +81,18 @@ FM.TstAjax.prototype.tGetErr = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tGetErr, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetErr, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tGetErr, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetErr, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tGetErr',true);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tGetErr, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetErr, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tGetErr',false);
         }        
     });    
@@ -101,7 +101,7 @@ FM.TstAjax.prototype.tGetErr = function() {
 }     
 
 FM.TstAjax.prototype.tGetJSON = function() {
-    this.log("tGetJSON, Ajax Get/JSON test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tGetJSON, Ajax Get/JSON test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://www.hicegosum.com/findme-dev/api/users/563771418', 
@@ -117,18 +117,18 @@ FM.TstAjax.prototype.tGetJSON = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tGetJSON, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetJSON, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tGetJSON, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetJSON, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tGetJSON',false);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tGetJSON, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tGetJSON, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tGetJSON',true);
         }        
     });    
@@ -137,7 +137,7 @@ FM.TstAjax.prototype.tGetJSON = function() {
 }     
 
 FM.TstAjax.prototype.tPostJSONparams = function() {
-    this.log("tPostJSONparams, Ajax Post/JSON/params test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tPostJSONparams, Ajax Post/JSON/params test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://www.hicegosum.com/findme-dev/api/users', 
@@ -153,18 +153,18 @@ FM.TstAjax.prototype.tPostJSONparams = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tPostJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tPostJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tPostJSONparams',false);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tPostJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tPostJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tPostJSONparams',true);
         }        
     });    
@@ -174,7 +174,7 @@ FM.TstAjax.prototype.tPostJSONparams = function() {
 
 
 FM.TstAjax.prototype.tPutJSONparams = function() {
-    this.log("tPutJSONparams, Ajax Put/JSON/params test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tPutJSONparams, Ajax Put/JSON/params test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://www.hicegosum.com/findme-dev/api/users', 
@@ -190,18 +190,18 @@ FM.TstAjax.prototype.tPutJSONparams = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tPutJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tPutJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tPutJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tPutJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tPutJSONparams',false);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tPutJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tPutJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tPutJSONparams',true);
         }        
     });    
@@ -210,7 +210,7 @@ FM.TstAjax.prototype.tPutJSONparams = function() {
 }     
 
 FM.TstAjax.prototype.tDeleteJSONparams = function() {
-    this.log("tDeleteJSONparams, Ajax Delete/JSON/params test started.",FM.logLevels.info,this.getFullClassName());
+    this.log("tDeleteJSONparams, Ajax Delete/JSON/params test started.",FM.logLevels.info,this.getClassName());
     
     var oAjax = new FM.UtAjax({
         url: 'http://www.hicegosum.com/findme-dev/api/users', 
@@ -226,18 +226,18 @@ FM.TstAjax.prototype.tDeleteJSONparams = function() {
     var me = this;
     oAjax.addListener({
         onAjaxStateStart: function(oAjax,oArgs) {
-            me.log("tDeleteJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tDeleteJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
         },
         onAjaxStateError: function(oAjax,oErr) {
-            me.log("tDeleteJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oErr.getAttr(),FM.logLevels.info,me.getFullClassName());
+            me.log("tDeleteJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
             me.addResult('tDeleteJSONparams',false);
             
         },
         onAjaxStateEnd: function(oAjax,oData) {
-            me.log("tDeleteJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getFullClassName());
-            me.log(oData.getAttr("value"),FM.logLevels.info,me.getFullClassName());
+            me.log("tDeleteJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
             me.addResult('tDeleteJSONparams',true);
         }        
     });    

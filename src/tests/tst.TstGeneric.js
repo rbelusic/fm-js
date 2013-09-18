@@ -31,14 +31,14 @@ FM.TstGeneric.prototype.run = function(test) {
     var tlist = {};    
     test = FM.isset(test) ? test : null;
     if(test) {
-        this.log("Running tests [" + test + "] ...",FM.logLevels.info,this.getFullClassName());
+        this.log("Running tests [" + test + "] ...",FM.logLevels.info,this.getClassName());
         if(!FM.isset(this.testsList[test])) {
-            this.log("Test [" + test + "] is not found!",FM.logLevels.error,this.getFullClassName());
+            this.log("Test [" + test + "] is not found!",FM.logLevels.error,this.getClassName());
             return false;
         }
         tlist[test] = true;        
     } else {
-        this.log("Running all tests ...",FM.logLevels.info,this.getFullClassName());
+        this.log("Running all tests ...",FM.logLevels.info,this.getClassName());
         tlist = this.testsList;
     }
 
@@ -47,7 +47,7 @@ FM.TstGeneric.prototype.run = function(test) {
     }
 
     for(var tname in tlist) {
-        this.log("Running test [" + tname + "] ...",FM.logLevels.info,this.getFullClassName());
+        this.log("Running test [" + tname + "] ...",FM.logLevels.info,this.getClassName());
         this[tname]();
     }
     

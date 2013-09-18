@@ -995,36 +995,14 @@ if(typeof(FM) == 'undefined') {
 
     // subclass/min loglevel def. info
     FM.logDefaultLevel = FM.logLevels.warn;
-    FM.logConfig = {
-        ut: FM.logLevels.warn,
-        ob: FM.logLevels.warn,
-        dm: FM.logLevels.warn,        
-        lm: FM.logLevels.warn,
-        ui: FM.logLevels.warn,
-        app: FM.logLevels.warn,
-        tst: FM.logLevels.info
-    };
 
 
-    FM.setDefaultLogLevel = function(level) {
+    FM.setLogLevel = function(level) {
         FM.logDefaultLevel = level;
     }
 
-    FM.getDefaultLogLevel = function(pkg) {
+    FM.getLogLevel = function() {
         return FM.logDefaultLevel;
-    }
-
-    FM.setLogLevel = function(pkg,level) {
-        FM.logConfig[pkg] = level;
-    }
-
-    FM.getLogLevel = function(pkg) {
-        return FM.isset(FM.logConfig[pkg]) ? FM.logConfig[pkg] : FM.logDefaultLevel;
-    }
-
-    FM.getPackageLogLevel = function(oObj) {
-        var pname = oObj && FM.isset(oObj.getPackageName) ? oObj.getPackageName() : null;
-        return (pname && FM.isset(FM.logConfig[pname])) ? FM.logConfig[pname] : FM.logDefaultLevel;    
     }
 
     FM.getLogId = function(oObj) {
@@ -1035,10 +1013,6 @@ if(typeof(FM) == 'undefined') {
         return FM.isset(FM.logLevelNames[level]) ? FM.logLevelNames[level] : FM.logLevelNames[FM.logLevels.info];
     }
 
-    FM.setPackageLogLevel = function(pkg,level) {
-        FM.logConfig[pkg] = level;    
-    }
-
     FM.logObjectMsgToArray = function(obj) {
         if(!FM.isset(obj) || !obj) return [];
         if(FM.isset(obj.length)) return obj;
@@ -1047,7 +1021,7 @@ if(typeof(FM) == 'undefined') {
         for(var id in obj) {
             ar.push(
                 '  ' + id + ":" + (obj[id] === null ? 'null' : (
-                    FM.isset(obj[id].getFullClassName) ?  obj[id].getFullClassName() :
+                    FM.isset(obj[id].getClassName) ?  obj[id].getClassName() :
                     (
                         FM.isFunction(obj[id]) ? "function() {...}" :
                         (
@@ -1076,9 +1050,7 @@ if(typeof(FM) == 'undefined') {
 
     FM.getStackTrace = function(err) {    
         var strace = FM.getStackTraceStr(err);    
-
         return strace.split("\n").slice(3); //strace.length > 2 ? strace.slice(2) : [];
-
     }
 
     FM.getCallerInfo = function(shift) {    
@@ -1112,8 +1084,8 @@ if(typeof(FM) == 'undefined') {
 
     FM.log = function(oObj,msg,level,callerinfo) {
         var minlevel = 
-        oObj&& FM.isset(oObj.objectLogLevel) && oObj.objectLogLevel != null ? 
-        oObj.objectLogLevel : FM.getPackageLogLevel(oObj)
+            oObj && FM.isset(oObj.getLogLevel) && oObj.getLogLevel() != null ? 
+            oObj.getLogLevel() : FM.getLogLevel()
         ;
         if(!FM.isset(level)) level = FM.logLevels.info;
         if(level < minlevel) return false;
@@ -1131,13 +1103,7 @@ if(typeof(FM) == 'undefined') {
             " [" + FM.getLogTypeName(level) + "]:" + 
             (msg && !FM.isString(msg) ? '' : msg)
             );
-        /*
-    var amsg = FM.logObjectMsgToArray(msg);
-    if(FM.isArray(amsg)) {
-        for(var i=0; i < amsg.length; i++) {
-            console.log(' >' + amsg[i]);
-        }
-    }*/
+
         if(FM.isObject(msg) || FM.isArray(msg)) {
             console.dir(msg);
         }

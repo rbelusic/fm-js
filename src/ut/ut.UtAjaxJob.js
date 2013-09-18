@@ -79,21 +79,21 @@ FM.UtAjaxJob.prototype.isTimeout = function() {
 }
 
 FM.UtAjaxJob.prototype.onAjaxStateEnd = function(oAjax,response) {
-    this.log("onAjaxStateEnd",response,FM.logLevels.info,this.getFullClassName());
+    this.log("onAjaxStateEnd",response,FM.logLevels.info,this.getClassName());
     this.stop();
     this.fireEvent("onGetDataFromServer",{job: this, connection: oAjax, event: 'end', response: response});
     this.fireEvent("onAjaxStateEnd",response);
 }
 
 FM.UtAjaxJob.prototype.onAjaxStateError = function(oAjax,errmsg) {
-    this.log("onAjaxStateError",errmsg,FM.logLevels.error,this.getFullClassName());
+    this.log("onAjaxStateError",errmsg,FM.logLevels.error,this.getClassName());
     this.fireEvent("onGetDataFromServer",{job: this, connection: oAjax, event: 'error', message: errmsg});
     this.discardJob(errmsg);
 }
 
 
 FM.UtAjaxJob.prototype.onAjaxStateStart = function(oAjax,data) {
-    this.log("onAjaxStateStart",data,FM.logLevels.info,this.getFullClassName());
+    this.log("onAjaxStateStart",data,FM.logLevels.info,this.getClassName());
     this.fireEvent("onGetDataFromServer",{job: this, connection: oAjax, event: 'start', params: data});
     this.fireEvent("onAjaxStateStart",data);
 }
