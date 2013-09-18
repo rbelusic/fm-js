@@ -1,7 +1,9 @@
 /**
 * Generic error DM class.
+* 
 * @class FM.DmGenericError
 * @extends FM.DmObject
+* @memberOf FM
 * @param {object} attrs list of attribute name and values
 * @param {object} options list of additional attributes
 * 
@@ -10,17 +12,11 @@ FM.DmGenericError = function() {
     this._init.apply(this, arguments); 
 }
 FM.extendClass(FM.DmGenericError, FM.DmObject); 
-
-// properties
-FM.DmGenericError.prototype.objectSubClass = "";
+FM.DmGenericError.className = "DmGenericError";
 
 // methods
-FM.DmGenericError.prototype._init = function(attrs,options) {
-    this._super(
-        "_init",
-        attrs, 
-        FM.extend({messageId: "0",text: "No error"},options) 
-    );
+FM.DmGenericError.prototype._init = function(attrs) {
+    this._super("_init", attrs, {messageId: "0",text: "No error"});
     this.objectSubClass = "GenericError";
 }
         
@@ -33,7 +29,7 @@ FM.DmGenericError.prototype.getErrorCode = function() {
 }
 
 FM.DmGenericError.prototype.setErrorCode = function(ec) {
-    return this.getAttr('messageId',ec);
+    this.setAttr('messageId',ec);
 }
 
 FM.DmGenericError.prototype.getErrorText = function() {
@@ -50,8 +46,5 @@ FM.DmGenericError.prototype.isError = function() {
     return errCode !== '' && errCode !== '0';
 }
 
-
-FM.DmGenericError.className = "DmGenericError";
-FM.DmGenericError.fullClassName = 'dm.DmGenericError';
 
 FM.DmObject.addSubClassType('GenericError',FM.DmGenericError,'GLOBAL');

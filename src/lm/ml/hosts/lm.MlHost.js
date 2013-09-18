@@ -1,48 +1,50 @@
-// =============================================================================
 /**
- * ML host class. 
- * @class FM.MlHost
- * @extends FM.Object
- * @param {FM.AppObject} app application object
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
- */    
+* ML host class. 
+* 
+* @class FM.MlHost
+* @memberOf FM
+* @extends FM.Object
+* @param {FM.AppObject} app application object
+* @param {object} [attrs] DOM node attributes
+* @param {DOMnode} node DOM node
+* 
+* 
+* data-fmml-run-maximized, data-fmml-object-class, data-fmml-object-id,
+* data-fmml-object-ref, data-fmml-object-destroy-on-dispose,
+* data-fmml-master-host, data-fmml-use-global-args,
+* data-fmml-object-attr-*, data-fmml-linked-host,
+* data-fmml-error-host, data-fmml-run-on-update,data-fmml-host-event-*
+* data-fmml-run-on-init
+* 
+*/    
 FM.MlHost = function() {
     this._init.apply(this, arguments); // new poziva _init()
 }
 FM.extendClass(FM.MlHost,FM.LmObject); 
-
-// properties
-FM.MlHost.prototype.objectSubClass = "";
-FM.MlHost.prototype.node = null;
-FM.MlHost.prototype.dmObject = null;
-FM.MlHost.prototype.app = null;
-FM.MlHost.prototype.listOfObservers = null;
-FM.MlHost.prototype.executed = false;
-FM.MlHost.prototype.masterHost = null;
-FM.MlHost.prototype.masterHostDm = null;
-FM.MlHost.prototype.clsParams = null;
+FM.MlHost.className = "MlHost";
 
 // methods
 FM.MlHost.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs);
-    this.objectSubClass = "MlHost";
+    this.objectSubClass = "Host";
     this.node = node;    
-    this.dmObject = null; // ovo popunjava "type" fn
+    this.dmObject = null; 
+    
+    this.masterHost = null;
+    this.masterHostDm = null;
+    
     this.listOfObservers = {};
+    
     this.clsParams = {
         id: '',
         className: ''
     }
 
-    this.executed = false;    
-    this.masterHost = null;
     
-    // upisi povratne vezu u dom objekt
+    // two way binding
     this.node.fmmlHost = this;    
-    this.app = app;
-    app.addListener(this);
-    this.addListener(app);
+    this.getApp().addListener(this);
+    this.addListener(this.getApp());
 }
 
 FM.MlHost.prototype.run = function(dmObj) {
@@ -440,8 +442,6 @@ FM.MlHost.prototype.onEvent = function(sender,ev,data,calledlist) {
 }
 
 // static
-FM.MlHost.className = "MlHost";
-FM.MlHost.fullClassName = 'lm.MlHost';
 FM.MlHost.hostTypes = {};
 
 /**
@@ -506,19 +506,19 @@ FM.MlHost.translateNode = function(app,node) {
     var txttotranslate;
     FM.forEach(attrs, function(i,name) {
         name = FM.trim(name);
-            if(name == 'body') {
-                txttotranslate = $(node).text(); 
-                if(FM.isset(txttotranslate)) {
-                    $(node).text(_T(txttotranslate,app));
-                    console.log("TRANSLATE(" + name + "):" + txttotranslate);
-                }
-            } else {
-                txttotranslate = $(node).attr(i); 
-                if(FM.isset(txttotranslate)) {
-                    $(node).attr(name,_T(txttotranslate,app));
-                    console.log("TRANSLATE(" + name + "):" + txttotranslate);
-                }
+        if(name == 'body') {
+            txttotranslate = $(node).text(); 
+            if(FM.isset(txttotranslate)) {
+                $(node).text(_T(txttotranslate,app));
+                console.log("TRANSLATE(" + name + "):" + txttotranslate);
             }
+        } else {
+            txttotranslate = $(node).attr(i); 
+            if(FM.isset(txttotranslate)) {
+                $(node).attr(name,_T(txttotranslate,app));
+                console.log("TRANSLATE(" + name + "):" + txttotranslate);
+            }
+        }
         return true;
     });
 }

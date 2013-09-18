@@ -1,35 +1,26 @@
 /**
  * ML generic collection host class. 
- * Selection types:
- * - none,[single], many, {N} max number of sel items
- * - [scsession],scpage, scproxy
  * 
  * @class FM.MlHostGenericCollection
+ * @memberOf FM
  * @extends FM.MlHost
  * @param {FM.AppObject} app application object
  * @param {object} [attrs] DOM node attributes
  * @param {DOMnode} node DOM node
+ * 
+ * data-fmml-list-max-items, 'data-fmml-list-items-template-base,
+ * data-fmml-list-items-template-empty, data-fmml-list-items-layout,
+ * data-fmml-list, data-fmml-list-attr-*,data-fmml-list-fetch-on-run,
+ * data-fmml-list-refresh-on-change,data-fmml-fromrow-attr-name,
+ * data-fmml-list-attr-resource-parser, data-fmml-list-waiting-fs,
+ * data-fmml-list-get-more-at-end
+ *  
  */
 FM.MlHostGenericCollection = function() {
     this._init.apply(this, arguments); 
 }
-
 FM.extendClass(FM.MlHostGenericCollection, FM.MlHost);
-
-FM.MlHostGenericCollection.prototype.selectedItems = null;    // list of selected items
-FM.MlHostGenericCollection.prototype.maxSelected = -1;        // max selection size
-
-FM.MlHostGenericCollection.prototype.listItemsContainer = null;
-FM.MlHostGenericCollection.prototype.listItemsWrapper = null;
-FM.MlHostGenericCollection.prototype.listItemsInner = null;
-FM.MlHostGenericCollection.prototype.listEmpty = null;
-FM.MlHostGenericCollection.prototype.listWaiting = null;
-FM.MlHostGenericCollection.prototype.listOffset = 0;
-
-FM.MlHostGenericCollection.prototype.history = null;
-
-FM.MlHostGenericCollection.prototype.listItemsTemplate = null;
-FM.MlHostGenericCollection.prototype.listEmptyTemplate = null;
+FM.MlHostGenericCollection.className = "MlHostGenericCollection";
 
 FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);
@@ -742,9 +733,6 @@ FM.MlHostGenericCollection.prototype.onPreviousPage = function() {
     // kraj
     return true;
 }
-
-FM.MlHostGenericCollection.className = "MlHostGenericCollection";
-FM.MlHostGenericCollection.fullClassName = 'lm.MlHostGenericCollection';
 
 FM.MlHostGenericCollection.DEF_LIST_SIZE = 5;
 

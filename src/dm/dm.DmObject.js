@@ -2,6 +2,7 @@
 * Basic DM class. Provide groups
 * @class FM.DmObject
 * @extends FM.Object
+* @memberOf FM
 * @param {object} attrs list of attribute name and values
 * @param {object} [flds] allowed attributes
 */    
@@ -9,14 +10,9 @@ FM.DmObject = function() {
     this._init.apply(this, arguments); 
 }
 FM.extendClass(FM.DmObject,FM.Object); 
-
-// properties
-FM.DmObject.prototype.objectSubClass = "";
-FM.DmObject.prototype.objectGroups = {};
-FM.DmObject.prototype.defaultGroup = '';
+FM.DmObject.className = "DmObject";
 
 // methods
-
 FM.DmObject.prototype._init = function(attrs,flds) {            
     this.objectGroups = {};
     this.defaultGroup = '';               
@@ -109,9 +105,6 @@ FM.DmObject.prototype.getDefaultGroup = function() {
     return defgrp;
 }        
 // == static ===================================================================
-FM.DmObject.className = "DmObject";
-FM.DmObject.fullClassName = 'dm.DmObject';
-
 FM.DmObject.subClassTypes = {
     GLOBAL: {}
 }; 
@@ -172,21 +165,6 @@ FM.DmObject.addSubClassType = function(subclsname, clsfn,appCls) {
     }
     
     FM.DmObject.subClassTypes[appCls][subclsname] = clsfn;
-}
-
-// class decorations
-FM.DmObject.classDecorations = {};
-
-FM.DmObject.defineClassDecorations = function(clsName,flds) {
-        FM.DmObject.classDecorations[clsName] = flds;
-}
-
-FM.DmObject.getClassDecoration = function(clsName) {
-    return FM.getAttr(FM.DmObject.classDecorations,clsName,null);
-}
-
-FM.DmObject.getAttributeDecoration = function(clsName,attr) {
-    return FM.getAttr(FM.DmObject.classDecorations, clsName + '.' + attr, attr);
 }
 
 

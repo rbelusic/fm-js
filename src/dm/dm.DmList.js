@@ -4,6 +4,7 @@
 *
 * @class DmList
 * @extends FM.DmObject
+* @memberOf FM
 * @param {object} attrs list of attribute name and values
 * @param {object|String} [config] configuration. Literal presentation or object
 */    
@@ -13,19 +14,12 @@ FM.DmList = function() {
 FM.extendClass(FM.DmList,FM.DmObject); // extends FM.DmObject
 
 // properties
-FM.DmList.prototype.objectSubClass = "";
-FM.DmList.prototype.objectsList = null;
-FM.DmList.prototype.fetchSize = 0;
-FM.DmList.prototype.lastFetchTime = null;
-FM.DmList.prototype.lastFetchEndTime = null;
-FM.DmList.prototype.lastFetchArgs = null;
-FM.DmList.prototype.lastFetchedArgs = null;
 FM.DmList.prototype.app = null;
 
 FM.DmList.prototype._init = function(attrs,config,app) {            
     this.objectsList = {};
     this.listIndex = [];
-    this.app = FM.isset(app) ? app : null;
+    this.setApp(FM.isset(app) ? app : null);
     
     // ajax
     this.fetchSize = FM.DmList.DEF_FETCH_SIZE;
@@ -57,6 +51,13 @@ FM.DmList.prototype._init = function(attrs,config,app) {
     
 }
 
+FM.DmList.prototype.getApp = function() {
+    return this.app;
+}
+
+FM.DmList.prototype.setApp = function(a) {
+    this.app = FM.isset(a) && a ? a : null;
+}
 
 FM.DmList.prototype._addPredefinedData = function(data) {
     var responseObjectType = this.getProperty('config.responseObject',FM.DmGenericValue);
@@ -1015,7 +1016,7 @@ FM.DmList.prototype.isStaticList = function() {
 * @return { {} } list
 */ 
 FM.DmList.prototype.getStaticList = function() {
-    var listconfig = FM.DmList.getConfiguration(this.app,this.getListConfigName());
+    var listconfig = FM.DmList.getConfiguration(this.getApp(),this.getListConfigName());
     
     if (FM.isset(listconfig)) {
         if (!FM.isset(listconfig.staticlist)) {

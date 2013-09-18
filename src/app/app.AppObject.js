@@ -3,33 +3,33 @@
 * 
 * @class FM.AppObject
 * @extends FM.LmObject
+* @memberOf FM
 * @param {object} [options] Options
-*/    
+*/
+    
 FM.AppObject = function() {
-    this._init.apply(this, arguments); // new poziva _init()
+    this._init.apply(this, arguments); 
 }
 FM.extendClass(FM.AppObject,FM.LmObject); 
-
-// properties
-FM.AppObject.prototype.objectSubClass = "";
-FM.AppObject.prototype.applicationObjectsSpace = null;
-FM.AppObject.prototype.strictApplicationObjectsSpace = false;
-
-FM.AppObject.prototype.lastError = null;
-FM.AppObject.prototype.appRegistry = null;
-
+FM.AppObject.className = "Application";
 
 // methods
 FM.AppObject.prototype._init = function(opt) {            
     this._super("_init",this,opt);
-    this.objectSubClass = "AppObjects";
+    this.objectSubClass = "Application";
     this.applicationObjectsSpace = [];
     this.strictApplicationObjectsSpace = this.getAttr("strict",false) == true;
-    this.lastError = new FM.DmGenericError();
+    this.lastError = null;
+
+    // registry
+    this.appRegistry = null;
+}
+
+FM.AppObject.prototype.run = function() {
+    this.lastError = FM.DmObject.newObject(this,'GenericError', {});
 
     // registry
     this.appRegistry = new FM.UtRegistry();
-
 }
 
 FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
@@ -46,27 +46,17 @@ FM.AppObject.prototype.dmListDispose = function(lst) {
     lst.dispose();
     return true;
 }
+
 FM.AppObject.prototype.mlInit = function(node) {
     return FM.MlHost.initChildNodes(this, node);
 }
-    
 
-FM.AppObject.prototype.onDiscardObjectData = function(sender,evdata) {
-    this.discardData(
-        FM.getAttr(evdata,'object',null),
-        FM.getAttr(evdata,'callback',null)
-        );	
-}
-
-FM.AppObject.prototype.discardData = function(sender,callback) {
-    sender.discardChanges();
-}
-
+// create error object from string or return same object
 FM.AppObject.prototype.getErrorObject = function(oErr) {
     oErr = FM.isset(oErr) && oErr ? oErr : '';
     
     if(FM.isString(oErr)) {
-        oErr = new FM.DmGenericError({
+        oErr = FM.DmObject.newObject(this,'GenericError', {
             messageId: '9999',
             text: oErr
         });
@@ -81,15 +71,15 @@ FM.AppObject.prototype.getLastError = function() {
 
 FM.AppObject.prototype.setLastError = function(oErr) {
     if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = new FM.DmGenericError();
+        oErr = FM.DmObject.newObject(this,'GenericError', {});
     }
     var me = this;
     this.lastError.forEachAttr(function(attr,value) {
-        me.lastError.setAttr(attr,oErr.getAttr(attr,null));
+        me.lastError.setAttr(attr,oErr.getAttr(attr,''));
         return true;
     });
-    this.lastError.setChanged(true,true); // posalji event
-    return oErr /* this.lastError */;
+    this.lastError.setChanged(true,true); // send event
+    return oErr;
 }
 
 
@@ -117,7 +107,7 @@ FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
     }
 }
 
-FM.AppObject.prototype.onSubmitForm = function(sender,evdata,options) {
+FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     this.submitForm(
         sender,
         FM.getAttr(evdata,'object',null),
@@ -126,14 +116,13 @@ FM.AppObject.prototype.onSubmitForm = function(sender,evdata,options) {
 }
 
 // static
-FM.AppObject.className = "AppObject";
-FM.AppObject.fullClassName = 'app.AppObject';
-
 FM.AppObject.applicationInstances = {};
 
 FM.AppObject.startApp = function(args,evHandler) {
     args = FM.isset(args) && args ? args :{};
     var appClsName = FM.getAttr(args,'appClass','FM.AppObject');
+    
+    // create new appCls or return app object
     var appCls = FM.getAttr(window,appClsName,FM.AppObject);
     if(!appCls) return null;
     var app = null;
@@ -146,6 +135,7 @@ FM.AppObject.startApp = function(args,evHandler) {
         app = new appCls(FM.getAttr(args,'options',{}));
     }
     if(!app) return null;
+    
     FM.AppObject.applicationInstances[appClsName] = app;
     if(FM.isset(evHandler)) {
         app.addListener(evHandler);

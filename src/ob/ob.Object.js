@@ -1,6 +1,7 @@
 // -- Basic FM class -----------------------------------------------------------
 /**
-* Basic FM class. Provide listeners, attributes, propertyes, log
+* Basic FM class. Provide listeners, attributes, propertyes, logger
+* 
 * @class FM.Object
 * @memberOf FM
 * @param {object} attrs list of attribute name and values
@@ -13,9 +14,6 @@ FM.Object = function() {
 // ne extenda nista
 FM.extendClass(FM.Object,null);
 FM.Object.className = "Object";
-
-    
-// methods
 
 /**
 * Get  FM class name

@@ -1,6 +1,6 @@
-// -- osnovna LM klasa ---------------------------------------------------------
 /**
 * Basic LM class. 
+* 
 * @class FM.LmObject
 * @extends FM.Object
 * @memberOf FM
@@ -8,22 +8,17 @@
 * @param {object} [options] Options
 */    
 FM.LmObject = function() {
-    this._init.apply(this, arguments); // new poziva _init()
+    this._init.apply(this, arguments); 
 }
 FM.extendClass(FM.LmObject,FM.Object); // extends FM.Object
-
-// properties
-FM.LmObject.prototype.objectSubClass = "";
-FM.LmObject.prototype.app = null;
-FM.LmObject.prototype.dmObject = null;
-FM.LmObject.prototype.executed = false;
+FM.LmObject.className = "LmObject";
 
 FM.LmObject.prototype._init = function(app,opt) {            
     this.setExecuted(false);
     this.setApp(app);
 
     this._super("_init",opt);
-    this.objectSubClass = "LmObject";
+    this.objectSubClass = "Object";
 }
 
 FM.LmObject.prototype.run = function() {
@@ -98,7 +93,3 @@ FM.LmObject.prototype.setRegistryValue = function(key,val) {
          val
      );        
 }
-
-
-FM.LmObject.className = "LmObject";
-FM.LmObject.fullClassName = 'lm.LmObject';
