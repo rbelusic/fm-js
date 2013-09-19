@@ -16,11 +16,7 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */    
-FM.MlObserverAttribute = function() {
-    this._init.apply(this, arguments); 
-}
-
-FM.extendClass(FM.MlObserverAttribute, FM.MlObserver);
+FM.MlObserverAttribute = FM.defineClass('MlObserverAttribute',FM.MlObserver);
 
 
 FM.MlObserverAttribute.prototype._init = function(app,attrs,node) {            
@@ -140,9 +136,5 @@ FM.MlObserverAttribute.prototype.setNodeValue = function() {
         this.node.fmmlValueSync = value;
     }
 }
-
-
-FM.MlObserverAttribute.className = "MlObserverAttribute";
-FM.MlObserverAttribute.fullClassName = 'lm.MlObserverAttribute';
 
 FM.MlObserver.addObserver("Attribute",FM.MlObserverAttribute,'GLOBAL');

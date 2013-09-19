@@ -8,11 +8,7 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */
-FM.MlHostQueryParams = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.MlHostQueryParams, FM.MlHost);
-FM.MlHostQueryParams.className = "MlHostQueryParams";
+FM.MlHostQueryParams = FM.defineClass('MlHostQueryParams',FM.MlHost);
 
 FM.MlHostQueryParams.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);

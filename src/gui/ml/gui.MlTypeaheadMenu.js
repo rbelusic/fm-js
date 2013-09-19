@@ -6,15 +6,12 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */
-FM.MlTypeaheadMenu = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.MlTypeaheadMenu,FM.MlExtension);
+FM.MlTypeaheadMenu = FM.defineClass('MlTypeaheadMenu',FM.MlExtension);
 
 FM.MlTypeaheadMenu.prototype._init = function(attrs,node) {
     this._super("_init",attrs,node);
     this.listCache = {};
-    this.objectSubClass = "MlTypeaheadMenu";
+    this.objectSubClass = "TypeaheadMenu";
 }
 
 
@@ -226,9 +223,6 @@ FM.MlExtension.prototype.dispose = function(obs) {
 
 
 // static
-FM.MlTypeaheadMenu.className = "MlTypeaheadMenu";
-FM.MlTypeaheadMenu.fullClassName = 'gui.MlTypeaheadMenu';
-
 FM.MlExtension.addExtensionType('MlTypeaheadMenu', FM.MlTypeaheadMenu);
 
 

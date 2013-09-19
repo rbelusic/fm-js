@@ -8,10 +8,7 @@
 * @param {object} attrs list of attribute name and values
 * @param {object|String} [config] configuration. Literal presentation or object
 */    
-FM.DmList = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.DmList,FM.DmObject); // extends FM.DmObject
+FM.DmList = FM.defineClass('DmList',FM.DmObject);
 
 // properties
 FM.DmList.prototype.app = null;
@@ -29,7 +26,7 @@ FM.DmList.prototype._init = function(attrs,config,app) {
     this.lastFetchedArgs = null;
 
     this._super("_init",attrs);
-    this.objectSubClass = "Collection";
+    this.objectSubClass = "List";
 
     // list configuration
     config = FM.isset(config) && config ? config : null;
@@ -1029,9 +1026,6 @@ FM.DmList.prototype.getStaticList = function() {
 }
 
 // == static ===================================================================
-FM.DmList.className = "DmList";
-FM.DmList.fullClassName = 'dm.DmList';
-
 FM.DmList.DEF_FETCH_SIZE = 20;
 
 FM.DmList.configurations = {

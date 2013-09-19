@@ -7,11 +7,7 @@
 * @param {object} attrs list of attribute name and values
 */    
 
-FM.DmGenericValue = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.DmGenericValue, FM.DmObject); 
-FM.DmGenericValue.className = "DmGenericValue";
+FM.DmGenericValue = FM.defineClass('DmGenericValue',FM.DmObject);
 
 // methods
 FM.DmGenericValue.prototype._init = function(attrs) {

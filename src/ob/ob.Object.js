@@ -7,13 +7,7 @@
 * @param {object} attrs list of attribute name and values
 * @param {object} [flds] allowed attributes
 */    
-FM.Object = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-
-// ne extenda nista
-FM.extendClass(FM.Object,null);
-FM.Object.className = "Object";
+FM.Object = FM.defineClass('Object');
 
 /**
 * Get  FM class name

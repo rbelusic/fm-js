@@ -12,15 +12,11 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */    
-FM.MlObserverDisplay = function() {
-    this._init.apply(this, arguments); 
-}
-
-FM.extendClass(FM.MlObserverDisplay, FM.MlObserver);
+FM.MlObserverDisplay = FM.defineClass('MlObserverDisplay',FM.MlObserver);
 
 FM.MlObserverDisplay.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);
-    this.objectSubClass ="ObserverDisplay";
+    this.objectSubClass ="Display";
 }        
 
 
@@ -103,8 +99,5 @@ FM.MlObserverDisplay.prototype.setNodeValue = function() {
     }
     
 }
-
-FM.MlObserverDisplay.className = "MlObserverDisplay";
-FM.MlObserverDisplay.fullClassName = 'lm.MlObserverDisplay';
 
 FM.MlObserver.addObserver("Display",FM.MlObserverDisplay,'GLOBAL');

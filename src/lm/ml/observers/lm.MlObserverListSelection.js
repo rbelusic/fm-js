@@ -6,15 +6,14 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */ 
-FM.MlObserverListSelection = function() {
-    this._init.apply(this, arguments); 
-}
+FM.MlObserverListSelection = FM.defineClass('MlObserverListSelection',FM.MlObserver);
+    
 
 FM.extendClass(FM.MlObserverListSelection, FM.MlObserver);  
 
 FM.MlObserverListSelection.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);
-    this.objectSubClass ="ObserverListSelection";
+    this.objectSubClass ="ListSelection";
     
     var me = this;
     $(this.node).click(function(event) {
@@ -48,9 +47,5 @@ FM.MlObserverListSelection.prototype.setNodeValue = function() {
         $(this.node).closest(".fmmlClsListRowWrapper").removeClass("fmmlSelected");
     }
 }
-
-
-FM.MlObserverListSelection.className = "MlObserverListSelection";
-FM.MlObserverListSelection.fullClassName = 'lm.MlObserverListSelection';
 
 FM.MlObserver.addObserver("ListSelection",FM.MlObserverListSelection,'GLOBAL');

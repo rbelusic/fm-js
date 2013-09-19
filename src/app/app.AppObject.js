@@ -7,11 +7,7 @@
 * @param {object} [options] Options
 */
     
-FM.AppObject = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.AppObject,FM.LmObject); 
-FM.AppObject.className = "Application";
+FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
 
 // methods
 FM.AppObject.prototype._init = function(opt) {            

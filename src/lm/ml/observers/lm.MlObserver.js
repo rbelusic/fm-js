@@ -20,22 +20,12 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */    
-FM.MlObserver = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.MlObserver,FM.LmObject); 
-
-// properties
-FM.MlObserver.prototype.host = null;
-FM.MlObserver.prototype.node = null;
-FM.MlObserver.prototype.lastValue = null;
-FM.MlObserver.prototype.extensions = [];
-FM.MlObserver.prototype.errorObject = null;
+FM.MlObserver = FM.defineClass('MlObserver',FM.LmObject);
 
 // methods
 FM.MlObserver.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs);
-    this.objectSubClass = "MlObserver";
+    this.objectSubClass = "Observer";
     this.executed = false;
     this.node = node;
     this.node.fmmlObserver = this;
@@ -396,8 +386,6 @@ FM.MlObserver.prototype.resolveAttrValue = function(val,defv) {
 }
 
 // static
-FM.MlObserver.className = "MlObserver";
-FM.MlObserver.fullClassName = 'lm.MlObserver';
 
 // pronadji u dom tree na dolje node koji ima fmmlDmObject - to je tvoj dm
 // vrati null ako ne nadjes

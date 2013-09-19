@@ -8,11 +8,8 @@
 * @param {object} options list of additional attributes
 * 
 */
-FM.DmGenericError = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.DmGenericError, FM.DmObject); 
-FM.DmGenericError.className = "DmGenericError";
+
+FM.DmGenericError = FM.defineClass('DmGenericError',FM.DmObject);
 
 // methods
 FM.DmGenericError.prototype._init = function(attrs) {

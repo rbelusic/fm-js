@@ -6,15 +6,12 @@
  * @param {object} [attrs] DOM node attributes
  * @param {DOMnode} node DOM node
 */
-FM.MlDateAttributeEdit = function() {
-    this._init.apply(this, arguments); 
+FM.MlDateAttributeEdit = FM.defineClass('MlDateAttributeEdit',FM.MlExtension);
+
+FM.MlDateAttributeEdit.prototype._init = function(attrs,node) {
+    this._super("_init",attrs,node);
+    this.objectSubClass = "DateAttributeEdit";
 }
-
-FM.extendClass(FM.MlDateAttributeEdit,FM.MlExtension); 
-
-// properties
-FM.MlDateAttributeEdit.prototype.objectSubClass = "";
-FM.MlDateAttributeEdit.prototype.appListener = null;
 
 // methods
 FM.MlDateAttributeEdit.prototype.run = function(obs) {

@@ -16,11 +16,7 @@
  * data-fmml-list-get-more-at-end
  *  
  */
-FM.MlHostGenericCollection = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.MlHostGenericCollection, FM.MlHost);
-FM.MlHostGenericCollection.className = "MlHostGenericCollection";
+FM.MlHostGenericCollection = FM.defineClass('MlHostGenericCollection',FM.MlHost);
 
 FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);

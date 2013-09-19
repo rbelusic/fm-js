@@ -7,11 +7,7 @@
 * @param {object} attrs list of attribute name and values
 */    
 
-FM.DmTranslation = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.DmTranslation, FM.DmObject); 
-FM.DmTranslation.className = "DmTranslation";
+FM.DmTranslation = FM.defineClass('DmTranslation',FM.DmObject);
 
 // methods
 FM.DmTranslation.prototype._init = function(attrs) {

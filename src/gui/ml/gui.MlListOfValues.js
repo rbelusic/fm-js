@@ -6,14 +6,11 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */
-FM.MlListOfValues = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.MlListOfValues,FM.MlExtension);
+FM.MlListOfValues = FM.defineClass('MlListOfValues',FM.MlExtension);
 
 FM.MlListOfValues.prototype._init = function(attrs,node) {
     this._super("_init",attrs,node);
-    this.objectSubClass = "MlListOfValues";
+    this.objectSubClass = "ListOfValues";
     this.lastLovArguments = null;
     this.lovDependsOf = null;
     this.lovItemsTemplate = null;
@@ -322,9 +319,6 @@ FM.MlListOfValues.prototype.update = function(obs) {
 
 
 // static
-FM.MlListOfValues.className = "MlListOfValues";
-FM.MlListOfValues.fullClassName = 'gui.MlListOfValues';
-
 FM.MlExtension.addExtensionType('MlListOfValues', FM.MlListOfValues);
 
 

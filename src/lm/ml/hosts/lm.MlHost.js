@@ -17,11 +17,7 @@
 * data-fmml-run-on-init
 * 
 */    
-FM.MlHost = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.MlHost,FM.LmObject); 
-FM.MlHost.className = "MlHost";
+FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
 
 // methods
 FM.MlHost.prototype._init = function(app,attrs,node) {

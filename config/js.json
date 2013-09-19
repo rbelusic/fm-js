@@ -26,7 +26,6 @@
 "<%=js_dir%>/lm/ml/hosts/lm.MlHostGenericCollection.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserver.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverAttribute.js",
-"<%=js_dir%>/lm/ml/observers/lm.MlObserverAttributeDecoration.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverDisplay.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverEvent.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListState.js",
@@ -36,10 +35,7 @@
 "<%=js_dir%>/gui/ml/gui.MlExtension.js",
 "<%=js_dir%>/gui/ml/gui.MlAttributeEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlDateAttributeEdit.js",
-"<%=js_dir%>/gui/ml/gui.MlWatermark.js",
-"<%=js_dir%>/gui/ml/gui.MlMenu.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",
 "<%=js_dir%>/gui/ml/gui.MlTypeaheadMenu.js",
-"<%=js_dir%>/gui/ml/gui.MlSlider.js",
 "<%=js_dir%>/terminator.js"
 ]

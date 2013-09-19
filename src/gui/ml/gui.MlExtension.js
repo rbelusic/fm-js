@@ -6,22 +6,13 @@
  * @param {object} [attrs] DOM node attributes
  * @param {DOMnode} node DOM node
 */
-FM.MlExtension = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
+FM.MlExtension = FM.defineClass('MlExtension',FM.Object);
 
-FM.extendClass(FM.MlExtension,FM.Object); 
-
-// properties
-FM.MlExtension.prototype.objectSubClass = "";
-FM.MlExtension.prototype.node = null;
-FM.MlExtension.prototype.executed = false;
-FM.MlExtension.prototype.observer = null;
 
 // methods
 FM.MlExtension.prototype._init = function(attrs,node) {
     this._super("_init",attrs);
-    this.objectSubClass = "MlExtension";
+    this.objectSubClass = "Extension";
     this.node = node;
     this.executed = false;    
 }
@@ -63,10 +54,6 @@ FM.MlExtension.prototype.getNode = function() {
 }
 
 // static
-FM.MlExtension.className = "MlExtension";
-FM.MlExtension.fullClassName = 'gui.MlExtension';
-
-
 FM.MlExtension.extensionTypes = {
     GLOBAL: {}
 };

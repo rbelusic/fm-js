@@ -33,15 +33,11 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */    
-FM.MlObserverEvent = function() {
-    this._init.apply(this, arguments); 
-}
-
-FM.extendClass(FM.MlObserverEvent, FM.MlObserver);
+FM.MlObserverEvent = FM.defineClass('MlObserverEvent',FM.MlObserver);
 
 FM.MlObserverEvent.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs,node);
-    this.objectSubClass ="ObserverEvent";
+    this.objectSubClass ="Event";
 
     this.eventHost = null;
     this.eventHostNode = null;
@@ -220,8 +216,5 @@ FM.MlObserverEvent.prototype.eventCallback = function(isok,oResponse) {
         }
     }
 }
-
-FM.MlObserverEvent.className = "MlObserverEvent";
-FM.MlObserverEvent.fullClassName = 'lm.MlObserverEvent';
 
 FM.MlObserver.addObserver("Event",FM.MlObserverEvent,'GLOBAL');

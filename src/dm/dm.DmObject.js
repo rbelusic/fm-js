@@ -6,11 +6,8 @@
 * @param {object} attrs list of attribute name and values
 * @param {object} [flds] allowed attributes
 */    
-FM.DmObject = function() {
-    this._init.apply(this, arguments); 
-}
-FM.extendClass(FM.DmObject,FM.Object); 
-FM.DmObject.className = "DmObject";
+FM.DmObject = FM.defineClass('DmObject',FM.Object);
+
 
 // methods
 FM.DmObject.prototype._init = function(attrs,flds) {            

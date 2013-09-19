@@ -6,24 +6,15 @@
  * @param {object} [attrs] DOM node attributes
  * @param {DOMnode} node DOM node
 */
-FM.MlAttributeEdit = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-
-FM.MlAttributeEdit.prototype.triggerEvent = null;
-FM.MlAttributeEdit.prototype.editWidget = null;
+FM.MlAttributeEdit = FM.defineClass('MlAttributeEdit',FM.MlExtension);
 
 // methods
 FM.MlAttributeEdit.prototype._init = function(attrs,node) {
     this._super("_init",attrs,node);
-    this.objectSubClass = "MlAttributeEdit";
+    this.objectSubClass = "AttributeEdit";
     this.triggerEvent = null;
     this.editWidget = null;    
 }
-FM.extendClass(FM.MlAttributeEdit,FM.MlExtension); 
-
-// properties
-FM.MlAttributeEdit.prototype.objectSubClass = "";
 
 // methods
 FM.MlAttributeEdit.prototype._cleanup = function(obs) {
@@ -207,15 +198,9 @@ FM.MlAttributeEdit.prototype.dispose = function(obs) {
 }
 
 FM.MlAttributeEdit.prototype.inputAdded = function(obs) {
-    }
+}
 
-// static
-FM.MlAttributeEdit.className = "MlAttributeEdit";
-FM.MlAttributeEdit.fullClassName = 'gui.MlAttributeEdit';
 
 FM.MlExtension.addExtensionType('MlAttributeEdit', FM.MlAttributeEdit);
-
-// temp !FIX!
-FM.MlExtension.addExtensionType('MlExAttributeEdit', FM.MlAttributeEdit);
 
 

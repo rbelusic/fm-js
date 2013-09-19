@@ -289,6 +289,20 @@ if(typeof(FM) == 'undefined') {
         return oDest;
     }
 
+
+    FM.defineClass = function(name,ext) {
+        name = FM.isset(name) && FM.isString(name) && name != ''  ? name : 'Undefined';
+        ext = FM.isset(ext) && FM.isFunction(ext) ? ext : null;
+        var cls = function() {
+            this._init.apply(this, arguments); 
+        };
+        
+        FM.extendClass(cls,ext); 
+        cls.className = name;
+        
+        return cls;
+    }
+    
     FM.extendClass = function(oDest,oSrc) {        
         if(oSrc) {
             for (var property in oSrc.prototype) {

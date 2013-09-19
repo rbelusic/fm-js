@@ -6,15 +6,11 @@
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
 */ 
-FM.MlObserverListOrder = function() {
-    this._init.apply(this, arguments); 
-}
-
-FM.extendClass(FM.MlObserverListOrder, FM.MlObserver);
+FM.MlObserverListOrder = FM.defineClass('MlObserverListOrder',FM.MlObserver);
 
 FM.MlObserverListOrder.prototype._init = function(app,attrs,node) {            
     this._super("_init",app,attrs,node);
-    this.objectSubClass ="ObserverListOrder";
+    this.objectSubClass ="ListOrder";
     
     var me = this;
     $(this.node).click(function(event) { 
@@ -61,9 +57,5 @@ FM.MlObserverListOrder.prototype.setNodeValue = function() {
         }
     }
 }
-
-
-FM.MlObserverListOrder.className = "MlObserverListOrder";
-FM.MlObserverListOrder.fullClassName = 'lm.MlObserverListOrder';
 
 FM.MlObserver.addObserver("ListOrder",FM.MlObserverListOrder,'GLOBAL');
