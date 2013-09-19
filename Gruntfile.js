@@ -37,6 +37,14 @@ module.exports = function(grunt) {
                     }
                 ]
             }
+        },
+        jsdoc : {
+            dist : {
+                src: ['<%=js_dir%>/**.js'/*'build/debug/js/*.js'*/], 
+                options: {
+                    destination: 'doc'
+                }
+            }
         }
     });
 
@@ -44,7 +52,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
-    grunt.registerTask('default', ['clean', 'concat', 'uglify','copy']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','jsdoc']);
 };
 
