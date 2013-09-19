@@ -63,9 +63,6 @@ FM.UtAjax = function() {
 }
 FM.extendClass(FM.UtAjax,FM.Object); 
 
-// properties
-FM.UtAjax.prototype.objectSubClass = "";
-FM.UtAjax.prototype.http = null;
 
 // methods
 FM.UtAjax.prototype._init = function(config) {            
@@ -82,15 +79,7 @@ FM.UtAjax.prototype.send = function(args) {
 
     
     var pline = "";
-    /*
-    if(FM.isObject(args)) {
-        var val;
-        for(var pname in params) {
-            val = FM.getAttr(args,pname,'');
-            pline = pline + (pline == "" ? "" : "&") + pname + "=" + encodeURIComponent(val);
-        }
-    }
-    */
+    
     if(FM.isObject(args)) {
         
         var val;
@@ -98,7 +87,7 @@ FM.UtAjax.prototype.send = function(args) {
             if(FM.isset(params[pname])) {
                 val = FM.getAttr(args,pname,'');
                 if(pname === "_body" && this.getAttr("method","POST") == 'POST') {
-                    pline =  /*encodeURIComponent */(val);
+                    pline = val;
                 } else {
                     pline = pline + (pline == "" ? "" : "&") + pname + "=" + encodeURIComponent(val);
                 }
@@ -158,7 +147,6 @@ FM.UtAjax.prototype.send = function(args) {
 
 // static
 FM.UtAjax.className = "UtAjax";
-FM.UtAjax.fullClassName = 'ut.UtAjax';
 
 // mapiranje ajax resp
 FM.UtAjax.AJAX_STATE_OPEN = 1;
