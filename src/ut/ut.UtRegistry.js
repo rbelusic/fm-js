@@ -5,22 +5,16 @@
 * @extends FM.Object
 * @param {object} opt Options
 */    
-FM.UtRegistry = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtRegistry,FM.Object); 
 
-// properties
-FM.UtRegistry.prototype.objectSubClass = "";
-FM.UtRegistry.prototype.cookieName = '';
-FM.UtRegistry.prototype.registry = null;
+FM.UtRegistry = FM.defineClass('UtRegistry',FM.Object);
+FM.UtRegistry.className = "UtRegistry";
 
 FM.UtRegistry.prototype._init = function(opt) {            
     this.cookieName = '';
     this.registry = null;
 
     this._super("_init",opt);
-    this.objectSubClass = "UtRegistry";
+    this.objectSubClass = "Registry";
 
     this.cookieName = this.getAttr('cookieName','fmRegistry');
     this.registry = null;
@@ -104,10 +98,6 @@ FM.UtRegistry.prototype.findKey = function(key,force) {
 }
 
 // static
-FM.UtRegistry.className = "UtRegistry";
-FM.UtRegistry.fullClassName = 'ut.UtRegistry';
-
-
 FM.UtRegistry.findKey = function(reg,key,force) {
     
     var retc = {found: false, node: null, nodeKey: '', parent: null, keyName: '', keyValue: null};

@@ -8,23 +8,11 @@
 * @param {number} period Period in seconds
 * @param {number} number of times to execute
 */    
-FM.UtTimerJob = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtTimerJob,FM.Object); 
-
-// properties
-FM.UtTimerJob.prototype.objectSubClass = "";
-FM.UtTimerJob.prototype.event = '';
-FM.UtTimerJob.prototype.evdata = null;
-FM.UtTimerJob.prototype.period = -1;
-FM.UtTimerJob.prototype.executecount = -1;
-FM.UtTimerJob.prototype.suspended = false;
-FM.UtTimerJob.prototype.started = false;
-FM.UtTimerJob.prototype.lastRun = 0;
+FM.UtTimerJob = FM.defineClass('UtTimerJob',FM.Object);
+FM.UtTimerJob.className = "UtTimerJob";
 
 FM.UtTimerJob.prototype._init = function(event,evdata,period,executecount) {
-    this.objectSubClass = "UtTimerJob";
+    this.objectSubClass = "TimerJob";
     this.event = '';
     this.evdata = null;
     this.period = -1;
@@ -87,6 +75,4 @@ FM.UtTimerJob.prototype.dispose = function() {
     
 }
 
-// static
-FM.UtTimerJob.className = "UtTimerJob";
-FM.UtTimerJob.fullClassName = 'ut.UtTimerJob';
+

@@ -5,24 +5,19 @@
 * @extends FM.Object
 * @param {object} opt Options
 */    
-FM.UtTranslations = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtTranslations,FM.Object); 
+FM.UtTranslations = FM.defineClass('UtTranslations',FM.Object);
+FM.UtTranslations.className = "UtTranslations";
 
-// properties
-FM.UtTranslations.prototype.objectSubClass = "";
-FM.UtTranslations.translationsLoaded = false;
-FM.UtTranslations.loadedTranslations = {};
-
-FM.UtTranslations.missingTranslations = {};
 
 FM.UtTranslations.prototype._init = function(attrs) {
     this._super("_init",attrs);
+    
+    // properties
+    this.translationsLoaded = false;
+    this.loadedTranslations = {};
+    this.missingTranslations = {};
     this.objectSubClass = "UtTranslations";
 }
-
-
     
 FM.UtTranslations.fetchTranslations = function(app,cbfn) {
     var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};

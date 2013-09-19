@@ -5,18 +5,12 @@
 * @extends FM.Object
 * @param {object} opt Options
 */    
-FM.UtTemplate = function() {
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtTemplate,FM.Object); 
-
-// properties
-FM.UtTemplate.prototype.objectSubClass = "";
-FM.UtTemplate.loadedTemplates = {};
+FM.UtTemplate = FM.defineClass('UtTemplate',FM.Object);
 
 FM.UtTemplate.prototype._init = function(attrs) {
     this._super("_init",attrs);
-    this.objectSubClass = "UtTemplate";
+    this.objectSubClass = "Template";
+    this.loadedTemplates = {};
 }
 
 FM.UtTemplate.getTemplateArgs = function(attrlist) {
