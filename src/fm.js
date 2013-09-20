@@ -438,7 +438,8 @@ if(typeof(FM) == 'undefined') {
             try {
                 var retv = context._fn();
             } catch(e) {
-                console.log("FM.resolveAttrValue:" + e);
+                 FM.log(context,e,FM.logLevels.error,'FM.resolveAttrValue');
+                
                 return undefined;
             }
             v = retv;
@@ -515,10 +516,8 @@ if(typeof(FM) == 'undefined') {
 
         try {
             return FM.isFunction(obj.serialize) ? obj.serialize() : JSON.stringify(obj);
-        } catch(e) {        
-            console.log('ERROR  serialize object!');
-            var oar = FM.logObjectMsgToArray(obj);
-            for(var i =0; i < oar.length; i++) console.log(oar[i]);        
+        } catch(e) {
+            FM.log(null,e,FM.logLevels.error,'FM.serialize');
         }
         return def;
     }
@@ -530,7 +529,7 @@ if(typeof(FM) == 'undefined') {
         try {
             return JSON.parse(str);
         } catch(e) {
-            console.log('ERROR  unserialize string ! [' +  str + ']');
+            FM.log(null,e,FM.logLevels.error,'FM.unserialize');
         }
         return def;
     }

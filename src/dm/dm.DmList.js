@@ -168,7 +168,7 @@ FM.DmList.prototype._resFn = function(value,args) {
         try {
         is = is(args);
         } catch(e) {
-            console.log("_resFn err:" + e);
+            this.log(e,FM.logLevels.error,'DmList._resFn');
         }
     }
 

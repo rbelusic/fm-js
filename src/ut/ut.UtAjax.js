@@ -4,65 +4,13 @@
 * @class FM.UtAjax
 * @extends FM.Object
 * @param {object} config Options
+* 
+* Valid options:
+* 
 */    
-FM.UtAjax = function() {    
-    var me = this;    
-    /** @ignore */
-    this._cb_onReadyStateChange = function() {        
-        if(me.http.readyState == FM.UtAjax.AJAX_STATE_LOADEND) { // http ok                
-            // timeout
-            if(me.http.status == 0) {
-                return me.fireEvent("onAjaxStateError",new FM.DmGenericError({
-                    messageId: "1",
-                    text: me.getAttr('url','') + ":\n Timeout or Access-Control-Allow-Origin is not allowed" 
-                }));
-            }   
 
-            // deserijaliziraj rezultat ako je JSON
-            var responseFormat = me.getAttr('responseFormat','TEXT');
-            var responseObject = null;
-            if(responseFormat == 'JSON') {
-                responseObject = FM.unserialize(me.http.responseText,null);
-                // neuspjela deserijalizacija
-                if(responseObject == null) {
-                    return me.fireEvent("onAjaxStateError",new FM.DmGenericError({
-                        messageId: "1",
-                        text: me.http.responseText != '' ? "Error: " + me.http.responseText : "Invalid response format"
-                    }));
-                }
-            } else {
-                responseObject = me.http.responseText;
-            }
-                
-            // provjeri response status code (samo ako nema nikakvog povratnog teksta
-            if(true /*me.http.responseText == '' */) {
-                var respCodesStr = FM.trim(me.getAttr('validResponseCodes',''));            
-                var responseCodes = respCodesStr == '' ? [] : me.getAttr('validResponseCodes','').split(",");            
-                var i;
-                for(i=0;i < FM.sizeOf(responseCodes); i++) {
-                    if(FM.trim(responseCodes[i]) == me.http.status) break;
-                }
-                if(i != 0 && i == FM.sizeOf(responseCodes)) {
-                    return me.fireEvent("onAjaxStateError",new FM.DmGenericError({
-                        messageId: "1",
-                        text: "Invalid response code (found:" + me.http.status + ", expected:" + responseCodes + ")"
-                    }));
-                }
-            }
-            
-            // ako sam stigsao do tu sve je ok
-            return me.fireEvent(
-                "onAjaxStateEnd",
-                new FM.DmGenericValue({value: responseObject})
-            );
-        }
-    }
-   
-    // pozovi konstruktor
-    this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtAjax,FM.Object); 
-
+FM.UtAjax = FM.defineClass('UtAjax',FM.Object);
+FM.UtAjax.className = "UtAjax";
 
 // methods
 FM.UtAjax.prototype._init = function(config) {            
@@ -72,22 +20,50 @@ FM.UtAjax.prototype._init = function(config) {
     this.http = null;
 }
 
+FM.UtAjax.prototype._ajaxCallback = function(data,status) {
+    var responseObject = data;                
+    var respCodesStr = FM.trim(this.getAttr('validResponseCodes',''));            
+    var responseCodes = 
+        respCodesStr == '' ? [] : 
+        this.getAttr('validResponseCodes','').split(",")
+    ;
+    var i;
+    for(i=0;i < FM.sizeOf(responseCodes); i++) {
+        if(FM.trim(responseCodes[i]) == status) break;
+    }
+    if(i != 0 && i == FM.sizeOf(responseCodes)) {
+        return this.fireEvent("onAjaxStateError",new FM.DmGenericError({
+            messageId: "1",
+            text: "Invalid response code (found:" + status + 
+                ", expected:" + responseCodes + ")"
+        }));
+    }
+            
+    // all ok
+    return this.fireEvent(
+        "onAjaxStateEnd",
+        new FM.DmGenericValue({
+            value: responseObject
+        })
+    );
+    
+}            
+
 FM.UtAjax.prototype.send = function(args) {
     var url = this.getAttr('url','');
     var params = this.getAttr('params',{});
     var headers = this.getAttr('headers',{});
-
     
     var pline = "";
     
     if(FM.isObject(args)) {
-        
         var val;
         for(var pname in args) {
             if(FM.isset(params[pname])) {
                 val = FM.getAttr(args,pname,'');
                 if(pname === "_body" && this.getAttr("method","POST") == 'POST') {
                     pline = val;
+                    break;
                 } else {
                     pline = pline + (pline == "" ? "" : "&") + pname + "=" + encodeURIComponent(val);
                 }
@@ -95,101 +71,40 @@ FM.UtAjax.prototype.send = function(args) {
         }
     }
     
-    var callUrl = this.getAttr("method","POST") == 'POST' ? url : url + "?" + pline;
-    this.http = FM.UtAjax.initHttpObject();
-    if(this.http == null) {
-        return this.fireEvent("onAjaxStateError",new FM.DmGenericError({
-            messageId: "1",
-            text: "Unable to init connection"
-        }));
-    }
-    
-    var auth = this.getAttr('auth',null);
-    if(auth) {
-        this.http.open(
-            this.getAttr("method","POST"), 
-            callUrl, true,
-            this.getAttr('auth.username',''),this.getAttr('auth.password','')
-        );
-    } else {
-        this.http.open(
-            this.getAttr("method","POST"), 
-            callUrl, true
-        );                
-    }
-    
-    if(this.getAttr("method","POST") == 'POST') {
-        this.http.setRequestHeader(
-            "Content-type", 
-            this.getAttr('contentType',"application/x-www-form-urlencoded")
-        );
-        //this.http.setRequestHeader("Content-length", params.length);
-        //this.http.setRequestHeader("Connection", "close");
-    } else {
-        this.http.setRequestHeader(
-            "Content-type", 
-            this.getAttr('contentType',"application/x-www-form-urlencoded")
-        );        
-    }
-        
-    if(FM.isset(headers) && headers) for(var hdr in headers) {
-        this.http.setRequestHeader(hdr, headers[hdr]);
-    }
-    this.http.onreadystatechange = this._cb_onReadyStateChange;
+    this.http = this.executeCall(url, pline, headers);
 
-    // posalji (ovo treba samo za POST, get ima parametre u url-u ali ne smeta)
-    this.http.send(pline);
-
-    // event
-    return this.fireEvent("onAjaxStateStart",new FM.DmGenericValue({value: args}));
+    return true;
 }     
 
-
-// static
-FM.UtAjax.className = "UtAjax";
-
-// mapiranje ajax resp
-FM.UtAjax.AJAX_STATE_OPEN = 1;
-FM.UtAjax.AJAX_STATE_SEND = 2;
-FM.UtAjax.AJAX_STATE_LOADSTART = 3;
-FM.UtAjax.AJAX_STATE_LOADEND = 4;
-
-FM.UtAjax.initHttpObject = function() {
-/* Primjer sa w3schools, tako radi u IE10 */
-    var http = null;
+FM.UtAjax.prototype.executeCall = function(url, params, headers) {
+    var ajaxOptions = {
+        global: false,
+        cache: this.getAttr("cache","false").toLowerCase() == 'true',
+        accepts: {},
+        beforeSend: function(jqXHR, settings) {
+            return this.fireEvent("onAjaxStateStart",new FM.DmGenericValue({
+                value: params
+            }));            
+        },
+        error: function(jqXHR,textStatus,errorThrown) {
+            return this.fireEvent("onAjaxStateError",new FM.DmGenericError({
+                messageId: "1",
+                text: errorThrown
+            }));
+        },
+        success: function(data,textStatus, jqXHR) {
+            this._ajaxCallback(data,jqXHR.status);
+        },
+        url: url,
+        type: this.getAttr("method","POST").toLowerCase(),
+        contentType: this.getAttr('contentType',"application/x-www-form-urlencoded"),
+        context: this,
+        data: params,
+        headers: headers,
+        username: this.getAttr('auth.username',''),
+        password: this.getAttr('auth.password',''),
+        dataType: this.getAttr('responseFormat','TEXT').toLowerCase() 
+    };
     
-    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-        http = new XMLHttpRequest();
-    }
-    else {// code for IE6, IE5
-        http = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    return http;
-
-/* NASE ORIGINAL */
-/* 
-    if(window.XMLHttpRequest && !(window.ActiveXObject)) {
-        try {
-            http = new XMLHttpRequest();
-        } catch(e1) {
-            http = null;
-        }
-    } else if(window.ActiveXObject) {
-        try {
-            http = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e2) {
-            try {
-                http = new ActiveXObject("MSXML2.XMLHTTP.3.0");
-            } catch (e3) {
-                try {
-                    http = new ActiveXObject("Microsoft.XMLHTTP");
-
-                } catch (e4) {
-                    http = null;
-                }
-            }
-        }
-    }
-    return(http);
-*/
+    return $.ajax(ajaxOptions);
 }

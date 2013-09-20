@@ -10,6 +10,7 @@ fmdemo = {};
 // (copy & paste)
 fmdemo.AppFmDemo = function() {
     this._init.apply(this, arguments); 
+    this.setLogLevel(FM.logLevels.debug);
 }
 
 // svaka app mora extendati FM.AppObject

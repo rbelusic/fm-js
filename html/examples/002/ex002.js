@@ -74,6 +74,8 @@ fmdemo.AppFmDemo.prototype.getFacebookPage = function(id,cbfn) {
     // create listener 
     var lstnr = {
         onListEnd: function(sender,data) {
+            // show some info in console
+            me.log("End of ajax call ...",FM.logLevels.info,'onAjaxStateStart');
             // get first object from list
             var oData = null;
             FM.forEach(data.Added,function(id, obj) {

@@ -69,7 +69,6 @@ _T = function() { // text,app, params
         str = FM.UtTranslations.loadedTranslations[hash].translation;
     } else {
         str = arguments[0];
-        console.log("Missing translation:" + arguments[0]);
         FM.UtTranslations.missingTranslations[hash]=arguments[0];
     }
 

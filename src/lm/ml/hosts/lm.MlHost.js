@@ -93,14 +93,13 @@ FM.MlHost.prototype.run = function(dmObj) {
         try {
             obsrv[id].run();            
         } catch(e) {
-            console.log("run observer() error: " + e);
+            this.log(e,FM.logLevels.error,'MlHost.run');
         }
     }
 }
 
 
 FM.MlHost.prototype._checkMasterReload = function() {
-    //this.log("_checkMasterReload:" + this.getID(),FM.logLevels.warn);
     var id = this.getAttr("data-fmml-object-id",'');
     var className = this.getAttr("data-fmml-object-class",'');
     
@@ -145,10 +144,9 @@ FM.MlHost.prototype._checkMasterReload = function() {
         var fnName = 'get' + className;
         if(id != '' && className != '' && FM.isset(this.app[fnName])) {
             var me = this;
-            //this.log("_checkMasterReload fetch ...:" + this.getID(),FM.logLevels.warn);
+            
             this.app[fnName](id,function(isok,oObj) {
                 if(isok) {
-                    //me.log("_checkMasterReload fetch ok:" + me.getID());
                     me.setDmObject(oObj);
                     me.setProperty('dmObjectCreated','true');
                 }
@@ -186,7 +184,7 @@ FM.MlHost.prototype.dispose = function() {
             obsrv[id].dispose();
             
         } catch(e) {
-            console.log("dispose observer() error: " + e);
+            this.log(e,FM.logLevels.error,'MlHost.dispose');
         }
     }
     this.listOfObservers = [];
@@ -260,7 +258,7 @@ FM.MlHost.prototype.updateObserver = function(o) {
         try {
             o.update(this);
         } catch(e) {
-            console.log("updateObservers() error: " + e);
+            this.log(e,FM.logLevels.error,'MlHost.updateObserver');
         }
     }
 
@@ -374,7 +372,6 @@ FM.MlHost.prototype.onChange = function(sender,obj) {
 
 
 FM.MlHost.prototype.onSetDmObject = function(sender,obj) {
-    this.log("onSetDmObject:" + this.getID() + " < " +  sender.getID(),FM.logLevels.warn);
     if(sender == this.masterHost) {
         if(this.masterHostDm) this.masterHostDm.removeListener(this);
         this.masterHostDm = obj;
@@ -421,8 +418,6 @@ FM.MlHost.prototype.onEvent = function(sender,ev,data,calledlist) {
         }
         done = true;
     }
-    
-    //console.log("ev:" + ev);
     
     // ako ima def trigger u layoutu
     var evtrg = this.getAttr('data-fmml-host-event-' + ev.toLowerCase(),'');
@@ -506,13 +501,11 @@ FM.MlHost.translateNode = function(app,node) {
             txttotranslate = $(node).text(); 
             if(FM.isset(txttotranslate)) {
                 $(node).text(_T(txttotranslate,app));
-                console.log("TRANSLATE(" + name + "):" + txttotranslate);
             }
         } else {
             txttotranslate = $(node).attr(i); 
             if(FM.isset(txttotranslate)) {
                 $(node).attr(name,_T(txttotranslate,app));
-                console.log("TRANSLATE(" + name + "):" + txttotranslate);
             }
         }
         return true;
@@ -525,7 +518,6 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
     checknode = FM.isset(checknode) && checknode ? checknode : $('body')[0];
     var appsc = app.getSubClassName();
     var nodeList = childsOnly ? $(checknode).children() : $(checknode);    
-    
     
     nodeList.each(function(index) {
         var domobj = this;        
@@ -557,7 +549,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                                 D: oObj
                             });
                         } catch(e) {
-                            console.log("resolveAttrValue error (" + attrib.value + "): " + e);
+                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                         }
                     } else {
                         attrlist[attrib.name] = attrib.value;
@@ -570,7 +562,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                     try {
                         FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
                     } catch(e) {
-                        console.log("new MlObserver(<" + otype + ">) error: " + e);
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                     };
                 }
                 
@@ -583,7 +575,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                             var oExt = FM.MlExtension.newExtension(app,attrlist,domobj,otype);
                             if(oExt && domobj.fmmlObserver) domobj.fmmlObserver.addExtension(oExt);
                         } catch(e) {
-                            console.log("new MlExtension(<" + otype + ">) error: " + e);
+                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                         };
                     }
                 }
@@ -593,7 +585,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                     try {
                         FM.MlHost.newHost(app,attrlist,domobj,jqobj.attr('data-fmml-host'),oObj);
                     } catch(e) {
-                        console.log("new MlHost(<" + jqobj.attr('data-fmml-host') + ">) error: " + e);
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                     }                  
                 } 
 
@@ -602,7 +594,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                     try {
                         FM.MlHost.translateNode(app,domobj);
                     } catch(e) {
-                        console.log("translateNode(<" + jqobj.attr('data-fmml-translate') + ">) error: " + e);
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                     }                  
                 } 
 

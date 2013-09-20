@@ -51,7 +51,6 @@ FM.LmObject.prototype.getDmObject = function() {
 
 FM.LmObject.prototype.setDmObject = function(o,addListener) {
     if(o && o === this.dmObject) return;
-    this.log("setDmObject:" + this.getID());
     
     if(this.dmObject) {
         this.dmObject.removeListener(this);

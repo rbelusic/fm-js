@@ -32,12 +32,10 @@ FM.MlListOfValues.prototype._init = function(attrs,node) {
 // methods
 // fetch values for LOV from server
 FM.MlListOfValues.prototype.lovFetch = function(args,callback) {
-    console.log("Get LOV values START ... : " + this.getAttr('data-fmml-list',''));
     
     // get observer
     var obs = this.getObserver();
     if(!obs) {
-        console.log("Get LOV values START ... : obs not found - " + this.getAttr('data-fmml-list',''));
         return false;
     }
     
@@ -56,13 +54,13 @@ FM.MlListOfValues.prototype.lovFetch = function(args,callback) {
     var lstnr = {
         /** @ignore */
         onListStart: function(sender,data) {
-            console.log("Get LOV values onListStart : " + me.getAttr('data-fmml-list',''));
+            me.log("Ajax call started",FM.logLevels.info,'MlListOfValues.onListStart');
             $(me.getNode()).addClass("fmmlWaitState");
             return true;
         },
         /** @ignore */
         onListEnd: function(sender,data) {
-            console.log("Get LOV values onListEnd : " + me.getAttr('data-fmml-list',''));
+            me.log("Ajax call completed",FM.logLevels.info,'MlListOfValues.onListEnd');
             $(me.getNode()).removeClass("fmmlWaitState");
             me.dmList.removeListener(lstnr);    
             callback(true,me.dmList);
@@ -70,7 +68,7 @@ FM.MlListOfValues.prototype.lovFetch = function(args,callback) {
         },
         /** @ignore */
         onListError: function(sender,data) {
-            console.log("Get LOV values onListError : " + me.getAttr('data-fmml-list',''));
+            me.log(data,FM.logLevels.error,'MlListOfValues.onListError');
             $(me.getNode()).removeClass("fmmlWaitState");
             me.dmList.removeListener(lstnr);    
             callback(false,null);
@@ -80,7 +78,7 @@ FM.MlListOfValues.prototype.lovFetch = function(args,callback) {
     
     me.dmList.addListener(lstnr);
     me.dmList.getData();
-    console.log("Get LOV values START ok : " + this.getAttr('data-fmml-list',''));
+
     return true; 
 }
 
@@ -137,8 +135,6 @@ FM.MlListOfValues.prototype.lovRenderItem = function(obj,issel,menuId,menuAttr,m
 }
 
 FM.MlListOfValues.prototype.lovDisplay = function(isok, dmList) {    
-    console.log("lovDisplay ... : " + this.getAttr('data-fmml-list',''));
-    
     // clear list
     $(this.getNode()).empty();
     

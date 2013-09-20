@@ -56,7 +56,7 @@ FM.MlObserver.prototype.run = function() {
         try {
             this.runExtension(this.extensions[i]);
         } catch(err) {
-            console.log("run extension error error: " + err);            
+            this.log(err,FM.logLevels.error,'MlObserver.run');     
         }
     }
     this.executed = true;
@@ -351,7 +351,7 @@ FM.MlObserver.prototype.onHostEvent = function(sender,ev,evdata) {
             this[ev](sender,evdata);
             return true;
         } catch(e) {
-            console.log("onHostEvent() error: " + e);
+            this.log(err,FM.logLevels.error,'MlObserver.onHostEvent');     
             return true;
         }        
     } else {
@@ -364,7 +364,7 @@ FM.MlObserver.prototype.onHostEvent = function(sender,ev,evdata) {
                 try {
                     extObj[ev](sender,evdata);
                 } catch(e) {
-                    console.log("onHostEvent-ext() error: " + e);             
+                    this.log(e,FM.logLevels.error,'MlObserver.onHostEvent');
                 }
                 fnd = true;
             }
