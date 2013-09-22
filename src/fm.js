@@ -249,26 +249,11 @@ if(typeof(FM) == 'undefined') {
     }
 
     FM.loadScript = function(url,cbfn) {
-        var script = document.createElement("script")
-        script.type = "text/javascript";
- 
-        if (script.readyState) { //IE
-            /** @ignore */
-            script.onreadystatechange = function () {
-                if (script.readyState == "loaded" || script.readyState == "complete") {
-                    script.onreadystatechange = null;
-                    cbfn();
-                }
-            };
-        } else { //Others
-            /** @ignore */
-            script.onload = function () {
+        $.getScript(url,function() {
+            if(FM.isFunction(cbfn)) {
                 cbfn();
-            };
-        }
-
-        script.src = url;
-        document.getElementsByTagName("head")[0].appendChild(script);
+            }
+        });
     }
  
     FM.extend = function(oDest,oSrc,isclass) {
