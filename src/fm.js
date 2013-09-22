@@ -1,23 +1,14 @@
-if(typeof(window.console) == 'undefined') {
-    /** @ignore */
-    window.console = new function() {
-        /** @ignore */
-        this.log = function() {}
-    };
-}
 
-
-if(typeof(FM) == 'undefined') {
-    /**
-    * @namespace Basic SDK namespace
-    */
+/**
+* @namespace Basic SDK namespace
+*/
     FM = {};    
 
 
     // propertyes
     FM.version = '0.1';
 
-    // static methods
+// static methods
 
 /**
 * Clone object methods and propertyes. This function is not recursive

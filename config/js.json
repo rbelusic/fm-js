@@ -1,4 +1,5 @@
 [
+"<%=js_dir%>/namespace.js_",
 "<%=js_dir%>/fm.js",
 "<%=js_dir%>/ob/ob.Object.js",
 "<%=js_dir%>/ut/ut.UtAjax.js",
@@ -34,5 +35,5 @@
 "<%=js_dir%>/gui/ml/gui.MlDateAttributeEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",
 "<%=js_dir%>/gui/ml/gui.MlTypeaheadMenu.js",
-"<%=js_dir%>/terminator.js"
+"<%=js_dir%>/terminator.js_"
 ]
