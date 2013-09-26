@@ -5,8 +5,9 @@
  * ========================================================================== */
 // -- web UI templates ---------------------------------------------------------
 FM.DmList.addConfiguration('getTemplate', {  
-    url: FM.getAttr(window,"FM_RESOURCES_PATH","") + '/resources/templates',
+    url: "[:fm_templates_path]",
     method: 'GET',
+    cache: 'true',
     contentType: 'application/x-www-form-urlencoded',
     params: {},
     headers: {},

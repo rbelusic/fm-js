@@ -6,11 +6,11 @@
 * @param {object} opt Options
 */    
 FM.UtTemplate = FM.defineClass('UtTemplate',FM.Object);
+FM.UtTemplate.loadedTemplates = {};
 
 FM.UtTemplate.prototype._init = function(attrs) {
     this._super("_init",attrs);
     this.objectSubClass = "Template";
-    this.loadedTemplates = {};
 }
 
 FM.UtTemplate.getTemplateArgs = function(attrlist) {
@@ -47,10 +47,22 @@ FM.UtTemplate._fetchTemplate = function(app,tname,cbfn) {
     }
     var res = tname.replace(/\./g,'/');    
     res = '/' + res.replace('/html','.html');    
-    var dmlist = new FM.DmList({},'getTemplate',app); 
+    var dmlist = new FM.DmList({
+        fm_templates_path: app.getAttr(
+            "fm_templates_path",
+            FM.getAttr(
+                FM,"templates_path",
+                FM.getAttr(
+                    window,"FM_TEMPLATES_PATH",
+                    "/resources/templates"
+                )
+            )
+        )
+    },'getTemplate',app); 
     var lurl = dmlist.getProperty('config.url','');
     lurl += res;
     dmlist.setProperty('config.url', lurl);
+    FM.log(app,"Loading template " + lurl + " ...",FM.logLevels.debug);
     
     var lstnr = {
         onListEnd: function(sender,data) {

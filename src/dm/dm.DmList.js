@@ -993,7 +993,7 @@ FM.DmList.prototype._ajaxCall = function(args) {
             this.getProperty('config.url', ''),
             fnargs
         ),
-        false, true
+        false, false
     ).replace(/\s*\[\:.*?\]\s*/g, "");
 
 
@@ -1010,6 +1010,7 @@ FM.DmList.prototype._ajaxCall = function(args) {
         validResponseCodes: this._resFn(this.getProperty('config.validResponseCodes', ''), args),
         params: this._resFn(this.getProperty('config.params', {}), args),
         headers: hdrs,
+        cache: this._resFn(this.getProperty('config.cache', 'true'), this),
         auth: FM.getAttr(authArgs, 'username', '') == '' ? null : {
             username: FM.getAttr(authArgs, 'username', ''),
             password: FM.getAttr(authArgs, 'password', '')
