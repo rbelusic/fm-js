@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: tests/tst.TstAjax.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: tests/tst.TstAjax.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+* {@link FM.UtAjax} test class. 
+* 
+* @class FM.TstAjax
+* @extends FM.TstGeneric
+* @param {object} config Test configuration
+*/    
+FM.TstAjax = function() {   
+    this._init.apply(this, arguments); // new poziva _init()
+}
+
+FM.extendClass(FM.TstAjax,FM.TstGeneric); 
+
+// properties
+FM.TstAjax.prototype.objectSubClass = "";
+
+
+// methods
+FM.TstAjax.prototype._init = function(config) {            
+    this._super("_init",config);
+    this.objectSubClass = "TstAjax";
+    // popis testova
+    this.addTest("tGet");
+    this.addTest("tGetErr");
+    this.addTest("tGetJSON");    
+    this.addTest("tPostJSONparams");   
+    this.addTest("tPutJSONparams");   
+    this.addTest("tDeleteJSONparams");
+}
+
+FM.TstAjax.prototype.tGet = function() {
+    this.log("tGet, Ajax GET/TEXT test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://10.76.150.104:9151/status', 
+        method: 'GET',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'TEXT',
+        validResponseCodes: '200',
+        params: {},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tGet, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tGet, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tGet',false);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tGet, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tGet',true);
+        }        
+    });    
+    
+    oAjax.send({});
+}     
+
+FM.TstAjax.prototype.tGetErr = function() {
+    this.log("tGetErr, Ajax GET (invalid request) test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://www.index.hr', 
+        method: 'GET',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'TEXT',
+        validResponseCodes: '200',
+        params: {},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tGetErr, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tGetErr, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tGetErr',true);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tGetErr, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tGetErr',false);
+        }        
+    });    
+    
+    oAjax.send({});
+}     
+
+FM.TstAjax.prototype.tGetJSON = function() {
+    this.log("tGetJSON, Ajax Get/JSON test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://www.hicegosum.com/findme-dev/api/users/563771418', 
+        method: 'GET',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'JSON',
+        validResponseCodes: '200',
+        params: {},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tGetJSON, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tGetJSON, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tGetJSON',false);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tGetJSON, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tGetJSON',true);
+        }        
+    });    
+    
+    oAjax.send({});
+}     
+
+FM.TstAjax.prototype.tPostJSONparams = function() {
+    this.log("tPostJSONparams, Ajax Post/JSON/params test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://www.hicegosum.com/findme-dev/api/users', 
+        method: 'POST',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'JSON',
+        validResponseCodes: '200',
+        params: {ids: true},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tPostJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tPostJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tPostJSONparams',false);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tPostJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tPostJSONparams',true);
+        }        
+    });    
+    
+    oAjax.send({ids: '563771418'});
+}     
+
+
+FM.TstAjax.prototype.tPutJSONparams = function() {
+    this.log("tPutJSONparams, Ajax Put/JSON/params test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://www.hicegosum.com/findme-dev/api/users', 
+        method: 'PUT',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'JSON',
+        validResponseCodes: '200',
+        params: {ids: true},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tPutJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tPutJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tPutJSONparams',false);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tPutJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tPutJSONparams',true);
+        }        
+    });    
+    
+    oAjax.send({ids: '563771418'});
+}     
+
+FM.TstAjax.prototype.tDeleteJSONparams = function() {
+    this.log("tDeleteJSONparams, Ajax Delete/JSON/params test started.",FM.logLevels.info,this.getClassName());
+    
+    var oAjax = new FM.UtAjax({
+        url: 'http://www.hicegosum.com/findme-dev/api/users', 
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        responseFormat: 'JSON',
+        validResponseCodes: '200',
+        params: {ids: true},
+        headers: {},
+        auth: null
+    });
+    
+    var me = this;
+    oAjax.addListener({
+        onAjaxStateStart: function(oAjax,oArgs) {
+            me.log("tDeleteJSONparams, onAjaxStateStart event:",FM.logLevels.info,me.getClassName());
+            me.log(oArgs.getAttr("value"),FM.logLevels.info,me.getClassName());
+        },
+        onAjaxStateError: function(oAjax,oErr) {
+            me.log("tDeleteJSONparams, onAjaxStateError event:",FM.logLevels.info,me.getClassName());
+            me.log(oErr.getAttr(),FM.logLevels.info,me.getClassName());
+            me.addResult('tDeleteJSONparams',false);
+            
+        },
+        onAjaxStateEnd: function(oAjax,oData) {
+            me.log("tDeleteJSONparams, onAjaxStateEnd event:",FM.logLevels.info,me.getClassName());
+            me.log(oData.getAttr("value"),FM.logLevels.info,me.getClassName());
+            me.addResult('tDeleteJSONparams',true);
+        }        
+    });    
+    
+    oAjax.send({ids: '563771418'});
+}     
+
+// static
+FM.TstAjax.className = "TstAjax";
+FM.TstAjax.fullClassName = 'tst.TstAjax';
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="FM.AppObject.html">AppObject</a></li><li><a href="FM.DmGenericError.html">DmGenericError</a></li><li><a href="FM.DmGenericValue.html">DmGenericValue</a></li><li><a href="FM.DmList.html">DmList</a></li><li><a href="FM.DmObject.html">DmObject</a></li><li><a href="FM.DmTranslation.html">DmTranslation</a></li><li><a href="FM.LmObject.html">LmObject</a></li><li><a href="FM.MlAttributeEdit.html">MlAttributeEdit</a></li><li><a href="FM.MlDateAttributeEdit.html">MlDateAttributeEdit</a></li><li><a href="FM.MlDateFormat.html">MlDateFormat</a></li><li><a href="FM.MlExtension.html">MlExtension</a></li><li><a href="FM.MlHost.html">MlHost</a></li><li><a href="FM.MlHostGenericCollection.html">MlHostGenericCollection</a></li><li><a href="FM.MlHostQueryParams.html">MlHostQueryParams</a></li><li><a href="FM.MlListOfValues.html">MlListOfValues</a></li><li><a href="FM.MlObserver.html">MlObserver</a></li><li><a href="FM.MlObserverAttribute.html">MlObserverAttribute</a></li><li><a href="FM.MlObserverDisplay.html">MlObserverDisplay</a></li><li><a href="FM.MlObserverEvent.html">MlObserverEvent</a></li><li><a href="FM.MlObserverListIndex.html">MlObserverListIndex</a></li><li><a href="FM.MlObserverListOrder.html">MlObserverListOrder</a></li><li><a href="FM.MlObserverListSelection.html">MlObserverListSelection</a></li><li><a href="FM.MlObserverListState.html">MlObserverListState</a></li><li><a href="FM.MlTypeaheadMenu.html">MlTypeaheadMenu</a></li><li><a href="FM.Object.html">Object</a></li><li><a href="FM.TstAjax.html">TstAjax</a></li><li><a href="FM.TstDmList.html">TstDmList</a></li><li><a href="FM.TstGeneric.html">TstGeneric</a></li><li><a href="FM.UtAjax.html">UtAjax</a></li><li><a href="FM.UtRegistry.html">UtRegistry</a></li><li><a href="FM.UtTemplate.html">UtTemplate</a></li><li><a href="FM.UtTimer.html">UtTimer</a></li><li><a href="FM.UtTimerJob.html">UtTimerJob</a></li><li><a href="FM.UtTranslations.html">UtTranslations</a></li></ul><h3>Events</h3><ul><li><a href="FM.DmList.html#event:onAjaxStateEnd">onAjaxStateEnd</a></li><li><a href="FM.DmList.html#event:onAjaxStateError">onAjaxStateError</a></li><li><a href="FM.DmList.html#event:onAjaxStateStart">onAjaxStateStart</a></li></ul><h3>Namespaces</h3><ul><li><a href="namespace.html">Basic SDK namespace</a></li><li><a href="FM.MlObserver.validationRules.html">validationRules</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Sep 28 2013 21:01:02 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

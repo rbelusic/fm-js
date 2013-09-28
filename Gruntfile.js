@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         js_dir: "src",
         project_dir: ".",
         clean: [
-            "build"
+            "build","doc"
         ],
         concat: {
             "options": {"separator": ";"},
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         },
         jsdoc : {
             dist : {
-                src: ['<%=js_dir%>/**.js'/*'build/debug/js/*.js'*/], 
+                src: ['<%=js_dir%>/**/*.js'], 
                 options: {
                     destination: 'doc'
                 }

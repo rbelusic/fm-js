@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: dm/dm.DmObject.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: dm/dm.DmObject.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+* Basic DM class. Provide groups
+* @class FM.DmObject
+* @extends FM.Object
+* @memberOf FM
+* @param {object} attrs list of attribute name and values
+* @param {object} [flds] allowed attributes
+*/    
+FM.DmObject = FM.defineClass('DmObject',FM.Object);
+
+
+// methods
+FM.DmObject.prototype._init = function(attrs,flds) {            
+    this.objectGroups = {};
+    this.defaultGroup = '';               
+
+    this._super("_init",attrs,flds);
+    this.objectSubClass = "Object";
+}
+
+FM.DmObject.prototype.getDataID = function() {
+    return this.getID();
+}
+
+// groups
+FM.DmObject.prototype.addGroup = function(s,callevent) {
+    if(!FM.isset(s) || !s || s == '') return false;
+
+    this.objectGroups[s] = {
+        name: s
+    }
+
+    if(FM.isset(callevent) && callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+FM.DmObject.prototype.removeGroup = function(s,callevent) {
+    if(!FM.isset(s) || !s || !FM.isset(this.objectGroups[s])) return false;
+    var newglist = {};            
+    FM.forEachAttr(this.objectGroups,function(name,value) {
+        if(name != s) {
+            newglist[name] = value;
+        }
+        return true;
+    });
+
+    this.objectGroups = newglist;
+    if(this.defaultGroup == s) this.defaultGroup = '';
+    if(FM.isset(callevent) && callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+FM.DmObject.prototype.isInGroup = function(s) {
+    return (
+        FM.isset(s) && s && FM.isset(this.objectGroups[s]) ?
+        true : false
+        );
+}
+
+FM.DmObject.prototype.removeAllGroups = function(callevent) {
+    this.objectGroups = {};
+    this.defaultGroup = '';
+    if(FM.isset(callevent) && callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+
+FM.DmObject.prototype.getGroups = function() {
+    return FM.cloneObject(this.objectGroups);
+}
+
+FM.DmObject.prototype.getGroupsCount = function() {
+    return FM.sizeOf(this.objectGroups);
+}
+
+FM.DmObject.prototype.forEachGroup = function(doFn) {
+    return FM.forEach(this.objectGroups,doFn);
+}
+
+FM.DmObject.prototype.setDefaultGroup = function(s,callevent) {
+    s = FM.isset(s) && s ? s : '';
+    if(s == '' || FM.isset(this.objectGroups[s])) {
+        this.defaultGroup = s;
+        if(FM.isset(callevent) && callevent == true) this.fireEvent("onChange", this);
+        return true;
+    }            
+    return false;
+}
+
+FM.DmObject.prototype.getDefaultGroup = function() {
+    if(this.defaultGroup != '') {
+        return FM.getAttr(this.objectGroups,this.defaultGroup,null);
+    }
+
+    // ako nema def ili nije vidljiv
+    var defgrp = null;
+    FM.forEach(this.objectGroups,function(name,value) {
+        // prvi u listi
+        defgrp = value;
+        return false;
+    }); 
+    return defgrp;
+}        
+// == static ===================================================================
+FM.DmObject.subClassTypes = {
+    GLOBAL: {}
+}; 
+
+/**
+* Returns DmObject &lt;b>config&lt;/b> class function for &lt;b>config&lt;/b> subclass type
+* @static
+* @function    
+* @param {object} app Application
+* @param {String} name Configuration name
+* @return {object} object configuration or null if not found
+*/   
+FM.DmObject.getConfiguration = function(app,name) {
+    var list = FM.DmObject.subClassTypes;
+
+    app = FM.isset(app) && app ? app : null;
+    var appCls = app ? app.getSubClassName() : null;
+    var appCfg = appCls && FM.isset(list[appCls]) ? list[appCls] : null;
+        
+    var obj = null;
+    if(appCfg && FM.isset(appCfg[name])) {
+        obj = appCfg[name];
+    } else if(app && FM.isArray(app.applicationObjectsSpace)) {
+        FM.forEach(app.applicationObjectsSpace,function(i,ns) {
+            if(FM.isset(list[ns]) && FM.isset(list[ns][name])) {
+                obj = list[ns][name];
+                return false;
+            }
+            return true;
+        });
+    }
+    
+    if(!obj && FM.isset(list['GLOBAL'][name])) {
+        obj = list['GLOBAL'][name];
+    }
+    
+    return obj;
+}
+
+FM.DmObject.newObject = function(app,clsname, oAttrs) {    
+    var clsFn = FM.DmObject.getConfiguration(app,clsname);
+    return clsFn ? new clsFn(oAttrs) : null;
+}
+
+FM.DmObject.getSubClassType = function(clsname,app) {
+    return clsname == "" ? 
+    FM.DmObject : (
+        FM.isset(FM.DmObject.subClassTypes[clsname]) ? 
+        FM.DmObject.subClassTypes[clsname] : 
+        null
+        );
+}
+
+FM.DmObject.addSubClassType = function(subclsname, clsfn,appCls) {
+    appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
+    if(!FM.isset(FM.DmObject.subClassTypes[appCls])) {
+        FM.DmObject.subClassTypes[appCls]= {};
+    }
+    
+    FM.DmObject.subClassTypes[appCls][subclsname] = clsfn;
+}
+
+
+FM.DmObject.addSubClassType('Object',FM.DmObject,'GLOBAL');</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="FM.AppObject.html">AppObject</a></li><li><a href="FM.DmGenericError.html">DmGenericError</a></li><li><a href="FM.DmGenericValue.html">DmGenericValue</a></li><li><a href="FM.DmList.html">DmList</a></li><li><a href="FM.DmObject.html">DmObject</a></li><li><a href="FM.DmTranslation.html">DmTranslation</a></li><li><a href="FM.LmObject.html">LmObject</a></li><li><a href="FM.MlAttributeEdit.html">MlAttributeEdit</a></li><li><a href="FM.MlDateAttributeEdit.html">MlDateAttributeEdit</a></li><li><a href="FM.MlDateFormat.html">MlDateFormat</a></li><li><a href="FM.MlExtension.html">MlExtension</a></li><li><a href="FM.MlHost.html">MlHost</a></li><li><a href="FM.MlHostGenericCollection.html">MlHostGenericCollection</a></li><li><a href="FM.MlHostQueryParams.html">MlHostQueryParams</a></li><li><a href="FM.MlListOfValues.html">MlListOfValues</a></li><li><a href="FM.MlObserver.html">MlObserver</a></li><li><a href="FM.MlObserverAttribute.html">MlObserverAttribute</a></li><li><a href="FM.MlObserverDisplay.html">MlObserverDisplay</a></li><li><a href="FM.MlObserverEvent.html">MlObserverEvent</a></li><li><a href="FM.MlObserverListIndex.html">MlObserverListIndex</a></li><li><a href="FM.MlObserverListOrder.html">MlObserverListOrder</a></li><li><a href="FM.MlObserverListSelection.html">MlObserverListSelection</a></li><li><a href="FM.MlObserverListState.html">MlObserverListState</a></li><li><a href="FM.MlTypeaheadMenu.html">MlTypeaheadMenu</a></li><li><a href="FM.Object.html">Object</a></li><li><a href="FM.TstAjax.html">TstAjax</a></li><li><a href="FM.TstDmList.html">TstDmList</a></li><li><a href="FM.TstGeneric.html">TstGeneric</a></li><li><a href="FM.UtAjax.html">UtAjax</a></li><li><a href="FM.UtRegistry.html">UtRegistry</a></li><li><a href="FM.UtTemplate.html">UtTemplate</a></li><li><a href="FM.UtTimer.html">UtTimer</a></li><li><a href="FM.UtTimerJob.html">UtTimerJob</a></li><li><a href="FM.UtTranslations.html">UtTranslations</a></li></ul><h3>Events</h3><ul><li><a href="FM.DmList.html#event:onAjaxStateEnd">onAjaxStateEnd</a></li><li><a href="FM.DmList.html#event:onAjaxStateError">onAjaxStateError</a></li><li><a href="FM.DmList.html#event:onAjaxStateStart">onAjaxStateStart</a></li></ul><h3>Namespaces</h3><ul><li><a href="namespace.html">Basic SDK namespace</a></li><li><a href="FM.MlObserver.validationRules.html">validationRules</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Sep 28 2013 21:01:02 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
