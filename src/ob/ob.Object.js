@@ -19,7 +19,7 @@ FM.Object.prototype.getClassName = function() {
     var o=this;
 
     while(o && !FM.isset(o.constructor.className)) {
-        o = o.parent? o.parent : null;
+        o = o._parent? o._parent : null;
     }
     return(o ? o.constructor.className : '');
 }
@@ -173,7 +173,7 @@ FM.Object.prototype.fireEvent = function(ev,evdata,calledlist) {
                     cl = ldef.listener.onEvent(this,ev,FM.isset(evdata) ? evdata : {},cl);
                 }
             } catch(err) {
-                console.log("fireEvent error(" + ev + "): " + err);
+                FM.log(null,err,FM.logLevels.error,'Object.fireEvent');
             }
             //if(FM.getAttr(cl,'_executed','0') == '1') break;            
         }
@@ -445,7 +445,6 @@ FM.Object.prototype.getLogLevel = function() {
 * @function 
 */
 FM.Object.prototype.dispose = function() {
-    console.log("DISPOSE:" + this.getSubClassName() + ":" + this.getID());
     this.removeAllListeners();
 }
 

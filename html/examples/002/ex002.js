@@ -74,6 +74,8 @@ fmdemo.AppFmDemo.prototype.getFacebookPage = function(id,cbfn) {
     // create listener 
     var lstnr = {
         onListEnd: function(sender,data) {
+            // show some info in console
+            me.log("End of dmList request.",FM.logLevels.info,'onListEnd');
             // get first object from list
             var oData = null;
             FM.forEach(data.Added,function(id, obj) {
@@ -94,7 +96,7 @@ fmdemo.AppFmDemo.prototype.getFacebookPage = function(id,cbfn) {
         },
         onListError: function(sender,data) {
             sender.dispose();
-            alert("Error fetching data!" + FM.serialize(data.getAttr()));
+            alert("Error fetching data!" + FM.serialize(data.getAttr()),'onListError');
             callbackFn(false,null);
             return true;
         }

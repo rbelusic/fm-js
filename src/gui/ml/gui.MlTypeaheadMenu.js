@@ -173,7 +173,6 @@ FM.MlTypeaheadMenu.prototype.run = function(obs) {
                 var lstnr = {
                     /** @ignore */
                     onListEnd: function(sender,data) {
-                        console.log("Create menu LEND: " + me.getAttr('data-fmml-list',''));
                         dmList.removeListener(lstnr);
                         var menuText = obs.getAttr('data-fmml-list-text-attr',attr);
                         var menuImg = obs.getAttr('data-fmml-img-attr','icon_url');
@@ -197,7 +196,6 @@ FM.MlTypeaheadMenu.prototype.run = function(obs) {
                         cbFn(retc);
                     },
                     onListError: function(sender,data) {
-                        console.log("Create menu LEER: " + me.getAttr('data-fmml-list',''));
                         dmList.removeListener(lstnr);
                         dmList.dispose();
                         cbFn([]);

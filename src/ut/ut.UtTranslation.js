@@ -32,8 +32,8 @@ FM.UtTranslations.fetchTranslations = function(app,cbfn) {
                 
                 FM.UtTranslations.loadedTranslations[dataid] = {
                     id: dataid,
-                    text: obj.getAttr('value.text',''),
-                    translation: obj.getAttr('value.translation','')
+                    text: obj.getAttr('text',''),
+                    translation: obj.getAttr('translation','')
                 };
                 return true;
             });
@@ -69,7 +69,6 @@ _T = function() { // text,app, params
         str = FM.UtTranslations.loadedTranslations[hash].translation;
     } else {
         str = arguments[0];
-        console.log("Missing translation:" + arguments[0]);
         FM.UtTranslations.missingTranslations[hash]=arguments[0];
     }
 

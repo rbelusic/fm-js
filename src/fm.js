@@ -1,23 +1,14 @@
-if(typeof(window.console) == 'undefined') {
-    /** @ignore */
-    window.console = new function() {
-        /** @ignore */
-        this.log = function() {}
-    };
-}
 
-
-if(typeof(FM) == 'undefined') {
-    /**
-    * @namespace Basic SDK namespace
-    */
+/**
+* @namespace Basic SDK namespace
+*/
     FM = {};    
 
 
     // propertyes
     FM.version = '0.1';
 
-    // static methods
+// static methods
 
 /**
 * Clone object methods and propertyes. This function is not recursive
@@ -249,26 +240,11 @@ if(typeof(FM) == 'undefined') {
     }
 
     FM.loadScript = function(url,cbfn) {
-        var script = document.createElement("script")
-        script.type = "text/javascript";
- 
-        if (script.readyState) { //IE
-            /** @ignore */
-            script.onreadystatechange = function () {
-                if (script.readyState == "loaded" || script.readyState == "complete") {
-                    script.onreadystatechange = null;
-                    cbfn();
-                }
-            };
-        } else { //Others
-            /** @ignore */
-            script.onload = function () {
+        $.getScript(url,function() {
+            if(FM.isFunction(cbfn)) {
                 cbfn();
-            };
-        }
-
-        script.src = url;
-        document.getElementsByTagName("head")[0].appendChild(script);
+            }
+        });
     }
  
     FM.extend = function(oDest,oSrc,isclass) {
@@ -438,7 +414,8 @@ if(typeof(FM) == 'undefined') {
             try {
                 var retv = context._fn();
             } catch(e) {
-                console.log("FM.resolveAttrValue:" + e);
+                 FM.log(context,e,FM.logLevels.error,'FM.resolveAttrValue');
+                
                 return undefined;
             }
             v = retv;
@@ -515,10 +492,8 @@ if(typeof(FM) == 'undefined') {
 
         try {
             return FM.isFunction(obj.serialize) ? obj.serialize() : JSON.stringify(obj);
-        } catch(e) {        
-            console.log('ERROR  serialize object!');
-            var oar = FM.logObjectMsgToArray(obj);
-            for(var i =0; i < oar.length; i++) console.log(oar[i]);        
+        } catch(e) {
+            FM.log(null,e,FM.logLevels.error,'FM.serialize');
         }
         return def;
     }
@@ -530,7 +505,7 @@ if(typeof(FM) == 'undefined') {
         try {
             return JSON.parse(str);
         } catch(e) {
-            console.log('ERROR  unserialize string ! [' +  str + ']');
+            FM.log(null,e,FM.logLevels.error,'FM.unserialize');
         }
         return def;
     }

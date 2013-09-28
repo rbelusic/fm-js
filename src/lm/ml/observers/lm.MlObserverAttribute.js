@@ -125,7 +125,6 @@ FM.MlObserverAttribute.prototype.setNodeValue = function() {
                 this.node.setSelectionRange(selStart, selEnd);
             }
         } else if(this.node.nodeName == 'IMG') {
-            this.log("Attr (img src):" + value,FM.logLevels.warn);
             this.node.setAttribute("src",value);
         } else if(this.node.nodeName == 'A') {
             this.node.setAttribute("href",value);

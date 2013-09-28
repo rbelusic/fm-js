@@ -105,7 +105,6 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
     var itmcnt = 0;
     var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
     maxitms = FM.isset(maxitms) ? maxitms : 200;
-    console.log("MlHostGenericCollection._refreshItems start");
     dmList.forEachListElement(function(i,oObj) {                
         var layout = me.getRegistryValue(
             "/itemsLayout",
@@ -128,8 +127,6 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
             attrs["listIndex"] = curitm+1;
             
             itmcnt++;
-            console.log("_refreshItems (" + attrs["listIndex"] + "):");
-            
             if(me.listItemsTemplate) {
                 me._createItmNode(oObj,attrs,me.listItemsTemplate);
             } else {
@@ -152,7 +149,6 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
     var emptyTempl = this.getAttr('data-fmml-list-items-template-empty','');
     if(maxitms > itmcnt && (emptyTempl != '' || this.listEmptyTemplate)) {
         curitm++;
-        console.log("_refreshItems (add empty rows on end):");
         if(this.listEmptyTemplate) {
             while(maxitms > itmcnt) {
                 curitm++;
@@ -193,7 +189,7 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
 
 FM.MlHostGenericCollection.prototype._createItmNode = function(oObj,attrs,templ) {
     var curitm = parseInt(FM.getAttr(attrs,'listIndex','0'));
-    console.log("createItmNode template (" + curitm + "):");
+    
     var itm = $(templ);
     if(itm) {
         if(this.listItemsInner) {
@@ -221,14 +217,12 @@ FM.MlHostGenericCollection.prototype._createItmNode = function(oObj,attrs,templ)
         $(newNode).attr('data-fmml-list-index',curitm);   
         $(newNode).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
         $(newNode).attr('data-fmml-item-data-id',oObj ? oObj.getDataID() : 'unknown');
-        console.log("_refreshItems apend (" + curitm + "):");
+        
         this._appendItmNode(oObj,newNode,attrs);                        
-        console.log("_refreshItems end (" + curitm + "):");
     }
 }
 
 FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj,node,attrs) {
-    console.log("FM.MlHostGenericCollection.prototype._appendItmNode:" + attrs["listIndex"]);
     var index = attrs["listIndex"];
     var lastNode = null;
     var lastNodeIndex = -1;
@@ -240,10 +234,8 @@ FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj,node,attrs) 
         }
     }
     if(lastNode) {
-        console.log("_appendItmNode, inserting AFTER:" + lastNodeIndex);
         $(lastNode).after(node[0]);
     } else {
-        console.log("_appendItmNode, inserting on end of list:" + lastNodeIndex);
         $(this.listItemsContainer).prepend(node);
     }
     if(oObj) {
@@ -515,7 +507,7 @@ FM.MlHostGenericCollection.prototype.onChangeResource = function(oSender,evdata)
                 try {
                     resurl = resResolvFn(this,resurl);
                 } catch(e) {
-                    error.log("onChangeResource:" + e);
+                    this.log(e,FM.logLevels.error,'onChangeResource');
                 }
             }
         }

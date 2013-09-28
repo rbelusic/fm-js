@@ -123,10 +123,6 @@ FM.MlObserverEvent.prototype.run = function() {
             me._runHostOnNode(document.getElementById(me.getAttr('data-fmml-run-on-error','')),null);
             
             // send event
-            console.log(
-                "Event: send event:" + ev + "/" + (
-                evdmobj ? evdmobj.getSubClassName() : "[null]") + ":" + (evdmobj ? evdmobj.getID() : "[null]")
-            );
             me.eventHost.onEvent(me,ev,{
                 object: evdmobj,
                 callback: function(isok, o) {
@@ -168,16 +164,14 @@ FM.MlObserverEvent.prototype._sendFormToPage = function(url,dmobj) {
             
 FM.MlObserverEvent.prototype._execCode = function(code,dmobj) {
     try {
-        console.log("event-exec-on:" + code);
         var val = FM.resolveAttrValue(this.options,"-", code,{
             A: this.getApp(),
             H: this.getHost(),
             O: this,
             D: dmobj
         });
-        console.log("event-run:" + val);        
     } catch(e) {
-        console.log("event-exec-on err: " + e);                    
+        this.log(e,FM.logLevels.error,'MlObserverEvent._execCode');
     }
 }
 

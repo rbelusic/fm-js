@@ -6,11 +6,11 @@
 * @param {object} opt Options
 */    
 FM.UtTemplate = FM.defineClass('UtTemplate',FM.Object);
+FM.UtTemplate.loadedTemplates = {};
 
 FM.UtTemplate.prototype._init = function(attrs) {
     this._super("_init",attrs);
     this.objectSubClass = "Template";
-    this.loadedTemplates = {};
 }
 
 FM.UtTemplate.getTemplateArgs = function(attrlist) {
@@ -30,7 +30,7 @@ FM.UtTemplate.getTemplate = function(app,attrlist,tname,cbfn) {
     attrlist = FM.isset(attrlist) && attrlist && FM.isObject(attrlist) ? attrlist : {};
     var params = FM.UtTemplate.getTemplateArgs(attrlist);
 
-    FM.UtTemplate._fetchTemplate(app,tname,function(isok,templ) {
+    FM.UtTemplate.fetchTemplate(app,tname,function(isok,templ) {
         if(isok) {
             callbackFn(true,FM.applyTemplate(params,templ,false,false));
         } else {
@@ -39,18 +39,77 @@ FM.UtTemplate.getTemplate = function(app,attrlist,tname,cbfn) {
     });
 }    
     
-FM.UtTemplate._fetchTemplate = function(app,tname,cbfn) {
+FM.UtTemplate.getLoadedTemplate = function(app,name) {
+    var list = FM.UtTemplate.loadedTemplates;
+
+    app = FM.isset(app) && app ? app : null;
+    var appCls = app ? app.getSubClassName() : null;
+    var appCfg = appCls && FM.isset(list[appCls]) ? list[appCls] : null;
+        
+    var obj = null;
+    if(appCfg && FM.isset(appCfg[name])) {
+        obj = appCfg[name];
+    } else if(app && FM.isArray(app.applicationObjectsSpace)) {
+        FM.forEach(app.applicationObjectsSpace,function(i,ns) {
+            if(FM.isset(list[ns]) && FM.isset(list[ns][name])) {
+                obj = list[ns][name];
+                return false;
+            }
+            return true;
+        });
+    }
+    
+    if(!obj && FM.isset(list['GLOBAL'][name])) {
+        obj = list['GLOBAL'][name];
+    }
+    
+    return obj;
+}
+
+FM.UtTemplate.addTemplate = function(tname,tdata,appCls) {
+    appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
+    if(!FM.isset(tdata) || !tdata) return false;
+    if(!FM.isset(tname) || !tname || tname == '') return false;
+    if(!FM.isset(FM.UtTemplate.loadedTemplates[appCls])) {
+        FM.UtTemplate.loadedTemplates[appCls]= {};
+    }
+    FM.UtTemplate.loadedTemplates[appCls][tname] = tdata;
+    return true;
+}
+
+FM.UtTemplate.fetchTemplate = function(app,tname,cbfn) {
     var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};
-    if(FM.isset(FM.UtTemplate.loadedTemplates[tname])) {
-        callbackFn(true,FM.UtTemplate.loadedTemplates[tname]);
+    var templData = FM.UtTemplate.getLoadedTemplate(app,tname);
+    if(templData) {
+        callbackFn(true,templData);
         return;
     }
+    
+    // check in DOM
+    var templNode = $("[data-fmml-template-def='" + tname + "']");
+    if(templNode.length > 0) {
+        callbackFn(true,$(templNode[0]).html());
+        return;
+    }
+    
     var res = tname.replace(/\./g,'/');    
     res = '/' + res.replace('/html','.html');    
-    var dmlist = new FM.DmList({},'getTemplate',app); 
+    var dmlist = new FM.DmList({
+        fm_templates_path: app.getAttr(
+            "fm_templates_path",
+            FM.getAttr(
+                FM,"templates_path",
+                FM.getAttr(
+                    window,"FM_TEMPLATES_PATH",
+                    "/resources/templates"
+                )
+            )
+        )
+    },'getTemplate',app); 
     var lurl = dmlist.getProperty('config.url','');
     lurl += res;
     dmlist.setProperty('config.url', lurl);
+    FM.log(app,"Loading template " + lurl + " ...",FM.logLevels.debug);
     
     var lstnr = {
         onListEnd: function(sender,data) {
@@ -62,7 +121,7 @@ FM.UtTemplate._fetchTemplate = function(app,tname,cbfn) {
             dmlist.removeListener(lstnr);
             dmlist.dispose();
             if(oData) {
-                FM.UtTemplate.loadedTemplates[tname] = oData.getAttr("value");
+                FM.UtTemplate.addTemplate(tname,oData.getAttr("value",""),app.getSubClassName());
                 callbackFn(true,oData.getAttr("value"));
             } else {
                 callbackFn(false,new FM.DmGenericError({
