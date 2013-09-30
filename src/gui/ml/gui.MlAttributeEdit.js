@@ -77,6 +77,7 @@ FM.MlAttributeEdit.prototype.run = function(obs) {
             }
             return true;
         }); 
+        /*
         if(obs.getAttr('data-fmml-attr-value-from-dom','false') == 'true') {
             this.timer = window.setInterval(function() {
                 if(FM.isset(domnode.fmmlValueSync) && obs.getNodeValue() != domnode.fmmlValueSync) {
@@ -86,7 +87,7 @@ FM.MlAttributeEdit.prototype.run = function(obs) {
                 }
             },300);
         }
-        
+        */
     } else if(domnode.nodeName == 'SELECT') {
         $(domnode)[this.triggerEvent]/*.change | blur*/(function() {
             var value = $(this).val();

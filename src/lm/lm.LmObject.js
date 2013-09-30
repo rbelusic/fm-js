@@ -12,6 +12,7 @@ FM.LmObject = FM.defineClass('LmObject',FM.Object);
 FM.LmObject.prototype._init = function(app,opt) {            
     this.setExecuted(false);
     this.setApp(app);
+    this.setDmObject();
 
     this._super("_init",opt);
     this.objectSubClass = "Object";
@@ -56,7 +57,6 @@ FM.LmObject.prototype.setDmObject = function(o,addListener) {
         this.dmObject.removeListener(this);
         if(this.getProperty('dmObjectCreated','true') === 'true') {
             this.dmObject.dispose();
-            this.dmObject = null;
         }
     }
     

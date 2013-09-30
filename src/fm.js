@@ -270,7 +270,7 @@
         name = FM.isset(name) && FM.isString(name) && name != ''  ? name : 'Undefined';
         ext = FM.isset(ext) && FM.isFunction(ext) ? ext : null;
         var cls = function() {
-            this._init.apply(this, arguments); 
+            if(this._init) this._init.apply(this, arguments); 
         };
         
         FM.extendClass(cls,ext); 
@@ -419,6 +419,31 @@
                 return undefined;
             }
             v = retv;
+        }
+    
+        return v;
+    }
+    
+    FM.resolveAttrName = function(options,attrName,def,context) {
+        options = options && FM.isObject(options) ? options : {};
+        context = context && FM.isObject(context) ? context : {};
+        var v = attrName;
+    
+        // eval ?
+        if(FM.isString(attrName) && FM.startsWith(attrName,'@')) {            
+            v = attrName.substring(FM.startsWith(attrName,'@@') ? 2 : 1);
+            context._fn = function() {
+                return eval(v);
+            }
+            try {
+                var retv = context._fn();
+            } catch(e) {
+                 FM.log(context,e,FM.logLevels.error,'FM.resolveAttrName');                
+                return undefined;
+            }
+            v = retv;
+        } else {
+            v = FM.getAttr(options,attrName,def);
         }
     
         return v;
@@ -1293,6 +1318,10 @@
     }
 
     FM.isDateString = function(sdate) { // '2010-05-26 05:56:00'
+        if(!FM.isString(sdate)){
+            return false;
+        }
+        
         var templ = "" + new Date().getFullYear() + '-01-01' + FM.dateTimeDivider + '00:00:00';
         if(sdate.length < templ.length) {
             sdate += templ.substr(sdate.length);
@@ -1305,8 +1334,9 @@
 
     FM.parseLocalDateString = function(sdate) { 
         if(!FM.isset(sdate) || sdate == null || sdate == '') return(null);
-        var d = new Date(Date.parse(sdate));
-        return isNaN(d.getTime()) ? null : d;
+        
+        var d = new Date(isNaN(sdate) ?  Date.parse(sdate) : sdate);
+        return d && !isNaN(d.getTime()) ? d : null;
     }
 
     FM.parseDateString = function(sdate,utc) { // '2010-05-26 05:56:00', true/false

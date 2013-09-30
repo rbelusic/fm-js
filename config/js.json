@@ -31,6 +31,7 @@
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListSelection.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListOrder.js",
 "<%=js_dir%>/gui/ml/gui.MlExtension.js",
+"<%=js_dir%>/gui/ml/gui.MlEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlAttributeEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlDateAttributeEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",

@@ -24,10 +24,11 @@
             <!-- init Attribute observer -->
             Current value:
             <span 
-                data-fmml-observer="Attribute" 
+                data-fmml-observer="Observer" 
+                data-fmml-extensions="Edit"
                 data-fmml-attr-name="value"
                 data-fmml-attr-type="number"
-                data-fmml-attr-decimals="0"
+                data-fmml-attr-decimals="2"
                 >                
             </span>
             <hr />
@@ -40,7 +41,16 @@
                     >+</button>            
             <button data-fmml-observer="Event"
                     data-fmml-event-type="onDecreaseValue" 
-                    >-</button>            
+                    >-</button>  
+            <hr />
+            Last update() call received at:
+            <span 
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="@this.O.getProperty('updateTimestamp','never')"
+                data-fmml-attr-type="date"
+                data-fmml-date-display-as="time"
+                >                
+            </span>
         </div>
     </body>
 </html>

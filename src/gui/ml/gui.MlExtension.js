@@ -13,28 +13,28 @@ FM.MlExtension = FM.defineClass('MlExtension',FM.Object);
 FM.MlExtension.prototype._init = function(attrs,node) {
     this._super("_init",attrs);
     this.objectSubClass = "Extension";
-    this.node = node;
-    this.executed = false;    
+    this.node = node ? node : null;
+    this.executed = false;
+    this.defaultRenderer = false;
+    
 }
 
 FM.MlExtension.prototype.run = function(obs) {
-    //this.dispose(obs);
     this._super("run");
-    this.observer = obs;
+    this.observer = obs ? obs : null;
     this.executed = true;
 }
 
-FM.MlExtension.prototype.dispose = function(obs) {
+FM.MlExtension.prototype.dispose = function(obs) {    
     this._super("dispose");
     this.executed = false;
 }
 
 FM.MlExtension.prototype.update = function(obs) {
-    this._super("update");
 }
 
 FM.MlExtension.prototype.getObserver = function() {
-    return this.observer;
+    return this.observer ? this.observer : null;
 }
 
 FM.MlExtension.prototype.getHost = function() {
@@ -50,8 +50,29 @@ FM.MlExtension.prototype.getDmObject = function() {
 }
 
 FM.MlExtension.prototype.getNode = function() {
-    return this.observer ? this.observer.getNode() : null;
+    return this.node;
 }
+
+// renderer interface
+FM.MlExtension.prototype.render = function() {
+    // TODO
+}
+
+FM.MlExtension.prototype.isRendererEnabled = function() {
+    return this.defaultRenderer;
+}
+FM.MlExtension.prototype.enableRenderer = function() {
+    if(this.defaultRenderer != true) {
+        this.defaultRenderer = true;
+    }
+}
+
+FM.MlExtension.prototype.disableRenderer = function() {
+    if(this.defaultRenderer != false) {
+        this.defaultRenderer = false;
+    }
+}
+
 
 // static
 FM.MlExtension.extensionTypes = {

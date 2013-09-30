@@ -23,9 +23,8 @@ FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
 FM.MlHost.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs);
     this.objectSubClass = "Host";
-    this.node = node;    
-    this.dmObject = null; 
     
+    this.setNode(node);        
     this.masterHost = null;
     this.masterHostDm = null;
     
@@ -36,7 +35,6 @@ FM.MlHost.prototype._init = function(app,attrs,node) {
         className: ''
     }
 
-    
     // two way binding
     this.node.fmmlHost = this;    
     this.getApp().addListener(this);
@@ -195,12 +193,12 @@ FM.MlHost.prototype.dispose = function() {
     return true;
 }
 
-FM.MlHost.prototype.getNode = function() {
-    return this.node;
+FM.MlHost.prototype.setNode = function(n) {
+    this.node = FM.isset(n) && n ? n : null;
 }
 
-FM.MlHost.prototype.getDmObject = function() {
-    return this.dmObject;
+FM.MlHost.prototype.getNode = function() {
+    return this.node;
 }
 
 
@@ -560,7 +558,12 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                 // ako je observer
                 if(jqobj.attr('data-fmml-observer')) { 
                     try {
-                        FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
+                        obs = FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
+                        if(obs) {
+                            if(obs.getHost()) {
+                                obs.getHost().addObserver(obs);
+                            }
+                        }
                     } catch(e) {
                         FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                     };
