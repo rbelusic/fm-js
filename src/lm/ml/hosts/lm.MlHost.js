@@ -159,7 +159,8 @@ FM.MlHost.prototype._checkMasterReload = function() {
             this.forEachAttr(function(n,v) {
                 if(FM.startsWith(n,'data-fmml-object-attr-')) {
                     attrs[n.substr(22)] = v;
-                } 
+                }
+                return true;
             });
             var oObj = FM.DmObject.newObject(this.getApp(),className, attrs);
             this.setProperty('dmObjectCreated','true');

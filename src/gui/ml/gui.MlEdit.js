@@ -64,14 +64,15 @@ FM.MlEdit.prototype._setNodeValue = function(node,value) {
     }    
 }
 
-FM.MlEdit.prototype._widgetHide = function() {
+FM.MlEdit.prototype.widgetHide = function() {
     $(this.editWidget).hide();
     $(this.getNode()).show();
 }
 
-FM.MlEdit.prototype._widgetShow = function() {
+FM.MlEdit.prototype.widgetShow = function() {
     $(this.getNode()).hide();
     $(this.editWidget).show();
+    this.getObserver().setNodeValue(true);    
     $(this.editWidget).focus();
     
 }
@@ -94,17 +95,19 @@ FM.MlEdit.prototype._widgetSelectCb = function() {
 
 FM.MlEdit.prototype._widgetInputCb = function() {
     if(!this.isRendererEnabled()) return true;
-
+    
+    var n = this.getNode();
+    
     var value =
-        $(this).is(':checkbox') ?
-        ($(this).is(":checked") ? 'true' : 'false') :
-        $(this).val()
+        $(n).is(':checkbox') ?
+        ($(n).is(":checked") ? 'true' : 'false') :
+        $(n).val()
     ;
     this.getObserver().setValue(value);
     return true;
 }
 
-FM.MlEdit.prototype._initWidget = function() {
+FM.MlEdit.prototype.initWidget = function() {
     var domnode = this.getNode();
     var me = this;
     this.editWidget = null;
@@ -133,19 +136,19 @@ FM.MlEdit.prototype._initWidget = function() {
         });
         
         $(domnode).bind("click.fmMlEdit",function() {
-            return me._widgetShow();
+            return me.widgetShow();
         });
         $(this.editWidget).bind("blur.fmMlEdit",function() {
-            return me._widgetHide();
+            return me.widgetHide();
         });
         $(this.editWidget).hide();
-        $(this.getNode()).after(this.editWidget);
+        $(this.getNode()).after(this.editWidget);        
     }
 }
 
-FM.MlEdit.prototype._disposeWidget = function() {    
+FM.MlEdit.prototype.disposeWidget = function() {    
     if(this.editWidget) {
-        this._widgetHide();
+        this.widgetHide();
         $(this.editWidget).unbind(this.triggerEvent);
         $(this.editWidget).unbind("blur.fmMlEdit");
         $(this.getNode()).unbind("click.fmMlEdit");
@@ -166,14 +169,14 @@ FM.MlEdit.prototype.render = function(value) {
 
 FM.MlEdit.prototype.enableRenderer = function() {
     if(!this.isRendererEnabled()) {
-        this._initWidget();
+        this.initWidget();
     }
     this._super("enableRenderer");
 }
 
 FM.MlEdit.prototype.disableRenderer = function() {
     if(this.isRendererEnabled()) {
-        this._disposeWidget();
+        this.disposeWidget();
     }
     this._super("disableRenderer");    
 }

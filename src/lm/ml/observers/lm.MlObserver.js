@@ -336,8 +336,9 @@ FM.MlObserver.prototype._formatValue = function(value) {
 // dates
     if (attrtype == "date") {
         var dateObj = null;
-
-        if (FM.isDateString(value)) {
+        if(FM.isObject(value) && FM.isset(value.getTime)) {
+            dateObj = value;
+        } else if (FM.isDateString(value)) {
             dateObj = FM.parseDateString(value, dateIsUtc);
         } else {
             dateObj = FM.parseLocalDateString(value);
@@ -401,8 +402,10 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
     return value;
 }
 
-FM.MlObserver.prototype.setNodeValue = function() {
+FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.setNodeValue');
+    force = FM.isset(force) && force == true ? true : false;
+    
     // get value
     var nfvalue = this.getValue();
 
@@ -413,7 +416,7 @@ FM.MlObserver.prototype.setNodeValue = function() {
     this.log("Formated value is [" + value + "].", FM.logLevels.debug, 'MlObserver.setNodeValue');
 
     // not changed
-    if (value == this.lastValue) {
+    if (!force && value == this.lastValue) {
         this.log("Aborting, formated value is not changed.", FM.logLevels.debug, 'MlObserver.setNodeValue');
         return;
     }
@@ -442,9 +445,9 @@ FM.MlObserver.prototype.setNodeValue = function() {
             $(this.node).val(value);
         }
     } else if (this.node.nodeName == 'IMG') {
-        value = $(this.node).attr("src");
+        $(this.node).attr("src",value);
     } else if (this.node.nodeName == 'A') {
-        value = $(this.node).attr("href");
+        $(this.node).attr("href",value);
     } else if (FM.isset(this.node.value)) {
         $(this.node).val(value);
     } else {

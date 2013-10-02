@@ -26,9 +26,9 @@
             <tbody class="fmmlListItems">
                 <tr class="fmmlListItemsTemplate" data-fmml-host="Host">
                     <td data-fmml-observer="ListIndex"></td>
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="id"></td> 
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="name"></td>
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="description"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="id"></td> 
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="name"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="description"></td>
                 </tr>
             </tbody>
         </table>
@@ -44,10 +44,10 @@
             data-fmml-list-text-attr="description"
             for custom format
             -->
-            <select data-fmml-observer="Attribute"
+            <select data-fmml-observer="Observer"
                 data-fmml-attr-name="id"
                 data-fmml-run-on-lov-change="single-demo-host"
-                data-fmml-extensions="MlListOfValues"
+                data-fmml-extensions="ListOfValues"
                 data-fmml-list="staticListExample"
                 data-fmml-list-id-attr="id"
                 data-fmml-list-text-attr="description"                
@@ -57,9 +57,9 @@
         <div id="single-demo-host" 
             data-fmml-host="Host" data-fmml-object-class="Object" data-xfmml-run-on-init="false"
              >
-            ID:<span data-fmml-observer="Attribute" data-fmml-attr-name="id"></span>;
-            Name:<span data-fmml-observer="Attribute" data-fmml-attr-name="name"></span>;
-            Description:<span data-fmml-observer="Attribute" data-fmml-attr-name="description"></span>
+            ID:<span data-fmml-observer="Observer" data-fmml-attr-name="id"></span>;
+            Name:<span data-fmml-observer="Observer" data-fmml-attr-name="name"></span>;
+            Description:<span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
         </div>        
     </body>
 </html>

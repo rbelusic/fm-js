@@ -193,12 +193,9 @@ FM.MlListOfValues.prototype.lovDisplay = function(isok, dmList) {
         
         // start listener
         $(me.getNode()).change(function() {
-            // attribute to set
-            var dmobj = obs.getDmObject();
+            // set
             var value = $(me.getNode()).val();
-            if(FM.isset(attr) && attr && attr != '' && dmobj && dmobj.getAttr(attr) !== value) {
-                dmobj.setAttr(attr,value,true);
-            }
+            me.getObserver().setValue(value);
             
             // host to run
             var hostToRun = me.getAttr("data-fmml-run-on-lov-change",'');
@@ -214,15 +211,12 @@ FM.MlListOfValues.prototype.lovDisplay = function(isok, dmList) {
                 }
             }
         });
-        $(me.getNode()).change();
         
         // check if dm value and lov value are the same                
         if(lovSelected) {
-            if(dmobj && dmobj.getAttr(attr,'') != lovSelected.getAttr(menuId,'')) {
-                dmobj.setAttr(attr,lovSelected.getAttr(menuId,''),true);            
-            }
+            me.getObserver().setValue(lovSelected.getAttr(menuId,''));
         }
-           
+        $(me.getNode()).change();
     } else { // error
         $(me.getNode()).append('<option value=""><i>Error occured</i></option>');        
     }    
@@ -315,7 +309,7 @@ FM.MlListOfValues.prototype.update = function(obs) {
 
 
 // static
-FM.MlExtension.addExtensionType('MlListOfValues', FM.MlListOfValues);
+FM.MlExtension.addExtensionType('ListOfValues', FM.MlListOfValues);
 
 
 
