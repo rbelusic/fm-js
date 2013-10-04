@@ -36,6 +36,23 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     this.executed = false;
     this.node = node;
+    
+    this.slaveNodes = [];
+    /*
+    this.slaveNodes = $(node).is(':radio') ?
+        $("input:radio[name ='" + $(node).attr("name") + "']") :
+        []
+    ;
+    
+    for(var i=0; i < this.slaveNodes; i++) {
+        if(FM.isset(this.slaveNodes[i].fmmlObserver) && this.slaveNodes[i].fmmlObserver) {
+            throw "Node is radio with initialized observer";
+        }
+    }
+    for(var i=0; i < this.slaveNodes; i++) {
+        this.slaveNodes[i].fmmlObserver = this;
+    }
+    */
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -97,6 +114,9 @@ FM.MlObserver.prototype.dispose = function() {
     this.log("Removing observer from DOM node ...", FM.logLevels.debug, 'MlObserver.dispose');
     if (this.node) {
         this.node.fmmlObserver = null;
+        for(var i=0; i < this.slaveNodes; i++) {
+            this.slaveNodes[i].fmmlObserver = null;
+        }
     }
 
     this.log("Removing observer from host ...", FM.logLevels.debug, 'MlObserver.dispose');
@@ -432,8 +452,18 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     }
 
     // def render
-    var selStart = this.node.selectionStart;
-    var selEnd = this.node.selectionEnd;
+    var doSelection =false;
+    try {
+        doSelection = this.node.selectionStart ? true : false;
+    } catch(e){
+        
+    }
+    var selStart = 0,selEnd = 0;
+    if (doSelection) {
+        selStart = this.node.selectionStart;
+        selEnd = this.node.selectionEnd;
+    }
+    
     if (this.node.nodeName == 'INPUT' || this.node.nodeName == 'TEXTAREA') {
         if ($(this.node).is(':checkbox')) {
             if (value && value != '' && value.toLowerCase() != 'false') {
@@ -441,6 +471,8 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
             } else {
                 $(this.node).removeAttr('checked');
             }
+        } else if ($(this.node).is(':radio')) {
+            $("input:radio[name ='" + $(this.node).attr("name") + "']").val([value]);
         } else {
             $(this.node).val(value);
         }
@@ -455,7 +487,7 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     }
 
     // selection range restore
-    if (FM.isset(this.node.setSelectionRange)) {
+    if (doSelection) {
         this.node.setSelectionRange(selStart, selEnd);
     }
 

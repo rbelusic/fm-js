@@ -23,6 +23,7 @@
              data-fmml-object-class="Object" 
              data-fmml-object-attr-value="0"
              data-fmml-object-attr-when="2013-10-01"
+             data-fmml-object-attr-proceed="YES"
              >
             <!-- init Attribute observer -->
             Current value:
@@ -69,6 +70,23 @@
                 data-fmml-attr-type="date"
                 data-fmml-date-display-as="local"
                 />
+            <hr />
+            <b>radio buttons</b>
+            <br />
+            proceed?
+            <label><input type="radio" name="proceed" value="YES">Yes</label>
+            <label><input type="radio" name="proceed" value="NO"
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="proceed"
+                data-fmml-extensions="Edit"
+                data-fmml-update-condition="click"
+                />No
+            </label>
+            Current proceed value:
+            <div 
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="proceed"
+                ></div>
         </div>
     </body>
 </html>

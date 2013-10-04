@@ -33,6 +33,5 @@
 "<%=js_dir%>/gui/ml/gui.MlEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlDateEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",
-"<%=js_dir%>/gui/ml/gui.MlTypeaheadMenu.js",
 "<%=js_dir%>/terminator.js_"
 ]
