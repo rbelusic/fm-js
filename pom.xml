@@ -50,22 +50,37 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
-                <executions>
+                 <executions>
                     <execution>
                         <id>default-compile</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>grunt</executable>
-                    <workingDirectory>.</workingDirectory>
-                    <arguments>
-                        <argument>-verbose</argument>
-                    </arguments>
-                </configuration>
+                        <configuration>
+                            <executable>grunt</executable>
+                            <workingDirectory>.</workingDirectory>
+                            <arguments>
+                                <argument>-verbose</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>                    
+                    <execution>
+                        <id>default-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>grunt</executable>
+                            <workingDirectory>.</workingDirectory>
+                            <arguments>
+                                <argument>-verbose</argument>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>                    
+                </executions>           
             </plugin>            
             
             <!-- NEVER TO BE RAN -->
