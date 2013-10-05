@@ -57,15 +57,30 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>grunt</executable>
-                    <workingDirectory>.</workingDirectory>
-                    <arguments>
-                        <argument>-verbose</argument>
-                    </arguments>
-                </configuration>
+                        <configuration>
+                            <executable>grunt</executable>
+                            <workingDirectory>.</workingDirectory>
+                            <arguments>
+                                <argument>-verbose</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>                    
+                    <execution>
+                        <id>default-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>grunt</executable>
+                            <workingDirectory>.</workingDirectory>
+                            <arguments>
+                                <argument>-verbose</argument>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>                    
+                </executions>                
             </plugin>            
             
             <!-- NEVER TO BE RAN -->

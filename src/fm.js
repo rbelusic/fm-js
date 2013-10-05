@@ -1,6 +1,7 @@
 
 /**
-* @namespace Basic SDK namespace
+ * Basic SDK namespace
+* @namespace 
 */
     FM = {};    
 

@@ -38,22 +38,20 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        jsdoc : {
-            dist : {
-                src: ['<%=js_dir%>/**/*.js'], 
-                options: {
-                    destination: 'doc'
-                }
+        exec: {
+            run_jsdoc2: {
+              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc',
+              stdout: true
             }
-        }
+          }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-exec');
 
-    grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','jsdoc']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','exec']);
 };
 
