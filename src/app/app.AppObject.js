@@ -1,7 +1,13 @@
 /**
+ * 
+ * @typedef {Object} FM.AppObject
+ * @type FM.AppObject
+ */
+
+/**
 * Basic application class. 
 * 
-* @class FM.AppObject
+* @type {FM.AppObject}
 * @extends FM.LmObject
 * @memberOf FM
 * @param {object} [options] Options

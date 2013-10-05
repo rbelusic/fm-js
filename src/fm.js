@@ -1,10 +1,9 @@
 
 /**
  * Basic SDK namespace
- * 
- * @namespace 
- */
-FM = {};
+* @namespace 
+*/
+    FM = {};    
 
 
 // propertyes

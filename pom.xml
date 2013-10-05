@@ -80,7 +80,7 @@
                             </arguments>
                         </configuration>
                     </execution>                    
-                </executions>  
+                </executions>                
             </plugin>            
             
             <!-- NEVER TO BE RAN -->
