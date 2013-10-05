@@ -25,12 +25,11 @@
 */    
 
 FM.UtAjax = FM.defineClass('UtAjax',FM.Object);
-FM.UtAjax.className = "UtAjax";
 
 // methods
 FM.UtAjax.prototype._init = function(config) {            
     this._super("_init",config);
-    this.objectSubClass = "UtAjax";
+    this.objectSubClass = "Ajax";
 
     this.http = null;
     this.lastStatusCode = "0";

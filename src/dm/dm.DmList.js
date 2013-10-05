@@ -590,7 +590,7 @@ FM.DmList.prototype.findByAttr = function(aname, value, all, orderList) {
         }, orderList
         );
 
-    return(getall);
+    return(retarr);
 }
 
 /**
