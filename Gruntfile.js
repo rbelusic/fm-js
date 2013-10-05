@@ -42,6 +42,7 @@ module.exports = function(grunt) {
             dist : {
                 src: ['<%=js_dir%>/**/*.js'], 
                 options: {
+                    template: 'templates/default',
                     destination: 'doc'
                 }
             }
