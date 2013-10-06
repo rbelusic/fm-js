@@ -193,6 +193,8 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.html">FM</a></li>
 	
+	<li><a href="../symbols/FM.AppObject.html">FM.AppObject</a></li>
+	
 	<li><a href="../symbols/FM.DmGenericError.html">FM.DmGenericError</a></li>
 	
 	<li><a href="../symbols/FM.DmGenericValue.html">FM.DmGenericValue</a></li>
@@ -205,11 +207,9 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.LmObject.html">FM.LmObject</a></li>
 	
-	<li><a href="../symbols/FM.MlAttributeEdit.html">FM.MlAttributeEdit</a></li>
+	<li><a href="../symbols/FM.MlDateEdit.html">FM.MlDateEdit</a></li>
 	
-	<li><a href="../symbols/FM.MlDateAttributeEdit.html">FM.MlDateAttributeEdit</a></li>
-	
-	<li><a href="../symbols/FM.MlDateFormat.html">FM.MlDateFormat</a></li>
+	<li><a href="../symbols/FM.MlEdit.html">FM.MlEdit</a></li>
 	
 	<li><a href="../symbols/FM.MlExtension.html">FM.MlExtension</a></li>
 	
@@ -225,8 +225,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.MlObserver.validationRules.html">FM.MlObserver.validationRules</a></li>
 	
-	<li><a href="../symbols/FM.MlObserverAttribute.html">FM.MlObserverAttribute</a></li>
-	
 	<li><a href="../symbols/FM.MlObserverDisplay.html">FM.MlObserverDisplay</a></li>
 	
 	<li><a href="../symbols/FM.MlObserverEvent.html">FM.MlObserverEvent</a></li>
@@ -238,8 +236,6 @@ ul.inheritsList
 	<li><a href="../symbols/FM.MlObserverListSelection.html">FM.MlObserverListSelection</a></li>
 	
 	<li><a href="../symbols/FM.MlObserverListState.html">FM.MlObserverListState</a></li>
-	
-	<li><a href="../symbols/FM.MlTypeaheadMenu.html">FM.MlTypeaheadMenu</a></li>
 	
 	<li><a href="../symbols/FM.Object.html">FM.Object</a></li>
 	
@@ -302,7 +298,7 @@ ul.inheritsList
 							<div class="fixedFont">
 								<b><a href="../symbols/FM.html#constructor">FM</a></b>
 							</div>
-							<div class="description">Basic SDK namespace</div>
+							<div class="description">FM is the name of the namespace that contains all of the core methods and objects.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -327,9 +323,9 @@ ul.inheritsList
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								FM.<b><a href="../symbols/FM.html#.AppObject">AppObject</a></b>
+								FM.<b><a href="../symbols/FM.html#.version">version</a></b>
 								</div>
-								<div class="description">Basic application class.</div>
+								<div class="description">FM version.</div>
 							</td>
 						</tr>
 					
@@ -357,9 +353,81 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.cloneObject">cloneObject</a></b>(obj)
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.addslashes">addslashes</a></b>(str)
 								</div>
-								<div class="description">Clone object methods and propertyes.</div>
+								<div class="description">Returns a string with backslashes before characters that need to be quoted.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.applyTemplate">applyTemplate</a></b>(attrs, template, escapeValues, encodeValues, prefix)
+								</div>
+								<div class="description">Apply <i>attrs</i> to template.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.arrayToUrl">arrayToUrl</a></b>(params)
+								</div>
+								<div class="description">Encode all array elements or object properties as URL query arguments.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.base64_decode">base64_decode</a></b>(input)
+								</div>
+								<div class="description">Decodes string encoded with MIME base64.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.base64_encode">base64_encode</a></b>(input)
+								</div>
+								<div class="description">Encodes string with MIME base64.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.camelCase">camelCase</a></b>(input)
+								</div>
+								<div class="description">Uppercase the first character of each word  in a input string except the first one.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.defineClass">defineClass</a></b>(name, ext)
+								</div>
+								<div class="description">Create new FM class.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.endsWith">endsWith</a></b>(instr, fstr)
+								</div>
+								<div class="description">Determines whether the end of this string matches a specified string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.escapeStr">escapeStr</a></b>(str)
+								</div>
+								<div class="description">HTML escape string.</div>
 							</td>
 						</tr>
 					
@@ -368,16 +436,153 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.forEach">forEach</a></b>(ar, doFn)
 								</div>
-								<div class="description">For each element in <i>ar</i> call function <i>doFn(id,elm)</i> until end of list or <i>false</i> return value</div>
+								<div class="description">For each element in <i>ar</i> 
+call function <i>doFn(id,elm)</i> 
+until end of list or <i>false</i> is returned.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isset">isset</a></b>(obj)
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.generateNewID">generateNewID</a></b>()
 								</div>
-								<div class="description">Clone object methods and propertyes.</div>
+								<div class="description">Generate a unique ID.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getAttr">getAttr</a></b>(options, key, defv)
+								</div>
+								<div class="description">Get attribute of object</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getLogLevel">getLogLevel</a></b>()
+								</div>
+								<div class="description">Get default log level.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getLogTypeName">getLogTypeName</a></b>(level)
+								</div>
+								<div class="description">Get log level name for given level.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isArray">isArray</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is array.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isAttr">isAttr</a></b>(options, key)
+								</div>
+								<div class="description">Check if attribute exists in object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isFunction">isFunction</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is function.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isNumber">isNumber</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is number.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isObject">isObject</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isset">isset</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is set.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isString">isString</a></b>(v)
+								</div>
+								<div class="description">Determine if a variable is string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isURL">isURL</a></b>(s)
+								</div>
+								<div class="description">Determine if a string is URL.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.log">log</a></b>(oObj, msg, level, callerinfo)
+								</div>
+								<div class="description">Log a message.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.ltrim">ltrim</a></b>(s)
+								</div>
+								<div class="description">Strip whitespace from the beginning of a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.md5">md5</a></b>(str)
+								</div>
+								<div class="description">Calculate the md5 hash of a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.rtrim">rtrim</a></b>(s)
+								</div>
+								<div class="description">Strip whitespace from the end of a string.</div>
 							</td>
 						</tr>
 					
@@ -387,6 +592,114 @@ ul.inheritsList
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.setAttr">setAttr</a></b>(options, undoList, key, val)
 								</div>
 								<div class="description">Set attribute of object</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.setLogLevel">setLogLevel</a></b>(level)
+								</div>
+								<div class="description">Set default log level.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.sizeOf">sizeOf</a></b>(o)
+								</div>
+								<div class="description">Count all elements in an array or object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.startsWith">startsWith</a></b>(instr, fstr)
+								</div>
+								<div class="description">Determines whether the beginning of this string matches a specified string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.stripslashes">stripslashes</a></b>(s)
+								</div>
+								<div class="description">Un-quotes a quoted string</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.trim">trim</a></b>(s)
+								</div>
+								<div class="description">Strip whitespace from the beginning and end of a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.ucwords">ucwords</a></b>(input)
+								</div>
+								<div class="description">Uppercase the first character of each word in a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.unescapeStr">unescapeStr</a></b>(str)
+								</div>
+								<div class="description">HTML unescape string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.urlDecode">urlDecode</a></b>(s)
+								</div>
+								<div class="description">URL decode string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.urlEncode">urlEncode</a></b>(s)
+								</div>
+								<div class="description">URL encode string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.urlToArray">urlToArray</a></b>()
+								</div>
+								<div class="description">Decode URL encoded parameters to object properties.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.utf8_decode">utf8_decode</a></b>(s)
+								</div>
+								<div class="description">Converts a string encoded with UTF-8 to system code page.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.utf8_encode">utf8_encode</a></b>(s)
+								</div>
+								<div class="description">Encodes string to UTF-8.</div>
 							</td>
 						</tr>
 					
@@ -411,7 +724,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="description">
-					Basic SDK namespace
+					FM is the name of the namespace that contains all of the core methods and objects.
 					
 				</div>
 				
@@ -435,18 +748,15 @@ ul.inheritsList
 					Field Detail
 				</div>
 				
-					<a name=".AppObject"> </a>
+					<a name=".version"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
-					<span class="light">FM.</span><b>AppObject</b>
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>version</b>
 					
 					</div>
 					<div class="description">
-						Basic application class.
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_app_app.AppObject.js.html">app.AppObject.js</a>.
+						FM version.
 						
 						
 					</div>
@@ -468,15 +778,16 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".cloneObject"> </a>
+					<a name=".addslashes"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{object}</span>
-					<span class="light">FM.</span><b>cloneObject</b>(obj)
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>addslashes</b>(str)
 					
 					</div>
 					<div class="description">
-						Clone object methods and propertyes. This function is not recursive
+						Returns a string with backslashes before characters that need to be quoted. 
+ These characters are single quote ('), double quote (") and backslash.
 						
 						
 					</div>
@@ -488,10 +799,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>obj</b>
+									<span class="light fixedFont">{string}</span> <b>str</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The string to be escaped.</dd>
 							
 							</dl>
 						
@@ -502,7 +813,389 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{object}</span> Returns copy of object</dd>
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".applyTemplate"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>applyTemplate</b>(attrs, template, escapeValues, encodeValues, prefix)
+					
+					</div>
+					<div class="description">
+						Apply <i>attrs</i> to template.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>attrs</b>
+									
+								</dt>
+								<dd>Object with properties to apply.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>template</b>
+									
+								</dt>
+								<dd>Template text.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>escapeValues</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>If set to <i>true</i> all values will be escaped before applyinig to template.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>encodeValues</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>If set to <i>true</i> all values will be encoded before applyinig to template.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>prefix</b>
+									<i>Optional, Default: ""</i>
+								</dt>
+								<dd>Prefix of bind variables in template.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".arrayToUrl"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>arrayToUrl</b>(params)
+					
+					</div>
+					<div class="description">
+						Encode all array elements or object properties as URL query arguments.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Array|Object}</span> <b>params</b>
+									
+								</dt>
+								<dd>Array or object to encode.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Encoded string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".base64_decode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>base64_decode</b>(input)
+					
+					</div>
+					<div class="description">
+						Decodes string encoded with MIME base64.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>input</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".base64_encode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>base64_encode</b>(input)
+					
+					</div>
+					<div class="description">
+						Encodes string with MIME base64.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>input</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".camelCase"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>camelCase</b>(input)
+					
+					</div>
+					<div class="description">
+						Uppercase the first character of each word  in a input string except the first one.
+The definition of a word is any string of characters that is immediately 
+after a whitespace or minus sign.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>input</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".defineClass"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{function}</span>
+					<span class="light">FM.</span><b>defineClass</b>(name, ext)
+					
+					</div>
+					<div class="description">
+						Create new FM class.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>name</b>
+									
+								</dt>
+								<dd>Name of new class.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/FM.Object.html">FM.Object</a>}</span> <b>ext</b>
+									<i>Optional, Default: null</i>
+								</dt>
+								<dd>FM class to extend.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{function}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".endsWith"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>endsWith</b>(instr, fstr)
+					
+					</div>
+					<div class="description">
+						Determines whether the end of this string matches a specified string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>instr</b>
+									
+								</dt>
+								<dd>The string to be checked.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>fstr</b>
+									
+								</dt>
+								<dd>the sufix to be matched.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".escapeStr"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>escapeStr</b>(str)
+					
+					</div>
+					<div class="description">
+						HTML escape string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>str</b>
+									
+								</dt>
+								<dd>String to escape.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Escaped string.</dd>
 							
 							</dl>
 						
@@ -519,7 +1212,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						For each element in <i>ar</i> call function <i>doFn(id,elm)</i> until end of list or <i>false</i> return value
+						For each element in <i>ar</i> 
+call function <i>doFn(id,elm)</i> 
+until end of list or <i>false</i> is returned.
 						
 						
 					</div>
@@ -531,14 +1226,14 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{object}</span> <b>ar</b>
+									<span class="light fixedFont">{Object}</span> <b>ar</b>
 									<i>Optional, Default: {}</i>
 								</dt>
 								<dd></dd>
 							
 								<dt>
 									<span class="light fixedFont">{function}</span> <b>doFn</b>
-									<i>Optional, Default: {}</i>
+									<i>Optional, Default: function(){}</i>
 								</dt>
 								<dd></dd>
 							
@@ -553,15 +1248,47 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name=".isset"> </a>
+					<a name=".generateNewID"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{object}</span>
-					<span class="light">FM.</span><b>isset</b>(obj)
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>generateNewID</b>()
 					
 					</div>
 					<div class="description">
-						Clone object methods and propertyes. This function is not recursive
+						Generate a unique ID.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> New ID.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getAttr"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{..}</span>
+					<span class="light">FM.</span><b>getAttr</b>(options, key, defv)
+					
+					</div>
+					<div class="description">
+						Get attribute of object
 						
 						
 					</div>
@@ -573,10 +1300,22 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>obj</b>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>Object with attributes.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>key</b>
+									
+								</dt>
+								<dd>Attribute name.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{...}</span> <b>defv</b>
+									<i>Optional, Default: ""</i>
+								</dt>
+								<dd>Default value of attribute.</dd>
 							
 							</dl>
 						
@@ -587,7 +1326,615 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{object}</span> Returns true if variable is set</dd>
+								<dd><span class="light fixedFont">{..}</span> Value of attribute or default value.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getLogLevel"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">FM.</span><b>getLogLevel</b>()
+					
+					</div>
+					<div class="description">
+						Get default log level.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getLogTypeName"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>getLogTypeName</b>(level)
+					
+					</div>
+					<div class="description">
+						Get log level name for given level.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{number}</span> <b>level</b>
+									
+								</dt>
+								<dd>The log level.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isArray"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isArray</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is array.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isAttr"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isAttr</b>(options, key)
+					
+					</div>
+					<div class="description">
+						Check if attribute exists in object.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									
+								</dt>
+								<dd>Object with attributes.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>key</b>
+									
+								</dt>
+								<dd>Attribute name.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isFunction"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isFunction</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is function.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isNumber"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isNumber</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is number.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isObject"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isObject</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is object.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isset"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isset</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is set.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isString"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isString</b>(v)
+					
+					</div>
+					<div class="description">
+						Determine if a variable is string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>v</b>
+									
+								</dt>
+								<dd>The variable to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".isURL"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isURL</b>(s)
+					
+					</div>
+					<div class="description">
+						Determine if a string is URL.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>The string to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".log"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>log</b>(oObj, msg, level, callerinfo)
+					
+					</div>
+					<div class="description">
+						Log a message.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/FM.Object.html">FM.Object</a>|null}</span> <b>oObj</b>
+									
+								</dt>
+								<dd>Context.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string|Object|...}</span> <b>msg</b>
+									
+								</dt>
+								<dd>Variable to be logged.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{number}</span> <b>level</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Log level.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>callerinfo</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Description of context.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".ltrim"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>ltrim</b>(s)
+					
+					</div>
+					<div class="description">
+						Strip whitespace from the beginning of a string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>The string that will be trimmed.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".md5"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>md5</b>(str)
+					
+					</div>
+					<div class="description">
+						Calculate the md5 hash of a string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>str</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".rtrim"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>rtrim</b>(s)
+					
+					</div>
+					<div class="description">
+						Strip whitespace from the end of a string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>The string that will be trimmed.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -616,28 +1963,28 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{object}</span> <b>options</b>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
 									
 								</dt>
-								<dd>Object with attributes</dd>
+								<dd>Object with attributes.</dd>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>undoList</b>
+									<span class="light fixedFont">{Object}</span> <b>undoList</b>
 									
 								</dt>
-								<dd>Undo list</dd>
+								<dd>Undo list (or<i>null</i>).</dd>
 							
 								<dt>
 									<span class="light fixedFont">{string}</span> <b>key</b>
 									
 								</dt>
-								<dd>Attribute name</dd>
+								<dd>Attribute name.</dd>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>val</b>
+									<span class="light fixedFont">{string|number|...}</span> <b>val</b>
 									
 								</dt>
-								<dd>Value of attribute</dd>
+								<dd>Value of attribute.</dd>
 							
 							</dl>
 						
@@ -648,7 +1995,524 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{boolean}</span> <i>true</i> if value of attribute is changed, otherwise <i>false</i></dd>
+								<dd><span class="light fixedFont">{boolean}</span> <i>true</i> if value of attribute is changed, otherwise <i>false</i>.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".setLogLevel"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>setLogLevel</b>(level)
+					
+					</div>
+					<div class="description">
+						Set default log level.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{number}</span> <b>level</b>
+									
+								</dt>
+								<dd>Log level.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".sizeOf"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">FM.</span><b>sizeOf</b>(o)
+					
+					</div>
+					<div class="description">
+						Count all elements in an array or object.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object|Array}</span> <b>o</b>
+									
+								</dt>
+								<dd>The array or object to be checked.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> Number of elements in array or object.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".startsWith"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>startsWith</b>(instr, fstr)
+					
+					</div>
+					<div class="description">
+						Determines whether the beginning of this string matches a specified string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>instr</b>
+									
+								</dt>
+								<dd>The string to be checked.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>fstr</b>
+									
+								</dt>
+								<dd>the prefix to be matched.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".stripslashes"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>stripslashes</b>(s)
+					
+					</div>
+					<div class="description">
+						Un-quotes a quoted string
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".trim"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>trim</b>(s)
+					
+					</div>
+					<div class="description">
+						Strip whitespace from the beginning and end of a string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>The string that will be trimmed.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".ucwords"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>ucwords</b>(input)
+					
+					</div>
+					<div class="description">
+						Uppercase the first character of each word in a string.
+The definition of a word is any string of characters that is immediately 
+after a whitespace or minus sign.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>input</b>
+									
+								</dt>
+								<dd>The input string.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".unescapeStr"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>unescapeStr</b>(str)
+					
+					</div>
+					<div class="description">
+						HTML unescape string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>str</b>
+									
+								</dt>
+								<dd>String to unescape.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Unescaped string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".urlDecode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>urlDecode</b>(s)
+					
+					</div>
+					<div class="description">
+						URL decode string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>String to decode.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Decoded string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".urlEncode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>urlEncode</b>(s)
+					
+					</div>
+					<div class="description">
+						URL encode string.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>String to encode.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Encoded string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".urlToArray"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{Object}</span>
+					<span class="light">FM.</span><b>urlToArray</b>()
+					
+					</div>
+					<div class="description">
+						Decode URL encoded parameters to object properties.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>url.</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".utf8_decode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>utf8_decode</b>(s)
+					
+					</div>
+					<div class="description">
+						Converts a string encoded with UTF-8 to system code page.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>String to decode.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".utf8_encode"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>utf8_encode</b>(s)
+					
+					</div>
+					<div class="description">
+						Encodes string to UTF-8.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>s</b>
+									
+								</dt>
+								<dd>String to encode.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -669,7 +2533,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sat Oct 05 2013 16:56:59 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Oct 06 2013 16:38:34 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

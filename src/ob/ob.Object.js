@@ -1,15 +1,16 @@
 // -- Basic FM class -----------------------------------------------------------
-FM.Object = FM.defineClass('Object');
-
 /**
  * Initialize new FM.Object
  * 
- * @constructs FM.Object
+ * @class FM.Object
  * @classdesc Basic FM class. Provide listeners, attributes, propertyes, logger
  * @param {object} attrs list of attribute name and values
  * @param {object} [flds] allowed attributes
  * 
  */
+
+FM.Object = FM.defineClass('Object');
+
 FM.Object.prototype._init = function(attrs, flds) {
     // properties    
     this.objectSubClass = "Objects";

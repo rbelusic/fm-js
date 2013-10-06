@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - FM.DmGenericValue</title>
+		<title>JsDoc Reference - FM.MlDateEdit</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -266,26 +266,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class FM.DmGenericValue
+				Class FM.MlDateEdit
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
 				<br />Extends
-					<a href="../symbols/FM.DmObject.html">FM.DmObject</a>.<br />
+					<a href="../symbols/FM.MlExtension.html">FM.MlExtension</a>.<br />
 				
 			
-				FM.DmGenericValue
+				FM.MlDateEdit
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_dm_dm.DmGenericValue.js.html">dm.DmGenericValue.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/src_gui_ml_gui.MlDateEdit.js.html">gui.MlDateEdit.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class FM.DmGenericValue.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class FM.MlDateEdit.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -298,9 +298,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/FM.DmGenericValue.html#constructor">FM.DmGenericValue</a></b>(attrs)
+								<b><a href="../symbols/FM.MlDateEdit.html#constructor">FM.MlDateEdit</a></b>(attrs, node)
 							</div>
-							<div class="description">Generic value DM class.</div>
+							<div class="description">ML date  edit extensions class.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -332,11 +332,12 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>FM.DmGenericValue</b>(attrs)
+						<b>FM.MlDateEdit</b>(attrs, node)
 				</div>
 				
 				<div class="description">
-					Generic value DM class.
+					ML date  edit extensions class.
+You can use other plugins instead jquery ui by replacing initWidget() method
 					
 				</div>
 				
@@ -349,9 +350,15 @@ ul.inheritsList
 						
 							<dt>
 								<span class="light fixedFont">{object}</span>  <b>attrs</b>
+								<i>Optional</i>
+							</dt>
+								<dd>DOM node attributes</dd>
+						
+							<dt>
+								<span class="light fixedFont">{DOMnode}</span>  <b>node</b>
 								
 							</dt>
-								<dd>list of attribute name and values</dd>
+								<dd>DOM node</dd>
 						
 						</dl>
 					
@@ -359,6 +366,13 @@ ul.inheritsList
 					
 					
 					
+					
+						<dl class="detailList">
+						<dt class="heading">Requires:</dt>
+						
+							<dd>http://api.jqueryui.com/datepicker/</dd>
+						
+						</dl>
 					
 					
 

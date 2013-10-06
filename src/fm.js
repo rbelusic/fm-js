@@ -1,105 +1,110 @@
 
 /**
- * Basic SDK namespace
-* @namespace 
-*/
-    FM = {};    
+ * FM is the name of the namespace that contains all of the core methods and objects.
+ * 
+ * @namespace 
+ */
+FM = {};
 
-
-// propertyes
-FM.version = '0.1';
-
-// static methods
 
 /**
- * Clone object methods and propertyes. This function is not recursive
+ * FM version.
+ * 
+ * @static
+ * @type string
+ */
+FM.version = '0.1';
+
+
+/**
+ * Determine if a variable is set.
+ * 
  * @static
  * @function 
- * @returns {object} Returns true if variable is set
+ * @param v The variable to be checked.
+ * @returns {boolean} 
  */
-FM.isset = function(obj) {
-    return (typeof(obj) != 'undefined');
+FM.isset = function(v) {
+    return (typeof(v) != 'undefined');
 }
 
-
-FM.isString = function(obj) {
-    return (typeof obj == 'string' && obj !== null);
+/**
+ * Determine if a variable is string.
+ * 
+ * @static
+ * @function 
+ * @param  v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isString = function(v) {
+    return (typeof v == 'string' && v !== null);
 }
 
-FM.isFunction = function(obj) {
-    return (typeof obj == 'function' && obj !== null);
+/**
+ * Determine if a variable is number.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isNumber = function(v) {
+    return !isNaN(parseFloat(v));
 }
 
-FM.isArray = function(obj) {
-    if (!FM.isset(obj) || !obj)
+/**
+ * Determine if a variable is function.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isFunction = function(v) {
+    return (typeof v == 'function' && v !== null);
+}
+
+/**
+ * Determine if a variable is array.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isArray = function(v) {
+    if (!FM.isset(v) || !v) {
         return false;
-    if (obj.constructor.toString().indexOf("Array") == -1)
+    }
+    
+    if (v.constructor.toString().indexOf("Array") == -1) {
         return false;
-    else
-        return FM.isset(obj.length);
+    }
+
+    return FM.isset(v.length);
 }
 
+/**
+ * Determine if a variable is object.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
 FM.isObject = function(obj) {
-    return (typeof obj == 'object' && obj !== null);
+    return (typeof v == 'object' && v !== null);
 }
 
-FM.isEqual = function(v1, v2, maxlvl, _l) {
-    maxlvl = FM.isset(maxlvl) ? maxlvl : 9;
-    _l = isset(_l) ? _l : -1;
-    _l++;
-    if (_l > maxlvl)
-        return true;
 
-    if (FM.isset(v1) && FM.isset(v2)) {
-        var eq = true;
-
-        if (FM.isObject(v1)) {
-            if (!FM.isObject(v2))
-                return false;
-
-            FM.forEach(v2, function(name, value) {
-                if (!FM.isset(v1[name])) {
-                    eq = false;
-                }
-                return(eq);
-            });
-
-            if (eq)
-                FM.forEach(v1, function(name, value) {
-                    eq = FM.isEqual(value, v2[name], maxlvl, _l);
-                    return eq;
-                });
-            return eq;
-
-
-        } else if (FM.isArray(v1)) {
-            if (!FM.isArray(v2))
-                return false;
-            if (v1.length != v2.length)
-                return false;
-
-            for (var i = 0; i < v1.length; i++) {
-                if (!FM.isEqual(v1[i], v2[i], maxlvl, _l))
-                    return false;
-            }
-
-            return true;
-        }
-    }
-
-    return(v1 == v2);
-}
-
-FM.isInstanceOf = function(object, constructorFunction) {
-    while (object != null) {
-        if (object == constructorFunction.prototype) {
-            return true;
-        }
-        object = object.__proto__;
-    }
-    return false;
-}
-
+/**
+ * Count all elements in an array or object.
+ * 
+ * @static
+ * @function 
+ * @param {Object|Array} o The array or object to be checked.
+ * @returns {number} Number of elements in array or object.
+ */
 FM.sizeOf = function(o) {
     if (!FM.isset(o) || o == null)
         return(-1);
@@ -110,7 +115,30 @@ FM.sizeOf = function(o) {
     return(i);
 }
 
+/**
+ * Generate a unique ID.
+ * 
+ * @static
+ * @function 
+ * @returns {string} New ID.
+ */
+FM.generateNewID = function() {
+    return '_' + new Date().getTime() + "_" + Math.floor(Math.random() * 1000000);
+}
 
+/**
+ * Apply <i>attrs</i> to template.
+ * 
+ * @static
+ * @function 
+ * @param {Object} attrs Object with properties to apply.
+ * @param {string} template Template text.
+ * @param {boolean} [escapeValues=true] If set to <i>true</i> all values will be escaped before applyinig to template.
+ * @param {boolean} [encodeValues=false] If set to <i>true</i> all values will be encoded before applyinig to template.
+ * @param {string} [prefix=""] Prefix of bind variables in template.
+ * 
+ * @returns {string} 
+ */
 FM.applyTemplate = function(attrs, template, escapeValues, encodeValues, prefix) {
     var templ = FM.isset(template) && template ? template : "";
     var pref = FM.isset(prefix) && prefix ? "" + prefix + "." : "";
@@ -144,29 +172,11 @@ FM.applyTemplate = function(attrs, template, escapeValues, encodeValues, prefix)
     return(templ);
 }
 
-FM.stringPtrToObject = function(objptr, lm, app) {
-    var akeys = objptr.split(".");
-    if (akeys.length < 1)
-        return null;
 
-    var parent = akeys[0] == 'APP' ? app : (
-        akeys[0] == 'LM' ? lm : window
-        );
-    var startIndex = parent == window ? 0 : 1;
-
-    for (var i = startIndex; i < akeys.length; i++) {
-        if (!FM.isset(parent[akeys[i]]))
-            return null;
-        parent = parent[akeys[i]];
-    }
-
-    return parent;
-}
-
-FM.generateNewID = function() {
-    return '_' + new Date().getTime() + "_" + Math.floor(Math.random() * 1000000);
-}
-
+/**
+ * @ignore
+ * 
+ */
 FM._findClassWithMethod = function(o, m) {
     while (
         FM.isset(o) && o &&
@@ -178,6 +188,10 @@ FM._findClassWithMethod = function(o, m) {
 
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM._super_stack = function(me, method, on) {
     var mStack = FM.getAttr(me, '_parent_call_stack', []);
 
@@ -220,6 +234,10 @@ FM._super_stack = function(me, method, on) {
     return mStack;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM._super = function() {
     var me = arguments[0]
     var callArgs = arguments[1];
@@ -251,6 +269,10 @@ FM._super = function() {
 
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.loadScript = function(url, cbfn) {
     $.getScript(url, function() {
         if (FM.isFunction(cbfn)) {
@@ -259,6 +281,10 @@ FM.loadScript = function(url, cbfn) {
     });
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.extend = function(oDest, oSrc, isclass) {
     isclass = FM.isset(isclass) && isclass;
     oDest = oDest ? oDest : {};
@@ -277,7 +303,13 @@ FM.extend = function(oDest, oSrc, isclass) {
     return oDest;
 }
 
-
+/**
+ * Create new FM class.
+ * 
+ * @param {string} name Name of new class.
+ * @param {FM.Object} [ext=null] FM class to extend.
+ * @returns {function}
+ */
 FM.defineClass = function(name, ext) {
     name = FM.isset(name) && FM.isString(name) && name != '' ? name : 'Undefined';
     ext = FM.isset(ext) && FM.isFunction(ext) ? ext : null;
@@ -292,6 +324,10 @@ FM.defineClass = function(name, ext) {
     return cls;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.extendClass = function(oDest, oSrc) {
     if (oSrc) {
         for (var property in oSrc.prototype) {
@@ -309,12 +345,32 @@ FM.extendClass = function(oDest, oSrc) {
     return oDest;
 }
 
+/**
+ * @ignore
+ * 
+ */
+FM.stringPtrToObject = function(objptr, lm, app) {
+    var akeys = objptr.split(".");
+    if (akeys.length < 1)
+        return null;
+
+    var parent = akeys[0] == 'APP' ? app : (
+        akeys[0] == 'LM' ? lm : window
+        );
+    var startIndex = parent == window ? 0 : 1;
+
+    for (var i = startIndex; i < akeys.length; i++) {
+        if (!FM.isset(parent[akeys[i]]))
+            return null;
+        parent = parent[akeys[i]];
+    }
+
+    return parent;
+}
 
 /**
- * Clone object methods and propertyes. This function is not recursive
- * @static
- * @function 
- * @returns {object} Returns copy of object
+ * @ignore
+ * 
  */
 FM.cloneObject = function(obj) {
     if (!FM.isset(obj) || !FM.isObject(obj))
@@ -322,10 +378,15 @@ FM.cloneObject = function(obj) {
     return FM.extend({}, obj);
 }
 
-FM.isNumber = function(n) {
-    return !isNaN(parseFloat(n));
-}
-
+/**
+ * Check if attribute exists in object.
+ * 
+ * @static
+ * @function 
+ * @param {Object} options Object with attributes.
+ * @param {string} key Attribute name.
+ * @returns {boolean}
+ */
 FM.isAttr = function(options, key) {
     if (!FM.isset(options) || !options || !FM.isset(key))
         return false;
@@ -342,6 +403,16 @@ FM.isAttr = function(options, key) {
     return true;
 }
 
+/**
+ * Get attribute of object
+ * 
+ * @static
+ * @function 
+ * @param {Object} options Object with attributes.
+ * @param {string} key Attribute name.
+ * @param {...} [defv=""] Default value of attribute.
+ * @returns {..} Value of attribute or default value.
+ */
 FM.getAttr = function(options, key, defv) {
     if (!options)
         return options;
@@ -369,13 +440,14 @@ FM.getAttr = function(options, key, defv) {
 
 /**
  * Set attribute of object
+ * 
  * @static
  * @function 
- * @param {object} options Object with attributes
- * @param {string} undoList Undo list 
- * @param {string} key Attribute name
- * @param {string} val Value of attribute
- * @returns {boolean} <i>true</i> if value of attribute is changed, otherwise <i>false</i>
+ * @param {Object} options Object with attributes.
+ * @param {Object} undoList Undo list (or<i>null</i>).
+ * @param {string} key Attribute name.
+ * @param {string|number|...} val Value of attribute.
+ * @returns {boolean} <i>true</i> if value of attribute is changed, otherwise <i>false</i>.
  */
 FM.setAttr = function(options, undoList, key, val) {
     var i, k, aname;
@@ -419,6 +491,10 @@ FM.setAttr = function(options, undoList, key, val) {
     return dirty;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.resolveAttrValue = function(options, attrName, def, context) {
     options = FM.isset(options) && options && FM.isObject(options) ? options : {};
     context = FM.isset(context) && context && FM.isObject(context) ? context : {};
@@ -444,6 +520,10 @@ FM.resolveAttrValue = function(options, attrName, def, context) {
     return v;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.resolveAttrName = function(options, attrName, def, context) {
     options = options && FM.isObject(options) ? options : {};
     context = context && FM.isObject(context) ? context : {};
@@ -469,7 +549,10 @@ FM.resolveAttrName = function(options, attrName, def, context) {
     return v;
 }
 
-
+/**
+ * @ignore
+ * 
+ */
 FM.nodeToHtml = function(node) {
     var el = document.createElement("p");
     el.appendChild(node);
@@ -478,6 +561,10 @@ FM.nodeToHtml = function(node) {
     return retc;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.findNodeWithAttr = function(node, attrName) {
     while (FM.isset(node) && node && !FM.isset(node[attrName])) {
         node = node.parentNode;
@@ -487,6 +574,10 @@ FM.findNodeWithAttr = function(node, attrName) {
         );
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.getNodeWithId = function(id) {
     var jo = $('#' + id);
     if (jo.length < 1)
@@ -495,11 +586,14 @@ FM.getNodeWithId = function(id) {
 }
 
 /**
- * For each element in <i>ar</i> call function <i>doFn(id,elm)</i> until end of list or <i>false</i> return value
+ * For each element in <i>ar</i> 
+ * call function <i>doFn(id,elm)</i> 
+ * until end of list or <i>false</i> is returned.
+ * 
  * @static
  * @function 
- * @param {object} [ar={}] 
- * @param {function} [doFn={}]
+ * @param {Object} [ar={}] 
+ * @param {function} [doFn=function(){}]
  * 
  */
 FM.forEach = function(ar, doFn) {
@@ -511,6 +605,10 @@ FM.forEach = function(ar, doFn) {
     return null;
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.removeArrayElement = function(arr, index) {
     var newarr = [];
 
@@ -522,6 +620,10 @@ FM.removeArrayElement = function(arr, index) {
     return newarr;
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.cancelEventPropagation = function() {
     e = window.event;
     //IE9 & Other Browsers
@@ -534,6 +636,10 @@ FM.cancelEventPropagation = function() {
     }
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.serialize = function(obj, def) {
     def = FM.isset(def) ? def : '';
     if (!FM.isset(obj) || !obj)
@@ -547,6 +653,10 @@ FM.serialize = function(obj, def) {
     return def;
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.unserialize = function(str, def) {
     def = FM.isset(def) ? def : null;
     if (!FM.isset(str) || !str)
@@ -560,11 +670,19 @@ FM.unserialize = function(str, def) {
     return def;
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.deleteCookie = function(name, domain) {
     FM.saveCookie(name, "", 0, domain);
     //document.cookie = name + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
 }
 
+/**
+ * @ignore
+ *
+ */
 FM.saveCookie = function(name, value, expiredays, domain) {
     var daysahead, expires = null;
 
@@ -593,6 +711,10 @@ FM.saveCookie = function(name, value, expiredays, domain) {
 }
 
 
+/**
+ * @ignore
+ *
+ */
 FM.loadCookie = function(name, asstring) {
     var dc = document.cookie;
     var cname = name + "=";
@@ -615,6 +737,15 @@ FM.loadCookie = function(name, asstring) {
 }
 
 // -- URL ------------------------------------------------------------------
+/**
+ * HTML escape string.
+ * 
+ * @static
+ * @function 
+ * @param {string} str String to escape.
+ * @returns {string} Escaped string.
+ * 
+ */
 FM.escapeStr = function(str) {
     str = str.replace(/&/g, "&amp;");
     str = str.replace(/>/g, "&gt;");
@@ -624,6 +755,15 @@ FM.escapeStr = function(str) {
     return str;
 }
 
+/**
+ * HTML unescape string.
+ * 
+ * @static
+ * @function 
+ * @param {string} str String to unescape.
+ * @returns {string} Unescaped string.
+ * 
+ */
 FM.unescapeStr = function(str) {
     str = str.replace(/&amp;/g, "&");
     str = str.replace(/&gt;/g, ">");
@@ -633,14 +773,41 @@ FM.unescapeStr = function(str) {
     return str;
 }
 
+/**
+ * URL encode string.
+ * 
+ * @static
+ * @function 
+ * @param {string} s String to encode.
+ * @returns {string} Encoded string.
+ * 
+ */
 FM.urlEncode = function(s) {
     return encodeURIComponent(s).replace(/\%20/g, '+').replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/\~/g, '%7E');
 }
 
+/**
+ * URL decode string.
+ * 
+ * @static
+ * @function 
+ * @param {string} s String to decode.
+ * @returns {string} Decoded string.
+ * 
+ */
 FM.urlDecode = function(s) {
     return decodeURIComponent(s.replace(/\+/g, '%20').replace(/\%21/g, '!').replace(/\%27/g, "'").replace(/\%28/g, '(').replace(/\%29/g, ')').replace(/\%2A/g, '*').replace(/\%7E/g, '~'));
 }
 
+/**
+ * Encode all array elements or object properties as URL query arguments.
+ * 
+ * @static
+ * @function 
+ * @param {Array|Object} params Array or object to encode.
+ * @returns {string} Encoded string.
+ * 
+ */
 FM.arrayToUrl = function(params) {
     var ret = "";
     var first = true;
@@ -654,6 +821,15 @@ FM.arrayToUrl = function(params) {
     return ret;
 }
 
+/**
+ * Decode URL encoded parameters to object properties.
+ * 
+ * @static
+ * @function 
+ * @param {string} url.
+ * @returns {Object}
+ * 
+ */
 FM.urlToArray = function(url) {
     //location.queryString = {};
     var arr = {};
@@ -668,12 +844,28 @@ FM.urlToArray = function(url) {
     return arr;
 }
 
+/**
+ * Determine if a string is URL.
+ * 
+ * @static
+ * @function 
+ * @param {string} s The string to be checked.
+ * @returns {boolean} 
+ */
 FM.isURL = function(s) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
     return regexp.test(s);
 }
 
 // -- STRING ---------------------------------------------------------------
+/**
+ * Strip whitespace from the beginning and end of a string.
+ * 
+ * @static
+ * @function 
+ * @param {string} s The string that will be trimmed.
+ * @returns {string} 
+ */
 FM.trim = function(s) {
     if (!FM.isset(s) || s == null)
         return('');
@@ -681,6 +873,14 @@ FM.trim = function(s) {
     return ss.replace(/^\s+|\s+$/g, "");
 }
 
+/**
+ * Strip whitespace from the beginning of a string.
+ * 
+ * @static
+ * @function 
+ * @param {string} s The string that will be trimmed.
+ * @returns {string} 
+ */
 FM.ltrim = function(s) {
     if (!FM.isset(s) || s == null)
         return('');
@@ -688,6 +888,15 @@ FM.ltrim = function(s) {
     return ss.replace(/^\s+/, "");
 }
 
+
+/**
+ * Strip whitespace from the end of a string.
+ * 
+ * @static
+ * @function 
+ * @param {string} s The string that will be trimmed.
+ * @returns {string} 
+ */
 FM.rtrim = function(s) {
     if (!FM.isset(s) || s == null)
         return('');
@@ -696,23 +905,65 @@ FM.rtrim = function(s) {
 }
 
 
+/**
+ * Determines whether the beginning of this string matches a specified string.
+ * 
+ * @static
+ * @function 
+ * @param {string} instr The string to be checked.
+ * @param {string} fstr the prefix to be matched.
+ * @returns {boolean} 
+ */
 FM.startsWith = function(instr, fstr) {
     return (instr ? instr.match("^" + fstr) == fstr : false);
 }
 
+/**
+ * Determines whether the end of this string matches a specified string.
+ * 
+ * @static
+ * @function 
+ * @param {string} instr The string to be checked.
+ * @param {string} fstr the sufix to be matched.
+ * @returns {boolean} 
+ */
 FM.endsWith = function(instr, fstr) {
     return (instr ? instr.match(fstr + "$") == fstr : false);
 }
 
+/**
+ * Encodes string to UTF-8.
+ * 
+ * @static
+ * @function 
+ * @param {string} s String to encode.
+ * @returns {string} 
+ */
 FM.utf8_encode = function(s) {
     return unescape(encodeURIComponent(s));
 }
 
+/**
+ *  Converts a string encoded with UTF-8 to system code page.
+ * 
+ * @static
+ * @function 
+ * @param {string} s String to decode.
+ * @returns {string} 
+ */
 FM.utf8_decode = function(s) {
     return decodeURIComponent(escape(s));
 }
 
-
+/**
+ *  Returns a string with backslashes before characters that need to be quoted. 
+ *  These characters are single quote ('), double quote (") and backslash.
+ * 
+ * @static
+ * @function 
+ * @param {string} str The string to be escaped.
+ * @returns {string} 
+ */
 FM.addslashes = function(str) {
     str = str.replace(/\\/g, '\\\\');
     str = str.replace(/\'/g, '\\\'');
@@ -721,6 +972,14 @@ FM.addslashes = function(str) {
     return str;
 }
 
+/**
+ *  Un-quotes a quoted string
+ * 
+ * @static
+ * @function 
+ * @param {string} s The input string.
+ * @returns {string} 
+ */
 FM.stripslashes = function(str) {
     str = str.replace(/\\'/g, '\'');
     str = str.replace(/\\"/g, '"');
@@ -729,6 +988,10 @@ FM.stripslashes = function(str) {
     return str;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.tokenize = function(argsstr) {
     var i, instr;
 
@@ -756,12 +1019,32 @@ FM.tokenize = function(argsstr) {
 }
 
 
-FM.camelCase = function(string) {
-    return string.replace( /-([a-z])/ig, function( all, letter ) {
+/**
+ * Uppercase the first character of each word  in a input string except the first one.
+ * The definition of a word is any string of characters that is immediately 
+ * after a whitespace or minus sign.
+ * 
+ * @static
+ * @function 
+ * @param {string} input The input string.
+ * @returns {string} 
+ */
+FM.camelCase = function(input) {
+    return input.replace(/-([a-z])/ig, function(all, letter) {
         return letter.toUpperCase();
     });
 }
 
+/**
+ * Uppercase the first character of each word in a string.
+ * The definition of a word is any string of characters that is immediately 
+ * after a whitespace or minus sign.
+ * 
+ * @static
+ * @function 
+ * @param {string} input The input string.
+ * @returns {string} 
+ */
 FM.ucwords = function(input) {
     var words = input.split(/(\s|-)+/),
         output = [];
@@ -773,7 +1056,16 @@ FM.ucwords = function(input) {
 
     return output.join('');
 }
+
 // -- MD5 ------------------------------------------------------------------
+/**
+ * Calculate the md5 hash of a string.
+ * 
+ * @static
+ * @function 
+ * @param {string} str The input string.
+ * @returns {string} 
+ */
 FM.md5 = function(str) {
     // Calculate the md5 hash of a string
     //
@@ -977,6 +1269,14 @@ FM.md5 = function(str) {
 }
 
 // -- base64 ---------------------------------------------------------------
+/**
+ *  Decodes string encoded with MIME base64.
+ * 
+ * @static
+ * @function 
+ * @param {string} input The input string.
+ * @returns {string} 
+ */
 FM.base64_decode = function(input) {
     var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var output = "";
@@ -1011,6 +1311,14 @@ FM.base64_decode = function(input) {
 }
 
 
+/**
+ *  Encodes string with MIME base64.
+ * 
+ * @static
+ * @function 
+ * @param {string} input The input string.
+ * @returns {string} 
+ */
 FM.base64_encode = function(input) {
     var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var output = "";
@@ -1061,23 +1369,52 @@ FM.logLevelNames = {
 // subclass/min loglevel def. info
 FM.logDefaultLevel = FM.logLevels.warn;
 
-
+/**
+ *  Set default log level.
+ * 
+ * @static
+ * @function 
+ * @param {number} level Log level.
+ */
 FM.setLogLevel = function(level) {
     FM.logDefaultLevel = level;
 }
 
+/**
+ *  Get default log level.
+ * 
+ * @static
+ * @function 
+ * @returns {number} 
+ */
 FM.getLogLevel = function() {
     return FM.logDefaultLevel;
 }
 
+
+/**
+ * 
+ * @ignore
+ */
 FM.getLogId = function(oObj) {
     return oObj && FM.isset(oObj.getClassName) ? oObj.getClassName() : '<anonymous>';
 }
 
+/**
+ *  Get log level name for given level.
+ * 
+ * @static
+ * @function 
+ * @param {number} level The log level.
+ * @returns {string} 
+ */
 FM.getLogTypeName = function(level) {
     return FM.isset(FM.logLevelNames[level]) ? FM.logLevelNames[level] : FM.logLevelNames[FM.logLevels.info];
 }
 
+/**
+ * @ignore
+ */
 FM.logObjectMsgToArray = function(obj) {
     if (!FM.isset(obj) || !obj)
         return [];
@@ -1110,17 +1447,29 @@ FM.logObjectMsgToArray = function(obj) {
 }
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.getStackTraceStr = function(err) {
     err = FM.isset(err) ? err : new Error();
 
     return err.stack ? err.stack : "";
 }
 
+/*
+ * 
+ * @ignore
+ */
 FM.getStackTrace = function(err) {
     var strace = FM.getStackTraceStr(err);
     return strace.split("\n").slice(3); //strace.length > 2 ? strace.slice(2) : [];
 }
 
+/*
+ * 
+ * @ignore
+ */
 FM.getCallerInfo = function(shift) {
     var strace = FM.getStackTrace();
     var pos1, pos2, name, file;
@@ -1152,6 +1501,16 @@ FM.getCallerInfo = function(shift) {
 }
 
 
+/**
+ *  Log a message.
+ * 
+ * @static
+ * @function  
+ * @param {FM.Object|null} oObj Context.
+ * @param {string|Object|...} msg Variable to be logged.
+ * @param {number} [level] Log level.
+ * @param {string} [callerinfo] Description of context.
+ */
 FM.log = function(oObj, msg, level, callerinfo) {
     var minlevel =
         oObj && FM.isset(oObj.getLogLevel) && oObj.getLogLevel() != null ?
@@ -1182,6 +1541,10 @@ FM.log = function(oObj, msg, level, callerinfo) {
     return true;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM._T = function() {
     if (arguments.length < 1)
         return('');
@@ -1213,6 +1576,10 @@ FM._T = function() {
 }
 
 // -- dates --------------------------------------------------------------------
+/**
+ * 
+ * @ignore
+ */
 FM.dateTimeDivider = ' ';
 /*
  * Date Format 1.2.3
@@ -1230,6 +1597,10 @@ FM.dateTimeDivider = ' ';
  * http://blog.stevenlevithan.com/archives/date-time-format
  */
 
+/**
+ * 
+ * @ignore
+ */
 FM.dateFormat = function() {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
         timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
@@ -1312,6 +1683,10 @@ FM.dateFormat = function() {
 }();
 
 // Some common format strings
+/**
+ * 
+ * @ignore
+ */
 FM.dateFormat.masks = {
     "default": "ddd mmm dd yyyy HH:MM:ss",
     shortDate: "m/d/yy",
@@ -1332,6 +1707,10 @@ FM.dateFormat.masks = {
 };
 
 // Internationalization strings
+/**
+ * 
+ * @ignore
+ */
 FM.dateFormat.i18n = {
     dayNames: [
         "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
@@ -1345,6 +1724,10 @@ FM.dateFormat.i18n = {
 
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.dateToString = function(dat, utc) {
     var sy, sm, sd, sh, sn, ss;
     var d = dat;

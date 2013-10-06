@@ -1,13 +1,7 @@
 // -- DM list class ------------------------------------------------------------
 /**
- * DM list holds  DM.Objects. 
- *
- * @class DmList
- * @extends FM.DmObject
- * @memberOf FM
- * @param {object} attrs list of attribute name and values
- * @param {object|String} [config] configuration. Literal presentation or object
- * 
+ * DM list holds DM.Objects. 
+ * <pre>
  * Config: {
  *  data:
  *  isstatic: true/false
@@ -24,6 +18,13 @@
  *  fromRowAttribute,numRowsAttribute
  * }
  * this.getProperty('config',{})
+ * </pre>
+ * 
+ * @class FM.DmList
+ * @extends FM.DmObject
+ * @memberOf FM
+ * @param {object} attrs list of attribute name and values
+ * @param {object|String} [config] configuration. Literal presentation or object
  * 
  */
 FM.DmList = FM.defineClass('DmList', FM.DmObject);

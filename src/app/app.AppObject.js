@@ -1,16 +1,10 @@
 /**
- * 
- * @typedef {Object} FM.AppObject
- * @type FM.AppObject
- */
-
-/**
 * Basic application class. 
 * 
-* @type {FM.AppObject}
+* @class FM.AppObject
 * @extends FM.LmObject
 * @memberOf FM
-* @param {object} [options] Options
+* @param {Object} [opt] Options (application attributes).
 */
     
 FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
