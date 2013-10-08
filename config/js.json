@@ -1,6 +1,17 @@
 [
-"<%=js_dir%>/namespace.js_",
+"<%=js_dir%>/namespace.js_", 
+
 "<%=js_dir%>/fm.js",
+"<%=js_dir%>/fm.types.js",
+"<%=js_dir%>/fm.attr.js",
+"<%=js_dir%>/fm.date.js",
+"<%=js_dir%>/fm.encoding.js",
+"<%=js_dir%>/fm.html.js",
+"<%=js_dir%>/fm.templates.js",
+"<%=js_dir%>/fm.validation.js",
+"<%=js_dir%>/fm.oop.js",
+"<%=js_dir%>/fm.log.js",
+
 "<%=js_dir%>/ob/ob.Object.js",
 "<%=js_dir%>/ut/ut.UtAjax.js",
 "<%=js_dir%>/ut/ut.UtTimer.js",
@@ -33,5 +44,6 @@
 "<%=js_dir%>/gui/ml/gui.MlEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlDateEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",
+
 "<%=js_dir%>/terminator.js_"
 ]
