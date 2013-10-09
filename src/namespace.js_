@@ -1,0 +1,10 @@
+if(typeof(window.console) == 'undefined') {
+    /** @ignore */
+    window.console = new function() {
+        /** @ignore */
+        this.log = function() {}
+    };
+}
+
+
+if(typeof(FM) == 'undefined') {

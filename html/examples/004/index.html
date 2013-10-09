@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo 04</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="../../../js/fm-js-all.js"></script> 
+        <script src="../common/ex-common.js"></script> 
+        <script src="ex004.js"></script> 
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp({
+                fm_templates_path: 'res/templates'
+            })">
+        <p
+            data-fmml-template="example.dummy.html" 
+            >
+            Be aware that you cant load 
+            templats from local drive directly. Install example 
+            on remote server and correct <b>fm_templates_path</b> in index.html.
+        </p>
+        <p>OR you can use template from DOM:</p>
+        <p
+            data-fmml-template="local.dummy.html"
+            >
+            If you see this text you did some mistake :) 
+        </p>
+        <p>OR you can use predefined template (check ex006.js):</p>
+        <p
+            data-fmml-template="predefined.dummy.html"
+            >
+            If you see this text you did some mistake :) 
+        </p>
+
+        <!-- local templates -->
+        <div style="display: none;">
+            <div data-fmml-template-def="local.dummy.html">
+                <div>local dummy template</div>
+            </div>
+        </div>
+        
+        <hr>
+    </body>
+</html>

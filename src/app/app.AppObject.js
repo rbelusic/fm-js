@@ -4,7 +4,7 @@
 * @class FM.AppObject
 * @extends FM.LmObject
 * @memberOf FM
-* @param {object} [options] Options
+* @param {Object} [opt] Options (application attributes).
 */
     
 FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
