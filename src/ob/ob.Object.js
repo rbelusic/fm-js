@@ -1,14 +1,11 @@
-// -- Basic FM class -----------------------------------------------------------
 /**
- * Initialize new FM.Object
+ * Basic FM class. Provide listeners, attributes, propertyes, logger.
  * 
  * @class FM.Object
- * @classdesc Basic FM class. Provide listeners, attributes, propertyes, logger
- * @param {object} attrs list of attribute name and values
- * @param {object} [flds] allowed attributes
+ * @param {object} attrs List of attribute name and values,
+ * @param {object} [flds] Allowed attributes,
  * 
  */
-
 FM.Object = FM.defineClass('Object');
 
 FM.Object.prototype._init = function(attrs, flds) {
@@ -43,10 +40,10 @@ FM.Object.prototype._init = function(attrs, flds) {
 }
 
 /**
- * Get  FM class name
+ * Get FM class name.
  * @public     
  * @function 
- * @returns {string} Returns name of the object
+ * @returns {string} Returns name of the class.
  */
 FM.Object.prototype.getClassName = function() {
     var o = this;
@@ -59,10 +56,11 @@ FM.Object.prototype.getClassName = function() {
 
 
 /**
- * Get FM subclass name
+ * Get FM subclass name.
+ * 
  * @public     
  * @function 
- * @returns {string} Returns subclass of object
+ * @returns {string} Returns subclass of object.
  */
 FM.Object.prototype.getSubClassName = function() {
     return this.objectSubClass;
@@ -80,10 +78,11 @@ FM.Object.prototype.getSubClassName = function() {
 }
 
 /**
- * Get object data id 
+ * Get object data ID,
+ * 
  * @public     
  * @function 
- * @returns {string} Returns id of object
+ * @returns {string} Returns data ID of the class instance.
  */
 FM.Object.prototype.getDataID = function() {
     return(this.getID());
@@ -91,14 +90,14 @@ FM.Object.prototype.getDataID = function() {
 
 
 /**
- * Add listener
+ * Add listener.
+ * 
  * @public     
  * @function 
- * @param {FM.Object|object} oListener FM.Object to register as listener or object with event functions
- * @param {object} [config] Additional options
+ * @param {FM.Object|object} oListener FM.Object to register as listener or object with event functions.
+ * @param {object} [config] Additional options.
  */
 FM.Object.prototype.addListener = function(oListener, config) {
-
     // definicija listenera
     var lstnrdef = {
         listener: oListener,
@@ -118,10 +117,11 @@ FM.Object.prototype.addListener = function(oListener, config) {
 }
 
 /**
- * Remove listener
+ * Remove listener.
+ * 
  * @public     
  * @function 
- * @param {FM.Object|object} oListener 
+ * @param {FM.Object|object} oListener Listener to remove.
  */
 FM.Object.prototype.removeListener = function(oListener) {
     if (!FM.isset(oListener) || !oListener || !FM.isset(oListener.getID))
@@ -143,7 +143,8 @@ FM.Object.prototype.removeListener = function(oListener) {
 }
 
 /**
- * Remove all listeners
+ * Remove all listeners,
+ * 
  * @public     
  * @function 
  */
@@ -154,13 +155,13 @@ FM.Object.prototype.removeAllListeners = function() {
 
 
 /**
- * Event function
+ * Event function.
+ * 
  * @public     
  * @function 
  * @param {FM.Object} sender Sender of event
- * @param {String} ev Event
- * @param {String} data Event data
- * @param {Object} calledlist list of olready called listeners
+ * @param {string} ev Event
+ * @param {} data Event data.
  */
 FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
@@ -181,11 +182,13 @@ FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
 }
 
 /**
- * Send event to all listeners
+ * Send event to all listeners.
+ * 
  * @public     
  * @function 
- * @param {String} ev Event
- * @param {String} evdata Event data
+ * @param {string} ev Event to send.
+ * @param {} evdata Event data.
+ * 
  */
 FM.Object.prototype.fireEvent = function(ev, evdata, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
@@ -222,10 +225,11 @@ FM.Object.prototype.fireEvent = function(ev, evdata, calledlist) {
 }
 
 /**
- * Test attribute existence
+ * Check if attribute exists.
+ * 
  * @public     
  * @function 
- * @param {string} [key] Attribute name
+ * @param {string} key Attribute name.
  * @returns {boolean} 
  */
 FM.Object.prototype.isAttr = function(key) {
@@ -233,24 +237,26 @@ FM.Object.prototype.isAttr = function(key) {
 }
 
 /**
- * Get attribute value
- * @public     
+ * Get attribute value.
+ * 
+ * @static
  * @function 
- * @param {string} [key] Attribute name
- * @param {string} [defv] Default value of attribute. Default for default is empty string :)
- * @returns {object|string|number} Returns attribute value of <i>key</i> attribute or all attributes in object if <i>key</i> is undefined
+ * @param {string} key Attribute name.
+ * @param {...} [defv=""] Default value of attribute.
+ * @returns {...} Value of attribute or default value.
  */
 FM.Object.prototype.getAttr = function(key, defv) {
     return FM.getAttr(this.options, key, defv);
 }
 
 /**
- * Set value of <i>key</i> attribute to <i>val</i> value
- * @public
- * @function
- * @param {string} key Attribute name
- * @param {string} val Value of attribute
- * @param {boolean} callevent Fire <i>onChange</i> after object update (default is true)
+ * Set attribute value.
+ * 
+ * @static
+ * @function 
+ * @param {string} key Attribute name.
+ * @param {string|number|...} val Value of attribute.
+ * @returns {boolean} <i>true</i> if value of attribute is changed, otherwise <i>false</i>.
  */
 FM.Object.prototype.setAttr = function(key, val, callevent) {
     if (FM.setAttr(this.options, this.undoList, key, val)) {
@@ -262,27 +268,26 @@ FM.Object.prototype.setAttr = function(key, val, callevent) {
 }
 
 /**
- * See <i>FM.Object.getAttr()</i>
- * @see FM.Object#getAttr
+ * @ignore
  */
 FM.Object.prototype.d = function(key, defv) {
     return this.getAttr(key, defv);
 }
 
 /**
- * See <i>FM.Object.setAttr()</i>
- * @see FM.Object#setAttr
+ * @ignore
  */
 FM.Object.prototype.s = function(key, val, callevent) {
     return this.setAttr(key, val, callevent);
 }
 
 /**
- * Check if <i>key</i> attribute is changed
+ * Check if <i>key</i> attribute is changed.
+ * 
  * @public
  * @function 
- * @param {string} key Attribute name
- * @returns {boolean} Returns <i>true</i> if attribute is changed 
+ * @param {string} key Attribute name.
+ * @returns {boolean} 
  */
 FM.Object.prototype.isChanged = function(key) {
     if (FM.isset(key)) {
@@ -294,11 +299,12 @@ FM.Object.prototype.isChanged = function(key) {
 }
 
 /**
- * Set object <i>changed</i> property 
+ * Set FM object <i>changed</i> property,
+ * 
  * @public
  * @function 
  * @param {boolean} v true or false
- * @param {boolean} callevent Fire <i>onChange</i> after object update (default is false)
+ * @param {boolean} callevent Fire <i>onChange</i> event after object update (default is false).
  */
 FM.Object.prototype.setChanged = function(v, callevent) {
     this.setProperty('dirty', v == true);
@@ -309,7 +315,8 @@ FM.Object.prototype.setChanged = function(v, callevent) {
 }
 
 /**
- * Discard object attributes changes
+ * Discard object attribute changes,
+ * 
  * @public
  * @function 
  */
@@ -320,12 +327,15 @@ FM.Object.prototype.discardChanges = function() {
     this.setChanged(false, true);
 }
 
+/**
+ * @ignore
+ */
 FM.Object.prototype.resolveAttrValue = function(attrName, def, context) {
     return FM.resolveAttrValue(this.options, attrName, def, context);
 }
 
 /**
- * Return an unique string based on object data
+ * Return an unique string based on object data.
  * 
  * @public
  * @function
@@ -341,33 +351,36 @@ FM.Object.prototype.getDataHash = function() {
 }
 
 /**
- * Return object with all changed attributes
+ * Return object with all changed attributes.
+ * 
  * @public     
  * @function 
- * @returns {object} Returns with changed attributes
+ * @returns {Object}
  */
 FM.Object.prototype.getChangedAttrList = function() {
     return FM.cloneObject(this.undoList);
 }
 
 /**
- * Get property value
+ * Get property value.
+ * 
  * @function 
- * @param {string} key Property name
- * @param {string} defv Default value of property
- * @returns Returns property value
+ * @param {string} key Property name.
+ * @param {string} [defv=""] Default value of property.
+ * @returns {..} Value of property or default value.
  */
 FM.Object.prototype.getProperty = function(key, defv) {
     return FM.getAttr(this.prop, key, defv);
 }
 
 /**
- * Set property value
+ * Set property value.
+ * 
  * @static
  * @function
  * @param {string} key Property name
  * @param {string} val Value of property
- * @param [boolean] callevent Fire <i>onChange</i> after object update (default is true)
+ * @param {boolean} [callevent=true] Fire <i>onChange</i> event after update.
  */
 FM.Object.prototype.setProperty = function(key, val, callevent) {
     if (FM.setAttr(this.prop, null, key, val)) {
@@ -379,7 +392,7 @@ FM.Object.prototype.setProperty = function(key, val, callevent) {
     return true;
 }
 
-/**
+/** tusam
  * For each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.    
  * @public
  * @function 

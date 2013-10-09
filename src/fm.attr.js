@@ -32,14 +32,14 @@ FM.isAttr = function(options, key) {
 }
 
 /**
- * Get attribute of object
+ * Get attribute value from object.
  * 
  * @static
  * @function 
  * @param {Object} options Object with attributes.
  * @param {string} key Attribute name.
  * @param {...} [defv=""] Default value of attribute.
- * @returns {..} Value of attribute or default value.
+ * @returns {..,} Value of attribute or default value.
  */
 FM.getAttr = function(options, key, defv) {
     if (!options)
