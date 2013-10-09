@@ -17,7 +17,7 @@ FM.MlTemplate.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs);
     this.objectSubClass = "Template";
     this.node = node;    
-    this.node = node;    
+    this.lastTemplateName = '';
     
     // two way binding
     this.node.fmmlTemplate = this;    
@@ -35,14 +35,6 @@ FM.MlTemplate.prototype.getNode = function() {
     return this.node;
 }
 
-
-FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
-    var obj = new FM.MlTemplate(app,attrs,node);
-    if(obj && obj.getAttr('data-fmml-run-on-init','true') != 'false') {
-        obj.run(oObj); 
-    }
-    return obj;
-}
 
 FM.MlTemplate.prototype._applyTemplate = function() {
     var me = this;
@@ -78,19 +70,22 @@ FM.MlTemplate.prototype._applyTemplate = function() {
     // template name
     var tname = this.getAttr('data-fmml-template','');
     tname = FM.applyTemplate(args, tname, false, false);
-    FM.UtTemplate.getTemplate(app,args,tname,function(isok,templ) {
-        if(isok) {
-            var tmplnode = $(templ);
-            if(me.getAttr('data-fmml-template-replace','') == "true") {
-                $(me.getNode()).replaceWith(tmplnode);
-                me.node = tmplnode;
-                me.node.fmmlTemplate = me;
-            } else {
-                $(me.getNode()).html(templ);
+    if(tname != this.lastTemplateName) {            
+        FM.UtTemplate.getTemplate(app,args,tname,function(isok,templ) {
+            if(isok) {
+                me.lastTemplateName = tname;
+                var tmplnode = $(templ);
+                if(me.getAttr('data-fmml-template-replace','') == "true") {
+                    $(me.getNode()).replaceWith(tmplnode);
+                    me.node = tmplnode;
+                    me.node.fmmlTemplate = me;
+                } else {
+                    $(me.getNode()).html(templ);
+                }
+                FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj);
             }
-            FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj);
-        }
-    });
+        });
+    }
 }
 
 FM.MlTemplate.prototype.run = function(dmObj) {    
@@ -108,3 +103,10 @@ FM.MlTemplate.prototype.onUrlHashChange = function(sender,hash) {
     }
 }
 
+FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
+    var obj = new FM.MlTemplate(app,attrs,node);
+    if(obj && obj.getAttr('data-fmml-run-on-init','true') != 'false') {
+        obj.run(oObj); 
+    }
+    return obj;
+}
