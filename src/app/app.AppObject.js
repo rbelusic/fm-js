@@ -22,10 +22,17 @@ FM.AppObject.prototype._init = function(opt) {
 }
 
 FM.AppObject.prototype.run = function() {
+    // err
     this.lastError = FM.DmObject.newObject(this,'GenericError', {});
 
     // registry
     this.appRegistry = new FM.UtRegistry();
+    
+    // start sys events
+    var me = this;
+    $(window).on('hashchange.'+this.getID(), function () {
+        me.fireEvent("onUrlHashChange",FM.getAttr(window,'location.hash',''));
+    });
 }
 
 FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
