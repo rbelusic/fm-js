@@ -30,6 +30,7 @@
 "<%=js_dir%>/tests/tst.TstGeneric.js",
 "<%=js_dir%>/tests/tst.TstAjax.js",
 "<%=js_dir%>/tests/tst.TstDmList.js",
+"<%=js_dir%>/lm/ml/lm.MlTemplate.js",
 "<%=js_dir%>/lm/ml/hosts/lm.MlHost.js",
 "<%=js_dir%>/lm/ml/hosts/lm.MlHostQueryParams.js",
 "<%=js_dir%>/lm/ml/hosts/lm.MlHostGenericCollection.js",

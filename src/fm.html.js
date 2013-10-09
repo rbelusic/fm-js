@@ -289,11 +289,18 @@ FM.getArgs = function(attr, def) {
     }
 
     var args = query_string;
+    var hash = FM.isset(window.location.hash) && window.location.hash ?
+        window.location.hash : '';
+    if(FM.startsWith(hash, "#")) {
+        hash = hash.substring(1);
+    }
+        
     args._page = {
         host: window.location.protocol + "//" + window.location.host +
             (window.location.port == '' ? '' : ":" + window.location.port),
         url: window.location.href,
-        path: window.location.pathname
+        path: window.location.pathname,
+        hash: hash
     }
 
     var pnamearr = args._page.path.split("/");

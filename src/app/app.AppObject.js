@@ -30,10 +30,17 @@ FM.AppObject.prototype.run = function() {
     
     // start sys events
     var me = this;
-    $(window).on('hashchange.'+this.getID(), function () {
-        me.fireEvent("onUrlHashChange",FM.getAttr(window,'location.hash',''));
+    $(window).bind('hashchange.'+this.getID(), function () {
+        me.fireEvent("onUrlHashChange",FM.getArgs('_page.hash',''));
     });
+        
 }
+
+FM.AppObject.prototype.dispose = function() {    
+    $(window).unbind('hashchange.'+this.getID());
+    this._super("dispose");    
+}
+
 
 FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
     var lst = new FM.DmList(dmData,dmConfig,this);

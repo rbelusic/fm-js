@@ -17,6 +17,7 @@ FM.MlTemplate.prototype._init = function(app,attrs,node) {
     this._super("_init",app,attrs);
     this.objectSubClass = "Template";
     this.node = node;    
+    this.node = node;    
     
     // two way binding
     this.node.fmmlTemplate = this;    
@@ -43,11 +44,9 @@ FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
     return obj;
 }
 
-FM.MlTemplate.prototype.run = function(dmObj) {
+FM.MlTemplate.prototype._applyTemplate = function() {
     var me = this;
-    
-    this.setDmObject(dmObj);
-    
+
     // t. args from node attributes
     var args = FM.UtTemplate.getTemplateArgs(this.getAttr());
     
@@ -66,8 +65,8 @@ FM.MlTemplate.prototype.run = function(dmObj) {
     var app = this.getApp();
     var oObj = this.getDmObject();
     FM.forEach(args, function(n,v) {
-        if(FM.isString(v) && FM.startsWith(v,'@@')) {                                    
-            v = FM.resolveAttrValue(null,"-",v,{
+        if(FM.isString(v) && FM.startsWith(v,'@')) {                                    
+            args[n] = FM.resolveAttrValue(null,"-",v,{
                 A: app,
                 D: oObj,
                 T: me
@@ -92,11 +91,20 @@ FM.MlTemplate.prototype.run = function(dmObj) {
             FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj);
         }
     });
+}
+
+FM.MlTemplate.prototype.run = function(dmObj) {    
+    this._super("run"); 
+    this.setDmObject(dmObj);
+    
+    this._applyTemplate();
 
 }
 
 
-FM.MlTemplate.prototype.onUrlHashChange = function(sender,data) {
-    
+FM.MlTemplate.prototype.onUrlHashChange = function(sender,hash) {
+    if(sender == this.getApp() && this.getAttr('data-fmml-template-type') == 'route') {
+        this._applyTemplate();
+    }
 }
 

@@ -13,6 +13,7 @@
  * <tr><td>data-fmml-nuber-display-decimals</td><td>display value rounded to number of decimals</td></tr>
  * <tr><td>data-fmml-validation-rules</td><td>validation rules for observer</td></tr>
  * <tr><td>data-fmml-validation-message</td><td>validation error message</td></tr>
+ * <tr><td>data-fmml-force-validation</td><td>force validation on value change if value is empty too</td></tr>
  * <tr><td>data-fmml-run-on-update</td><td>node id of host to run on update</td></tr>
  * </table>
  * 
@@ -38,22 +39,6 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
     this.executed = false;
     this.node = node;
     
-    this.slaveNodes = [];
-    /*
-    this.slaveNodes = $(node).is(':radio') ?
-        $("input:radio[name ='" + $(node).attr("name") + "']") :
-        []
-    ;
-    
-    for(var i=0; i < this.slaveNodes; i++) {
-        if(FM.isset(this.slaveNodes[i].fmmlObserver) && this.slaveNodes[i].fmmlObserver) {
-            throw "Node is radio with initialized observer";
-        }
-    }
-    for(var i=0; i < this.slaveNodes; i++) {
-        this.slaveNodes[i].fmmlObserver = this;
-    }
-    */
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -115,9 +100,6 @@ FM.MlObserver.prototype.dispose = function() {
     this.log("Removing observer from DOM node ...", FM.logLevels.debug, 'MlObserver.dispose');
     if (this.node) {
         this.node.fmmlObserver = null;
-        for(var i=0; i < this.slaveNodes; i++) {
-            this.slaveNodes[i].fmmlObserver = null;
-        }
     }
 
     this.log("Removing observer from host ...", FM.logLevels.debug, 'MlObserver.dispose');
@@ -186,7 +168,12 @@ FM.MlObserver.prototype.isValid = function(force) {
     var value = this.getValue();
 
     if (rules != '') {
-        force = FM.isset(force) ? force : false;
+        force = FM.isset(force) ? force : 
+            (
+                this.getAttr('data-fmml-force-validation','false') == 'true' ? 
+                true : false
+            );
+        
         if (force || value != "") {
             var allRules = rules != null && rules != '' ? rules.split(";") : [];
 

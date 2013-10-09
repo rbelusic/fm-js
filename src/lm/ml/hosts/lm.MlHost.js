@@ -628,16 +628,19 @@ FM.MlHost.disposeChildNodes = function(checknode,childsOnly) {
         checknode = checknode.length > 0 ? checknode[0] : null;
     }    
     childsOnly = FM.isset(childsOnly) && childsOnly == false ? false : true;
-    var nodes = $(checknode).find("[data-fmml-host]");
-    if(!childsOnly && $(checknode).is("[data-fmml-host]")) {
+    var nodes = $(checknode).find("[data-fmml-host],[data-fmml-template]");
+    if(!childsOnly && $(checknode).is("[data-fmml-host],[data-fmml-template]")) {
         nodes = nodes.add(checknode);
     }
     
     nodes.each(function(i, n){
+        if(FM.isset(n.fmmlTemplate) && n.fmmlTemplate) {
+            n.fmmlTemplate.dispose();
+        }        
         if(FM.isset(n.fmmlHost) && n.fmmlHost) {
             n.fmmlHost.dispose();
         }        
-    });  
+    });
 }
 
 //
