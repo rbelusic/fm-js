@@ -1,9 +1,6 @@
-/** 
- * -----------------------------------------------------------------------------
- * 
+/**
+ * @fileOverview This file has functions related to validation.
  * @review isipka
- * 
- * -----------------------------------------------------------------------------
  */
 /**
  * Determine if a variable containing e-mail address.

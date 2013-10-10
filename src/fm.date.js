@@ -1,9 +1,15 @@
+/**
+ * @fileOverview This file has functions related to date and time.
+ * @review isipka
+ */
+
 // -- dates --------------------------------------------------------------------
 /**
  * 
  * @ignore
  */
 FM.dateTimeDivider = ' ';
+
 /*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
@@ -21,8 +27,12 @@ FM.dateTimeDivider = ' ';
  */
 
 /**
+ * Basic date and time function.
+ * Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date formating function.
  * 
- * @ignore
+ * @static
+ * @function 
+ * @see <a href="http://blog.stevenlevithan.com/archives/date-time-format">Steven Levithan blog article</a> for full list of options.
  */
 FM.dateFormat = function() {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
@@ -126,6 +136,12 @@ FM.dateFormat.masks = {
     isoDate: "yyyy-mm-dd",
     isoTime: "HH:MM:ss",
     isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
+    fmDateTime: "yyyy-mm-dd HH:MM:ss",
+    fmUtcDateTime: "UTC:yyyy-mm-dd HH:MM:ss",
+    fmDate: "yyyy-mm-dd",
+    fmUtcDate: "UTC:yyyy-mm-dd",
+    fmTime: "HH:MM:ss",
+    fmUtcTime: "UTC:HH:MM:ss",
     isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
 };
 
@@ -152,255 +168,129 @@ FM.dateFormat.i18n = {
  * @ignore
  */
 FM.dateToString = function(dat, utc) {
-    var sy, sm, sd, sh, sn, ss;
-    var d = dat;
-
-    if (!FM.isset(d) || d == null || d == '')
-        return('');
-
-    if (utc) {
-        sy = d.getUTCFullYear();
-        sm = (d.getUTCMonth() + 1);
-        sd = d.getUTCDate();
-        sh = d.getUTCHours();
-        sn = d.getUTCMinutes();
-        ss = d.getUTCSeconds();
-    } else {
-        sy = d.getFullYear();
-        sm = (d.getMonth() + 1);
-        sd = d.getDate();
-        sh = d.getHours();
-        sn = d.getMinutes();
-        ss = d.getSeconds();
-        ;
+    dat = FM.isset(dat) ? dat : new Date();
+    
+    try {
+        var s = FM.dateFormat(dat, (utc ? 'fmUtcDateTime' : 'fmDateTime'));
+        return s;
+    } catch(e) {
+        return '';
     }
-
-    // formiraj string
-    return(
-        sy +
-        (sm < 9 ? '-0' + sm : '-' + sm) +
-        (sd < 9 ? '-0' + sd : '-' + sd) +
-        (sh < 9 ? ' 0' + sh : FM.dateTimeDivider + sh) +
-        (sn < 9 ? ':0' + sn : ':' + sn) +
-        (ss < 9 ? ':0' + ss : ':' + ss)
-        );
 }
 
-FM.isDateString = function(sdate) { // '2010-05-26 05:56:00'
+FM.isDateString = function(sdate) { 
     if (!FM.isString(sdate)) {
         return false;
     }
 
-    var templ = "" + new Date().getFullYear() + '-01-01' + FM.dateTimeDivider + '00:00:00';
-    if (sdate.length < templ.length) {
-        sdate += templ.substr(sdate.length);
+    try {
+        var ds = FM.dateFormat(sdate);
+        var d = new Date(ds);
+        return d ? true : false;
+    } catch(e) {
+        return false;
     }
-    new RegExp("[-:\\" + FM.dateTimeDivider + "]", "g")
-    var arr = sdate.split(new RegExp("[-:\\" + FM.dateTimeDivider + "]", "g"));
-
-    return arr.length == 6;
 }
 
 FM.parseLocalDateString = function(sdate) {
     if (!FM.isset(sdate) || sdate == null || sdate == '')
         return(null);
 
-    var d = new Date(isNaN(sdate) ? Date.parse(sdate) : sdate);
-    return d && !isNaN(d.getTime()) ? d : null;
+    try {
+        var s = FM.dateFormat(sdate);
+        var d = new Date(s);
+        return d;
+    } catch(e) {
+        return null;
+    }
 }
 
-FM.parseDateString = function(sdate, utc) { // '2010-05-26 05:56:00', true/false
-    var fpos = 0, pos;
-    var sy = '1970';
-    var sm = '01';
-    var sd = '01';
-    var sh = '00';
-    var sn = '00';
-    var ss = '00';
-    var d;
-
-    if (!FM.isset(sdate) || sdate == null || sdate == '')
-        return(sdate);
-    if (sdate == FM.endOfHistory() || sdate == FM.startOfHistory())
-        return('');
-
-    var templ = "" + new Date().getFullYear() + '-01-01' + FM.dateTimeDivider + '00:00:00';
-    if (sdate.length < templ.length) {
-        sdate += templ.substr(sdate.length);
+FM.parseDateString = function(sdate, utc) { 
+    if (!FM.isset(sdate) || sdate == null || sdate == '') {
+        return(null);
     }
 
-    // godina
-    pos = sdate.indexOf("-", fpos);
-    if (pos < 0) {
-        sy = sdate.substr(fpos);
-        fpos = -1;
-    } else {
-        sy = sdate.substr(fpos, pos - fpos);
-        fpos = pos + 1;
+    try {
+        var s = FM.dateFormat(sdate + (utc ? 'Z' : ''));
+        var d = new Date(s);
+        return d;
+    } catch(e) {
+        return null;
     }
-    if (sy < 1970 || sy > 9999)
-        return('');
-
-    // mjesec
-    if (fpos > -1) {
-        pos = sdate.indexOf("-", fpos);
-        if (pos < 0) {
-            sm = sdate.substr(fpos);
-            fpos = -1;
-        } else {
-            sm = sdate.substr(fpos, pos - fpos);
-            fpos = pos + 1;
-        }
-    }
-    if (sm.substr(0, 1) == '0') {
-        sm = sm.substr(1);
-    }
-    if (sm < 1 || sm > 12)
-        return('');
-
-    // dan
-    if (fpos > -1) {
-        pos = sdate.indexOf(FM.dateTimeDivider, fpos);
-        if (pos < 0) {
-            sd = sdate.substr(fpos);
-            fpos = -1;
-        } else {
-            sd = sdate.substr(fpos, pos - fpos);
-            fpos = pos + 1;
-        }
-    }
-    if (sd.substr(0, 1) == '0') {
-        sd = sd.substr(1);
-    }
-    if (sd < 1 || sd > 31)
-        return('');
-
-    // sat
-    if (fpos > -1) {
-        pos = sdate.indexOf(":", fpos);
-        if (pos < 0) {
-            sh = sdate.substr(fpos);
-            fpos = -1;
-        } else {
-            sh = sdate.substr(fpos, pos - fpos);
-            fpos = pos + 1;
-        }
-    }
-    if (sh.substr(0, 1) == '0') {
-        sh = sh.substr(1);
-    }
-    if (sh < 0 || sh > 23)
-        return('');
-
-    // minute
-    if (fpos > -1) {
-        pos = sdate.indexOf(":", fpos);
-        if (pos < 0) {
-            sn = sdate.substr(fpos);
-            fpos = -1;
-        } else {
-            sn = sdate.substr(fpos, pos - fpos);
-            fpos = pos + 1;
-        }
-    }
-    if (sn.substr(0, 1) == '0') {
-        sn = sn.substr(1);
-    }
-    if (sn < 0 || sn > 59)
-        return('');
-
-    // sekunde
-    if (fpos > -1) {
-        pos = sdate.indexOf(":", fpos);
-        if (pos < 0) {
-            ss = sdate.substr(fpos);
-            fpos = -1;
-        } else {
-            ss = sdate.substr(fpos, pos - fpos);
-            fpos = pos + 1;
-        }
-    }
-    if (ss.substr(0, 1) == '0')
-        ss = ss.substr(1);
-    if (ss < 0 || ss > 59)
-        return('');
-
-    if (utc) {
-        d = new Date(
-            Date.UTC(
-            parseInt(sy), parseInt(sm) - 1, parseInt(sd),
-            parseInt(sh), parseInt(sn), parseInt(ss), 0
-            )
-            );
-    } else {
-        d = new Date();
-        d.setFullYear(parseInt(sy), parseInt(sm) - 1, parseInt(sd));
-        d.setHours(parseInt(sh), parseInt(sn), parseInt(ss), 0);
-    }
-
-    // kraj
-    return isNaN(d.getTime()) ? '' : d;
 }
 
+/* UTC to local date string */
 FM.srv2locDate = function(srvstr) {
     return(FM.dateToString(FM.parseDateString(srvstr, true), false));
 }
 
+/* local to UTC date string */
 FM.loc2srvDate = function(locstr) {
     return(FM.dateToString(FM.parseDateString(locstr, false), true));
 }
 
+/* local now() date string */
 FM.locNow = function() {
     return(FM.dateToString(new Date(), false));
 }
 
+/* UTC now() date string */
 FM.srvNow = function() {
     return(FM.dateToString(new Date(), true));
 }
 
+/* calculate time difference in seconds between two dates 
+ */
+
+FM.timeBetween = function(d1, d2) {
+    if (
+        !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) || 
+        !FM.isset(d2) || !d2 || !FM.isset(d2.getTime)
+    ) {
+        return false;    
+    }
+    // Calculate the difference in milliseconds
+    return (d2.getTime()/1000 - d1.getTime()/1000);
+}
+
+
+/* calculate time difference in seconds between two dates and returns descriptive string
+ */
 FM.strTimeBetween = function(d1, d2) {
-    if (!FM.isset(d1) || !d1 || d1 == ' ' || !FM.isset(d2) || !d2 || d2 == ' ')
-        return '';
+    var dif = FM.timeBetween(d1,d2);    
+    if (dif == false) {
+        return '';    
+    }
+    var dif_abs = Math.abs(dif);
+    
 
     // The number of milliseconds in one day
-    var ONE_DAY = 1000 * 60 * 60 * 24;
-    var ONE_HOUR = 1000 * 60 * 60;
-    var ONE_MINUTE = 1000 * 60;
-    var ONE_SEC = 1000;
+    var ONE_DAY = 24;
+    var ONE_HOUR = 60;
+    var ONE_MINUTE = 60;
 
-    var dif, ret;
+    var ret;
 
-    // Convert both dates to milliseconds
-    var date1_ms = d1.getTime();
-    var date2_ms = d2.getTime();
-
-    // Calculate the difference in milliseconds
-    var difference_ms = Math.abs(date1_ms - date2_ms);
-
-    // ONE_SEC
-    dif = Math.round(difference_ms / ONE_SEC);
 
     if (dif < 60) {
-        ret = FM._T(date1_ms < date2_ms ? "[:1] seconds ago" : "In [:1] seconds", dif);
+        ret = FM._T(dif > 0 ? "[:1] seconds ago" : "In [:1] seconds", dif_abs);
     } else { // ONE_MINUTE
-        dif = Math.round(difference_ms / ONE_MINUTE);
-        if (dif < 60) {
-            ret = FM._T(date1_ms < date2_ms ? "[:1] minutes ago" : "In [:1] minutes", dif);
+        dif_abs = Math.round(dif_abs / ONE_MINUTE);
+        if (dif_abs < 60) {
+            ret = FM._T(dif > 0 ? "[:1] minutes ago" : "In [:1] minutes", dif_abs);
         } else { // ONE_HOUR
-            dif = Math.round(difference_ms / ONE_HOUR);
-            if (dif < 24) {
-                ret = FM._T(date1_ms < date2_ms ? "[:1] hours ago" : "In [:1] hours", dif);
+            dif_abs = Math.round(dif_abs / ONE_HOUR);
+            if (dif_abs < 24) {
+                ret = FM._T(dif > 0 ? "[:1] hours ago" : "In [:1] hours", dif_abs);
             } else { // ONE_DAY
-                dif = Math.round(difference_ms / ONE_DAY);
+                dif_abs = Math.round(dif_abs / ONE_DAY);
 
-                if (dif == 1) {
-                    ret = FM._T(date1_ms < date2_ms ? "Yesterday" : "Tomorow", dif);
+                if (dif_abs == 1) {
+                    ret = FM._T(dif > 0 ? "Yesterday" : "Tomorow", dif_abs);
                 }
                 else {
-                    ret = FM._T(date1_ms < date2_ms ? "[:1] days ago" : "In [:1] days", dif);
+                    ret = FM._T(dif > 0 ? "[:1] days ago" : "In [:1] days", dif_abs);
                 }
-
-
             }
         }
     }
@@ -429,16 +319,17 @@ FM.dateLocalFormat = function(d) {
 
 
 FM.startOfHistory = function() {
-    return '1970-01-01' + FM.dateTimeDivider + '00:00:00';
+    return FM.dateFormat(new Date(0),'fmUtcDateTime');    
 }
 
 FM.endOfHistory = function() {
-    return '2050-01-01' + FM.dateTimeDivider + '00:00:00';
+    return FM.dateFormat(new Date(2524608000000),'fmUtcDateTime');
 }
 
 FM.timestamp = function(date) {
     return FM.l_timestamp(date) / 1000;
 }
+
 FM.l_timestamp = function(date) {
     return Math.round((FM.isset(date) ? date : new Date()).getTime());
 }

@@ -207,6 +207,10 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.LmObject.html">FM.LmObject</a></li>
 	
+	<li><a href="../symbols/FM.logLevelNames.html">FM.logLevelNames</a></li>
+	
+	<li><a href="../symbols/FM.logLevels.html">FM.logLevels</a></li>
+	
 	<li><a href="../symbols/FM.MlDateEdit.html">FM.MlDateEdit</a></li>
 	
 	<li><a href="../symbols/FM.MlEdit.html">FM.MlEdit</a></li>
@@ -240,6 +244,8 @@ ul.inheritsList
 	<li><a href="../symbols/FM.MlTemplate.html">FM.MlTemplate</a></li>
 	
 	<li><a href="../symbols/FM.Object.html">FM.Object</a></li>
+	
+	<li><a href="../symbols/FM.PageInfo.html">FM.PageInfo</a></li>
 	
 	<li><a href="../symbols/FM.TstAjax.html">FM.TstAjax</a></li>
 	
@@ -418,9 +424,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateFormat">dateFormat</a></b>()
+								</div>
+								<div class="description">Basic date and time function.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.defineClass">defineClass</a></b>(name, ext)
 								</div>
 								<div class="description">Create new FM class.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.deleteCookie">deleteCookie</a></b>(name, domain)
+								</div>
+								<div class="description">Delete cookie <i>name</i> on choosen domain.</div>
 							</td>
 						</tr>
 					
@@ -476,8 +500,7 @@ until end of list or <i>false</i> is returned.</div>
 							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getArgs">getArgs</a></b>(attr, def)
 								</div>
-								<div class="description">Return chosen page information 
-or object representing page info and all URL query parameters as name,value pairs.</div>
+								<div class="description">Return combined result of FM.getPageArgs and FM.getPageInfo functions.</div>
 							</td>
 						</tr>
 					
@@ -505,6 +528,24 @@ or object representing page info and all URL query parameters as name,value pair
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getLogTypeName">getLogTypeName</a></b>(level)
 								</div>
 								<div class="description">Get log level name for given level.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getPageArgs">getPageArgs</a></b>(attr, def)
+								</div>
+								<div class="description">Return requested query parameter value, or object containing all query name - value pairs.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getPageInfo">getPageInfo</a></b>(attr, def)
+								</div>
+								<div class="description">Return requested page information, or object containing all informations.</div>
 							</td>
 						</tr>
 					
@@ -592,6 +633,15 @@ or object representing page info and all URL query parameters as name,value pair
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.loadCookie">loadCookie</a></b>(name, asstring, domain)
+								</div>
+								<div class="description">Get cookie value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.log">log</a></b>(oObj, msg, level, callerinfo)
 								</div>
 								<div class="description">Log a message.</div>
@@ -631,6 +681,15 @@ or object representing page info and all URL query parameters as name,value pair
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.rtrim">rtrim</a></b>(s)
 								</div>
 								<div class="description">Strip whitespace from the end of a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.saveCookie">saveCookie</a></b>(name, value, expiredays, domain)
+								</div>
+								<div class="description">Set cookie.</div>
 							</td>
 						</tr>
 					
@@ -1184,6 +1243,42 @@ after a whitespace or minus sign.
 
 					<hr />
 				
+					<a name=".dateFormat"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>dateFormat</b>()
+					
+					</div>
+					<div class="description">
+						Basic date and time function.
+Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date formating function.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="http://blog.stevenlevithan.com/archives/date-time-format">Steven Levithan blog article</a> for full list of options.</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
 					<a name=".defineClass"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -1230,6 +1325,51 @@ after a whitespace or minus sign.
 								<dd><span class="light fixedFont">{function}</span> </dd>
 							
 							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".deleteCookie"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>deleteCookie</b>(name, domain)
+					
+					</div>
+					<div class="description">
+						Delete cookie <i>name</i> on choosen domain.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>name</b>
+									
+								</dt>
+								<dd>Name of the cookie.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>domain</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Cookie domain.</dd>
+							
+							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -1452,25 +1592,14 @@ until end of list or <i>false</i> is returned.
 					<a name=".getArgs"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{string}</span>
+					<span class="light">{...|Object}</span>
 					<span class="light">FM.</span><b>getArgs</b>(attr, def)
 					
 					</div>
 					<div class="description">
-						Return chosen page information 
-or object representing page info and all URL query parameters as name,value pairs.
-{
-  _page: {
-    host: "...",
-    url: "...",
-    path: "...",
-    name: "..."
-    fullname: "..."
-  },
-  arg1: v1,
-  arg2: v2,
-  ...
-}
+						Return combined result of FM.getPageArgs and FM.getPageInfo functions. 
+FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs function call.
+<b>This function is deprecated. Please use FM.getPageArgs and FM.getPageInfo functions.</b>
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
@@ -1485,16 +1614,16 @@ or object representing page info and all URL query parameters as name,value pair
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>attr</b>
-									<i>Optional</i>
+									<b>attr</b>
+									
 								</dt>
-								<dd>The name of attrribute to return.</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>def</b>
-									<i>Optional</i>
+									<b>def</b>
+									
 								</dt>
-								<dd>Default return value.</dd>
+								<dd></dd>
 							
 							</dl>
 						
@@ -1505,11 +1634,20 @@ or object representing page info and all URL query parameters as name,value pair
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{string}</span> </dd>
+								<dd><span class="light fixedFont">{...|Object}</span> </dd>
 							
 							</dl>
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.html#.getPageArgs">FM.getPageArgs</a></dd>
+							
+								<dd><a href="../symbols/FM.html#.getPageInfo">FM.getPageInfo</a></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -1645,6 +1783,110 @@ or object representing page info and all URL query parameters as name,value pair
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getPageArgs"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{...|Object}</span>
+					<span class="light">FM.</span><b>getPageArgs</b>(attr, def)
+					
+					</div>
+					<div class="description">
+						Return requested query parameter value, or object containing all query name - value pairs.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>attr</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The name of attrribute to return.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>def</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Default return value.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{...|Object}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getPageInfo"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string|<a href="../symbols/FM.PageInfo.html">FM.PageInfo</a>}</span>
+					<span class="light">FM.</span><b>getPageInfo</b>(attr, def)
+					
+					</div>
+					<div class="description">
+						Return requested page information, or object containing all informations.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>attr</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The name of attrribute to return.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>def</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Default return value.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string|<a href="../symbols/FM.PageInfo.html">FM.PageInfo</a>}</span> </dd>
 							
 							</dl>
 						
@@ -2062,6 +2304,57 @@ or object representing page info and all URL query parameters as name,value pair
 
 					<hr />
 				
+					<a name=".loadCookie"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>loadCookie</b>(name, asstring, domain)
+					
+					</div>
+					<div class="description">
+						Get cookie value.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>name</b>
+									
+								</dt>
+								<dd>Name of the cookie.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>asstring</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Don't deserialize cookie value.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>domain</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Cookie domain.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name=".log"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -2293,6 +2586,63 @@ or object representing page info and all URL query parameters as name,value pair
 								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".saveCookie"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.</span><b>saveCookie</b>(name, value, expiredays, domain)
+					
+					</div>
+					<div class="description">
+						Set cookie.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>name</b>
+									
+								</dt>
+								<dd>Name of the cookie.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{...}</span> <b>value</b>
+									
+								</dt>
+								<dd>Value of the cookie.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{number}</span> <b>expiredays</b>
+									<i>Optional, Default: 3650</i>
+								</dt>
+								<dd>The time the cookie expires.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>domain</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Cookie domain.</dd>
+							
+							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -3068,7 +3418,7 @@ JSON parsing will occur.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 09 2013 18:03:17 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Oct 10 2013 16:02:39 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

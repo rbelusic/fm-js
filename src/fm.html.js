@@ -1,9 +1,6 @@
-/** 
- * -----------------------------------------------------------------------------
- * 
+/**
+ * @fileOverview This file has functions related to HTML.
  * @review isipka
- * 
- * -----------------------------------------------------------------------------
  */
 
 /**
@@ -59,8 +56,13 @@ FM.cancelEventPropagation = function() {
 }
 
 /**
- * @ignore
- *
+ * Delete cookie <i>name</i> on choosen domain.
+ * 
+ * @static
+ * @function 
+ * @param {string} name Name of the cookie.
+ * @param {string} [domain] Cookie domain.
+ * 
  */
 FM.deleteCookie = function(name, domain) {
     FM.saveCookie(name, "", 0, domain);
@@ -68,8 +70,15 @@ FM.deleteCookie = function(name, domain) {
 }
 
 /**
- * @ignore
- *
+ * Set cookie.
+ * 
+ * @static
+ * @function 
+ * @param {string} name Name of the cookie.
+ * @param {...} value Value of the cookie.
+ * @param {number} [expiredays=3650] The time the cookie expires. 
+ * @param {string} [domain] Cookie domain.
+ * 
  */
 FM.saveCookie = function(name, value, expiredays, domain) {
     var daysahead, expires = null;
@@ -100,8 +109,14 @@ FM.saveCookie = function(name, value, expiredays, domain) {
 
 
 /**
- * @ignore
- *
+ * Get cookie value.
+ * 
+ * @static
+ * @function 
+ * @param {string} name Name of the cookie.
+ * @param {boolean} [asstring=false] Don't deserialize cookie value.
+ * @param {string} [domain] Cookie domain.
+ * 
  */
 FM.loadCookie = function(name, asstring) {
     var dc = document.cookie;
@@ -245,28 +260,125 @@ FM.isURL = function(s) {
 }
 
 
+/* -- FM.PageInfo virtual object -------------------------------------------- */
+
 /**
- * Return chosen page information 
- * or object representing page info and all URL query parameters as name,value pairs.
- * {
- *   _page: {
- *     host: "...",
- *     url: "...",
- *     path: "...",
- *     name: "..."
- *     fullname: "..."
- *   },
- *   arg1: v1,
- *   arg2: v2,
- *   ...
- * }
+ * Class holding page info. 
+ * It has no constructor, but is instantiated as an object literal.
+ *
+ * @class
+ * @name FM.PageInfo
+ * 
+ */
+
+/**
+ * Host name.
+ * 
+ * @name host
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/**
+ * Page URL.
+ * 
+ * @name url
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/**
+ * Page path.
+ * 
+ * @name path
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/**
+ * Page name.
+ * 
+ * @name name
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/**
+ * Page anchor.
+ * 
+ * @name hash
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/**
+ * Page query string.
+ * 
+ * @name query
+ * @property
+ * @type string
+ * @memberOf FM.PageInfo
+ */
+
+/* -------------------------------------------------------------------------- */
+/**
+ * Return requested page information, or object containing all informations.
+ * 
  * @static
  * @function 
  * @param {string} [attr] The name of attrribute to return.
  * @param {string} [def] Default return value.
- * @returns {string} 
+ * @returns {string|FM.PageInfo} 
  */
-FM.getArgs = function(attr, def) {
+FM.getPageInfo = function(attr,def) {
+
+    var hash = FM.isset(window.location.hash) && window.location.hash ?
+        window.location.hash : ''
+    ;
+    if(FM.startsWith(hash, "#")) {
+        hash = hash.substring(1);
+    }
+
+    var pnamearr = window.location.pathname.split("/");
+    var fullname = pnamearr.length > 0 ? pnamearr[pnamearr.length - 1] : window.location.pathname;
+    
+    var i = fullname.lastIndexOf(".");
+    var name = i > -1 ?
+        fullname.substring(0, i) :
+        fullname
+    ;
+
+    var pi = {
+        query: window.location.search != '' ? window.location.search.substring(1) : '',
+        protocol: FM.getAttr(window.location,'protocol',''),
+        name: name,
+        fullname: fullname,
+        host: window.location.host != '' ?
+            window.location.protocol + "//" + window.location.host +
+            (window.location.port == '' ? '' : ":" + window.location.port) : '',
+        url: window.location.href,
+        path: window.location.pathname,
+        hash: hash
+    };
+
+    return(FM.isset(attr) && attr ? FM.getAttr(pi,attr,def) : pi);
+}
+ 
+/**
+ * Return requested query parameter value, or object containing all query name - value pairs.
+ * 
+ * @static
+ * @function 
+ * @param {string} [attr] The name of attrribute to return.
+ * @param {string} [def] Default return value.
+ * @returns {...|Object} 
+ */
+FM.getPageArgs = function(attr, def) {
     var query_string = {};
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -287,31 +399,30 @@ FM.getArgs = function(attr, def) {
             query_string[pair[0]].push(pair[1]);
         }
     }
+   
+    return FM.isset(attr) && attr ? FM.getAttr(query_string, attr, def) : query_string;
+}
 
-    var args = query_string;
-    var hash = FM.isset(window.location.hash) && window.location.hash ?
-        window.location.hash : '';
-    if(FM.startsWith(hash, "#")) {
-        hash = hash.substring(1);
-    }
-        
-    args._page = {
-        host: window.location.protocol + "//" + window.location.host +
-            (window.location.port == '' ? '' : ":" + window.location.port),
-        url: window.location.href,
-        path: window.location.pathname,
-        hash: hash
-    }
+/**
+ * Return combined result of FM.getPageArgs and FM.getPageInfo functions. 
+ * FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs function call.
+ * <b>This function is deprecated. Please use FM.getPageArgs and FM.getPageInfo functions.</b>
+ * 
+ * 
+ * @deprecated
 
-    var pnamearr = args._page.path.split("/");
-    args._page.fullname = pnamearr.length > 0 ? pnamearr[pnamearr.length - 1] : args._page.path;
-    var i = args._page.fullname.lastIndexOf(".");
-    args._page.name = i > -1 ?
-        args._page.fullname.substring(0, i) :
-        args._page.fullname
-        ;
-
-    return FM.isset(attr) && attr ? FM.getAttr(args, attr, def) : args;
+ * @static
+ * @function 
+ * @see FM.getPageArgs
+ * @see FM.getPageInfo
+ * @returns {...|Object} 
+ */
+FM.getArgs = function(attr, def) {
+    var pi = FM.getPageInfo();
+    var args = FM.getPageArgs();
+    args._page = pi;
+    
+    return(FM.isset(attr) && attr ? FM.getAttr(args,attr,def) : args);    
 }
 
 

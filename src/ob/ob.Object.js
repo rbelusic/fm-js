@@ -1,8 +1,18 @@
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
+
 /**
  * Basic FM class. Provide listeners, attributes, propertyes, logger.
  * 
  * @class FM.Object
- * @param {object} attrs List of attribute name and values,
+ * @param {object|string|function} attrs List of attribute name and values, 
+ *  This parametar can be object, string evaluating to object or function returning object.
  * @param {object} [flds] Allowed attributes,
  * 
  */
@@ -24,7 +34,7 @@ FM.Object.prototype._init = function(attrs, flds) {
     this.prop = {
         dirty: false,
         timestamp: new Date().getTime(),
-        fetched: true // da li je new loc ili je fetchan
+        fetched: true 
     },
     this.setAttr(false, FM.isset(flds) ? flds : {}, false);
     this.strictOptions = FM.isset(flds) ? true : false;
@@ -40,10 +50,11 @@ FM.Object.prototype._init = function(attrs, flds) {
 }
 
 /**
- * Get FM class name.
+ * Returns name of the class.
+ * 
  * @public     
  * @function 
- * @returns {string} Returns name of the class.
+ * @returns {string} 
  */
 FM.Object.prototype.getClassName = function() {
     var o = this;
@@ -56,33 +67,36 @@ FM.Object.prototype.getClassName = function() {
 
 
 /**
- * Get FM subclass name.
+ * Returns subclass name.
  * 
  * @public     
  * @function 
- * @returns {string} Returns subclass of object.
+ * @returns {string} 
  */
 FM.Object.prototype.getSubClassName = function() {
     return this.objectSubClass;
-},
-    /**
-     * Get object id
-     * @public     
-     * @function 
-     * @returns {string} Returns id of object
-     */
-    FM.Object.prototype.getID = function() {
+}
+
+
+/**
+* Get class instance id.
+* 
+* @public     
+* @function 
+* @returns {string} 
+*/
+FM.Object.prototype.getID = function() {
     if (this.id == null)
         this.id = FM.generateNewID();
     return(this.id);
 }
 
 /**
- * Get object data ID,
+ * Returns data ID of the class instance,
  * 
  * @public     
  * @function 
- * @returns {string} Returns data ID of the class instance.
+ * @returns {string} 
  */
 FM.Object.prototype.getDataID = function() {
     return(this.getID());
@@ -94,8 +108,10 @@ FM.Object.prototype.getDataID = function() {
  * 
  * @public     
  * @function 
- * @param {FM.Object|object} oListener FM.Object to register as listener or object with event functions.
- * @param {object} [config] Additional options.
+ * @param {FM.Object|Object} oListener FM.Object to register as listener or object with event functions.
+ *  Object must be of form {<eventName1>: function(sender,evdata) {}, <eventName2>: funtion(sender,evdata) {}, ,,,}. 
+ *  FM.Object must implement these functions inside class.   
+ * @param {Object} [config] Additional options.
  */
 FM.Object.prototype.addListener = function(oListener, config) {
     // definicija listenera
@@ -122,6 +138,7 @@ FM.Object.prototype.addListener = function(oListener, config) {
  * @public     
  * @function 
  * @param {FM.Object|object} oListener Listener to remove.
+ * @returns <i>true</i> if listener is found and removed.
  */
 FM.Object.prototype.removeListener = function(oListener) {
     if (!FM.isset(oListener) || !oListener || !FM.isset(oListener.getID))
@@ -161,7 +178,7 @@ FM.Object.prototype.removeAllListeners = function() {
  * @function 
  * @param {FM.Object} sender Sender of event
  * @param {string} ev Event
- * @param {} data Event data.
+ * @param {...} [data] Event data.
  */
 FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
@@ -173,7 +190,7 @@ FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
         this[ev](sender, data);
         cl[this.getID()] = '1';
         FM.setAttr(cl, '_executed', '1');
-        //return cl;
+    //return cl;
     }
 
     // proslijedi dalje ako nemas ev fn
@@ -187,7 +204,7 @@ FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
  * @public     
  * @function 
  * @param {string} ev Event to send.
- * @param {} evdata Event data.
+ * @param {...} [evdata] Event data.
  * 
  */
 FM.Object.prototype.fireEvent = function(ev, evdata, calledlist) {
@@ -216,7 +233,7 @@ FM.Object.prototype.fireEvent = function(ev, evdata, calledlist) {
             } catch (err) {
                 FM.log(null, err, FM.logLevels.error, 'Object.fireEvent');
             }
-            //if(FM.getAttr(cl,'_executed','0') == '1') break;            
+        //if(FM.getAttr(cl,'_executed','0') == '1') break;            
         }
     }
 
@@ -286,7 +303,9 @@ FM.Object.prototype.s = function(key, val, callevent) {
  * 
  * @public
  * @function 
- * @param {string} key Attribute name.
+ * @param {string} [key] Attribute name. If <i>key</i> is undefined this method
+ *  check for any attribute change.
+ *  
  * @returns {boolean} 
  */
 FM.Object.prototype.isChanged = function(key) {
@@ -300,6 +319,7 @@ FM.Object.prototype.isChanged = function(key) {
 
 /**
  * Set FM object <i>changed</i> property,
+ * <i>dirty</i> property will be set to new value.
  * 
  * @public
  * @function 
@@ -335,10 +355,11 @@ FM.Object.prototype.resolveAttrValue = function(attrName, def, context) {
 }
 
 /**
- * Return an unique string based on object data.
+ * Return an unique string based on object attributes.
  * 
  * @public
  * @function
+ * @returns {string}
  */
 FM.Object.prototype.getDataHash = function() {
     var dataHash = '';
@@ -351,7 +372,7 @@ FM.Object.prototype.getDataHash = function() {
 }
 
 /**
- * Return object with all changed attributes.
+ * Return object with all changed attributes and their old values.
  * 
  * @public     
  * @function 
@@ -392,42 +413,43 @@ FM.Object.prototype.setProperty = function(key, val, callevent) {
     return true;
 }
 
-/** tusam
+
+/** 
  * For each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.    
+ * For each object attribute call function <i>doFn(id,elm)</i> 
+ * until end of list or <i>false</i> is returned. 
+ * 
  * @public
  * @function 
  * @param {function} [doFn={}]
- * @return {string} In case of <i>false</i> return value of <i>doFn()</i> call return attribute name otherwise null
  */
 FM.Object.prototype.forEachAttr = function(doFn) {
     return FM.forEach(this.options, doFn);
 }
 
 /**
- * Evaluate property value
- * @static
- * @function
- * @param {string} attrName Property name
- * @param {string} def Default value of property
- * @param {array} fnargs resolver arguments
+ * @ignore
+ * 
  */
 FM.Object.prototype.resolvePropertyValue = function(attrName, def, context) {
     return FM.resolveAttrValue(this.prop, attrName, def, context);
 }
 
-/**
+
+/** 
  * For each property call function <i>doFn(id,prop)</i> until end of properties or <i>false</i> return value.    
+ * 
  * @public
  * @function 
  * @param {function} [doFn={}]
- * @return {string} In case of <i>false</i> return value of <i>doFn()</i> call return property name otherwise null
  */
 FM.Object.prototype.forEachProperty = function(doFn) {
     return FM.forEach(this.prop, doFn);
 }
 
 /**
- * Enable object. Object start to process events.
+ * Start to process events.
+ * 
  * @public
  * @function 
  */
@@ -436,7 +458,8 @@ FM.Object.prototype.enable = function() {
 }
 
 /**
- * Disable object. Object stop to process events.
+ * Stop processing events.
+ * 
  * @public
  * @function 
  */
@@ -446,7 +469,8 @@ FM.Object.prototype.disable = function() {
 
 
 /**
- * Check if object is enabled
+ * Check if object is enabled.
+ * 
  * @public
  * @function 
  * @return {boolean} 
@@ -456,22 +480,24 @@ FM.Object.prototype.isEnabled = function() {
 }
 
 /**
- * Log function to call from this object
+ *  Log a message.
+ * 
  * @public
- * @function 
- * @param {string} msg Log text
- * @param {number} level Log level
- * @param {string} callerinfo 
+ * @function  
+ * @param {string|Object|...} msg Variable to be logged.
+ * @param {number} [level] Log level.
+ * @param {string} [callerinfo] Description of context.
  */
 FM.Object.prototype.log = function(msg, level, callerinfo) {
     FM.log(this, msg, level, callerinfo);
 }
 
 /**
- * Set log level for this object
+ * Set log level.
+ * 
  * @public
  * @function 
- * @param {string | number} level Log level
+ * @param {string|number} level Log level
  */
 FM.Object.prototype.setLogLevel = function(level) {
     if (FM.isString(level)) {
@@ -484,7 +510,7 @@ FM.Object.prototype.setLogLevel = function(level) {
 }
 
 /**
- * Get log level for this object
+ * Get log level,
  * 
  * @public
  * @function 
@@ -495,7 +521,7 @@ FM.Object.prototype.getLogLevel = function() {
 }
 
 /**
- * Dispose object
+ * Dispose object.
  * 
  * @public
  * @function 

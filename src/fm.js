@@ -1,3 +1,8 @@
+/**
+ * @fileOverview This file has core FM functions.
+ * @review isipka
+ */
+
 /** 
  * -----------------------------------------------------------------------------
  * 

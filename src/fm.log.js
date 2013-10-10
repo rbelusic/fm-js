@@ -1,39 +1,72 @@
-/** 
- * -----------------------------------------------------------------------------
- * 
+/**
+ * @fileOverview This file has functions related to logging.
  * @review isipka
- * 
- * -----------------------------------------------------------------------------
  */
 
 /**
+ * Log levels enumeration.
  * 
- * @ignore
+ * @namespace 
+ * @memberOf FM
+ * 
  */
 FM.logLevels = {
-    debug: 0,
-    info: 1,
-    warn: 2,
-    error: 3,
-    fatal: 99
+    /** 
+    * @description Debug log level. 
+    */
+    debug: 0,   
+    /** 
+     * @description Info log level. 
+    */
+    info: 1,    
+    /** 
+     * @description Warn log level. 
+    */
+    warn: 2,    
+    /** 
+     * @description Error log level. 
+    */
+    error: 3,   
+    /** 
+     * @description Fatal log level. 
+    */
+    fatal: 99   
 }
 
 /**
+ * Log levels names enumeration.
  * 
- * @ignore
+ * @namespace 
+ * @memberOf FM
+ * 
  */
 FM.logLevelNames = {
+    /** 
+    * @description Debug log level. 
+    */
     0: 'DEBUG',
+    /** 
+     * @description Info log level. 
+    */
     1: 'INFO',
+    /** 
+     * @description Warn log level. 
+    */
     2: 'WARN',
+    /** 
+     * @description Error log level. 
+    */
     3: 'ERROR',
+    /** 
+     * @description Fatal log level. 
+    */
     99: 'FATAL'
 }
 
 
 /**
- * 
  * @ignore
+ * 
  */
 FM.logDefaultLevel = FM.logLevels.warn;
 

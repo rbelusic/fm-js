@@ -207,6 +207,10 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.LmObject.html">FM.LmObject</a></li>
 	
+	<li><a href="../symbols/FM.logLevelNames.html">FM.logLevelNames</a></li>
+	
+	<li><a href="../symbols/FM.logLevels.html">FM.logLevels</a></li>
+	
 	<li><a href="../symbols/FM.MlDateEdit.html">FM.MlDateEdit</a></li>
 	
 	<li><a href="../symbols/FM.MlEdit.html">FM.MlEdit</a></li>
@@ -240,6 +244,8 @@ ul.inheritsList
 	<li><a href="../symbols/FM.MlTemplate.html">FM.MlTemplate</a></li>
 	
 	<li><a href="../symbols/FM.Object.html">FM.Object</a></li>
+	
+	<li><a href="../symbols/FM.PageInfo.html">FM.PageInfo</a></li>
 	
 	<li><a href="../symbols/FM.TstAjax.html">FM.TstAjax</a></li>
 	
@@ -338,7 +344,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#disable">disable</a></b>()
 								</div>
-								<div class="description">Disable object.</div>
+								<div class="description">Stop processing events.</div>
 							</td>
 						</tr>
 					
@@ -356,7 +362,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#dispose">dispose</a></b>()
 								</div>
-								<div class="description">Dispose object</div>
+								<div class="description">Dispose object.</div>
 							</td>
 						</tr>
 					
@@ -365,7 +371,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#enable">enable</a></b>()
 								</div>
-								<div class="description">Enable object.</div>
+								<div class="description">Start to process events.</div>
 							</td>
 						</tr>
 					
@@ -383,7 +389,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#forEachAttr">forEachAttr</a></b>(doFn)
 								</div>
-								<div class="description">tusamFor each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.</div>
+								<div class="description">For each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.</div>
 							</td>
 						</tr>
 					
@@ -410,7 +416,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getChangedAttrList">getChangedAttrList</a></b>()
 								</div>
-								<div class="description">Return object with all changed attributes.</div>
+								<div class="description">Return object with all changed attributes and their old values.</div>
 							</td>
 						</tr>
 					
@@ -419,7 +425,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getClassName">getClassName</a></b>()
 								</div>
-								<div class="description">Get FM class name.</div>
+								<div class="description">Returns name of the class.</div>
 							</td>
 						</tr>
 					
@@ -428,7 +434,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getDataHash">getDataHash</a></b>()
 								</div>
-								<div class="description">Return an unique string based on object data.</div>
+								<div class="description">Return an unique string based on object attributes.</div>
 							</td>
 						</tr>
 					
@@ -437,7 +443,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getDataID">getDataID</a></b>()
 								</div>
-								<div class="description">Get object data ID,</div>
+								<div class="description">Returns data ID of the class instance,</div>
 							</td>
 						</tr>
 					
@@ -446,7 +452,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getID">getID</a></b>()
 								</div>
-								<div class="description">Get object id</div>
+								<div class="description">Get class instance id.</div>
 							</td>
 						</tr>
 					
@@ -455,7 +461,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getLogLevel">getLogLevel</a></b>()
 								</div>
-								<div class="description">Get log level for this object</div>
+								<div class="description">Get log level,</div>
 							</td>
 						</tr>
 					
@@ -473,7 +479,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#getSubClassName">getSubClassName</a></b>()
 								</div>
-								<div class="description">Get FM subclass name.</div>
+								<div class="description">Returns subclass name.</div>
 							</td>
 						</tr>
 					
@@ -500,7 +506,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#isEnabled">isEnabled</a></b>()
 								</div>
-								<div class="description">Check if object is enabled</div>
+								<div class="description">Check if object is enabled.</div>
 							</td>
 						</tr>
 					
@@ -509,7 +515,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#log">log</a></b>(msg, level, callerinfo)
 								</div>
-								<div class="description">Log function to call from this object</div>
+								<div class="description">Log a message.</div>
 							</td>
 						</tr>
 					
@@ -543,15 +549,6 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#resolvePropertyValue">resolvePropertyValue</a></b>(attrName, def, fnargs)
-								</div>
-								<div class="description">Evaluate property value</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#setAttr">setAttr</a></b>(key, val, callevent)
 								</div>
 								<div class="description">Set attribute value.</div>
@@ -563,7 +560,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#setChanged">setChanged</a></b>(v, callevent)
 								</div>
-								<div class="description">Set FM object <i>changed</i> property,</div>
+								<div class="description">Set FM object <i>changed</i> property,<i>dirty</i> property will be set to new value.</div>
 							</td>
 						</tr>
 					
@@ -572,7 +569,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/FM.Object.html#setLogLevel">setLogLevel</a></b>(level)
 								</div>
-								<div class="description">Set log level for this object</div>
+								<div class="description">Set log level.</div>
 							</td>
 						</tr>
 					
@@ -618,10 +615,10 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								<span class="light fixedFont">{object}</span>  <b>attrs</b>
+								<span class="light fixedFont">{object|string|function}</span>  <b>attrs</b>
 								
 							</dt>
-								<dd>List of attribute name and values,</dd>
+								<dd>List of attribute name and values,  This parametar can be object, string evaluating to object or function returning object.</dd>
 						
 							<dt>
 								<span class="light fixedFont">{object}</span>  <b>flds</b>
@@ -670,13 +667,13 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/FM.Object.html">FM.Object</a>|object}</span> <b>oListener</b>
+									<span class="light fixedFont">{<a href="../symbols/FM.Object.html">FM.Object</a>|Object}</span> <b>oListener</b>
 									
 								</dt>
-								<dd>FM.Object to register as listener or object with event functions.</dd>
+								<dd>FM.Object to register as listener or object with event functions. Object must be of form {<eventName1>: function(sender,evdata) {}, <eventName2>: funtion(sender,evdata) {}, ,,,}.  FM.Object must implement these functions inside class.</dd>
 							
 								<dt>
-									<span class="light fixedFont">{object}</span> <b>config</b>
+									<span class="light fixedFont">{Object}</span> <b>config</b>
 									<i>Optional</i>
 								</dt>
 								<dd>Additional options.</dd>
@@ -700,7 +697,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Disable object. Object stop to process events.
+						Stop processing events.
 						
 						
 					</div>
@@ -750,7 +747,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Dispose object
+						Dispose object.
 						
 						
 					</div>
@@ -775,7 +772,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Enable object. Object start to process events.
+						Start to process events.
 						
 						
 					</div>
@@ -818,8 +815,8 @@ ul.inheritsList
 								<dd>Event to send.</dd>
 							
 								<dt>
-									<b>evdata</b>
-									
+									<span class="light fixedFont">{...}</span> <b>evdata</b>
+									<i>Optional</i>
 								</dt>
 								<dd>Event data.</dd>
 							
@@ -843,12 +840,12 @@ ul.inheritsList
 					<a name="forEachAttr"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{string}</span>
+					
 					<b>forEachAttr</b>(doFn)
 					
 					</div>
 					<div class="description">
-						tusamFor each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.
+						For each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.    For each object attribute call function <i>doFn(id,elm)</i> until end of list or <i>false</i> is returned.
 						
 						
 					</div>
@@ -871,13 +868,6 @@ ul.inheritsList
 						
 						
 						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{string}</span> In case of <i>false</i> return value of <i>doFn()</i> call return attribute name otherwise null</dd>
-							
-							</dl>
-						
 						
 						
 
@@ -886,7 +876,7 @@ ul.inheritsList
 					<a name="forEachProperty"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{string}</span>
+					
 					<b>forEachProperty</b>(doFn)
 					
 					</div>
@@ -913,13 +903,6 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{string}</span> In case of <i>false</i> return value of <i>doFn()</i> call return property name otherwise null</dd>
-							
-							</dl>
 						
 						
 						
@@ -983,7 +966,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Return object with all changed attributes.
+						Return object with all changed attributes and their old values.
 						
 						
 					</div>
@@ -1015,7 +998,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get FM class name.
+						Returns name of the class.
 						
 						
 					</div>
@@ -1030,7 +1013,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{string}</span> Returns name of the class.</dd>
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -1042,12 +1025,12 @@ ul.inheritsList
 					<a name="getDataHash"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{string}</span>
 					<b>getDataHash</b>()
 					
 					</div>
 					<div class="description">
-						Return an unique string based on object data.
+						Return an unique string based on object attributes.
 						
 						
 					</div>
@@ -1058,6 +1041,13 @@ ul.inheritsList
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
 						
 						
 						
@@ -1072,7 +1062,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get object data ID,
+						Returns data ID of the class instance,
 						
 						
 					</div>
@@ -1087,7 +1077,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{string}</span> Returns data ID of the class instance.</dd>
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -1104,7 +1094,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get object id
+						Get class instance id.
 						
 						
 					</div>
@@ -1119,7 +1109,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{string}</span> Returns id of object</dd>
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -1136,7 +1126,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get log level for this object
+						Get log level,
 						
 						
 					</div>
@@ -1210,7 +1200,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get FM subclass name.
+						Returns subclass name.
 						
 						
 					</div>
@@ -1225,7 +1215,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{string}</span> Returns subclass of object.</dd>
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -1298,9 +1288,9 @@ ul.inheritsList
 							
 								<dt>
 									<span class="light fixedFont">{string}</span> <b>key</b>
-									
+									<i>Optional</i>
 								</dt>
-								<dd>Attribute name.</dd>
+								<dd>Attribute name. If <i>key</i> is undefined this method check for any attribute change.</dd>
 							
 							</dl>
 						
@@ -1328,7 +1318,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Check if object is enabled
+						Check if object is enabled.
 						
 						
 					</div>
@@ -1360,7 +1350,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Log function to call from this object
+						Log a message.
 						
 						
 					</div>
@@ -1372,22 +1362,22 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>msg</b>
+									<span class="light fixedFont">{string|Object|...}</span> <b>msg</b>
 									
 								</dt>
-								<dd>Log text</dd>
+								<dd>Variable to be logged.</dd>
 							
 								<dt>
 									<span class="light fixedFont">{number}</span> <b>level</b>
-									
+									<i>Optional</i>
 								</dt>
-								<dd>Log level</dd>
+								<dd>Log level.</dd>
 							
 								<dt>
 									<span class="light fixedFont">{string}</span> <b>callerinfo</b>
-									
+									<i>Optional</i>
 								</dt>
-								<dd></dd>
+								<dd>Description of context.</dd>
 							
 							</dl>
 						
@@ -1432,8 +1422,8 @@ ul.inheritsList
 								<dd>Event</dd>
 							
 								<dt>
-									<b>data</b>
-									
+									<span class="light fixedFont">{...}</span> <b>data</b>
+									<i>Optional</i>
 								</dt>
 								<dd>Event data.</dd>
 							
@@ -1510,53 +1500,12 @@ ul.inheritsList
 						
 						
 						
-						
-						
-
-					<hr />
-				
-					<a name="resolvePropertyValue"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>resolvePropertyValue</b>(attrName, def, fnargs)
-					
-					</div>
-					<div class="description">
-						Evaluate property value
-						
-						
-					</div>
-					
-					
-					
-						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{string}</span> <b>attrName</b>
-									
-								</dt>
-								<dd>Property name</dd>
-							
-								<dt>
-									<span class="light fixedFont">{string}</span> <b>def</b>
-									
-								</dt>
-								<dd>Default value of property</dd>
-							
-								<dt>
-									<span class="light fixedFont">{array}</span> <b>fnargs</b>
-									
-								</dt>
-								<dd>resolver arguments</dd>
+								<dd><i>true</i> if listener is found and removed.</dd>
 							
 							</dl>
-						
-						
-						
-						
 						
 						
 						
@@ -1626,7 +1575,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Set FM object <i>changed</i> property,
+						Set FM object <i>changed</i> property,<i>dirty</i> property will be set to new value.
 						
 						
 					</div>
@@ -1668,7 +1617,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Set log level for this object
+						Set log level.
 						
 						
 					</div>
@@ -1680,7 +1629,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{string | number}</span> <b>level</b>
+									<span class="light fixedFont">{string|number}</span> <b>level</b>
 									
 								</dt>
 								<dd>Log level</dd>
@@ -1756,7 +1705,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 09 2013 18:03:17 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Oct 10 2013 16:02:39 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>
