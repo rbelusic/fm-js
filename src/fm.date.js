@@ -7,6 +7,7 @@
 /**
  * 
  * @ignore
+ * @deprecated
  */
 FM.dateTimeDivider = ' ';
 
@@ -32,13 +33,16 @@ FM.dateTimeDivider = ' ';
  * 
  * @static
  * @function 
+ * @param {Date|string=new Date()} [date] The Date class instance or string representing date.
+ * @param {string} [mask=FM.dateFormat.masks.default] Format mask to use.
+ * @param {boolean} [utc=false] Format UTC values.
  * @see <a href="http://blog.stevenlevithan.com/archives/date-time-format">Steven Levithan blog article</a> for full list of options.
  */
 FM.dateFormat = function() {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-        timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-        timezoneClip = /[^-+\dA-Z]/g,
-        pad = function(val, len) {
+    timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
+    timezoneClip = /[^-+\dA-Z]/g,
+    pad = function(val, len) {
         val = String(val);
         len = len || 2;
         while (val.length < len)
@@ -70,16 +74,16 @@ FM.dateFormat = function() {
         }
 
         var _ = utc ? "getUTC" : "get",
-            d = date[_ + "Date"](),
-            D = date[_ + "Day"](),
-            m = date[_ + "Month"](),
-            y = date[_ + "FullYear"](),
-            H = date[_ + "Hours"](),
-            M = date[_ + "Minutes"](),
-            s = date[_ + "Seconds"](),
-            L = date[_ + "Milliseconds"](),
-            o = utc ? 0 : date.getTimezoneOffset(),
-            flags = {
+        d = date[_ + "Date"](),
+        D = date[_ + "Day"](),
+        m = date[_ + "Month"](),
+        y = date[_ + "FullYear"](),
+        H = date[_ + "Hours"](),
+        M = date[_ + "Minutes"](),
+        s = date[_ + "Seconds"](),
+        L = date[_ + "Milliseconds"](),
+        o = utc ? 0 : date.getTimezoneOffset(),
+        flags = {
             d: d,
             dd: pad(d),
             ddd: dF.i18n.dayNames[D],
@@ -115,13 +119,38 @@ FM.dateFormat = function() {
     };
 }();
 
-// Some common format strings
+
 /**
+ * Predefined date and time formats.
  * 
- * @ignore
- */
-FM.dateFormat.masks = {
-    "default": "ddd mmm dd yyyy HH:MM:ss",
+ * @namespace 
+ * @memberOf FM.dateFormat
+ * 
+ * @property {string} default "ddd mmm dd yyyy HH:MM:ss"
+ * @property {string} shortDate "m/d/yy"
+ * @property {string} shortDateTime "m/d/yy HH:MM:ss"
+ * @property {string} mediumDate "mmm d, yyyy",
+ * @property {string} mediumDateTime "mmm d, yyyy HH:MM:ss",
+ * @property {string} longDate "mmmm d, yyyy",
+ * @property {string} longDateTime "mmmm d, yyyy HH:MM:ss",
+ * @property {string} fullDate "dddd, mmmm d, yyyy",
+ * @property {string} fullDateTime "dddd, mmmm d, yyyy HH:MM:ss",
+ * @property {string} shortTime "h:MM TT",
+ * @property {string} mediumTime "h:MM:ss TT",
+ * @property {string} longTime "h:MM:ss TT Z",
+ * @property {string} isoDate "yyyy-mm-dd",
+ * @property {string} isoTime "HH:MM:ss",
+ * @property {string} isoDateTime "yyyy-mm-dd'T'HH:MM:ss",
+ * @property {string} fmDateTime "yyyy-mm-dd HH:MM:ss",
+ * @property {string} fmUtcDateTime "UTC:yyyy-mm-dd HH:MM:ss",
+ * @property {string} fmDate "yyyy-mm-dd",
+ * @property {string} fmUtcDate "UTC:yyyy-mm-dd",
+ * @property {string} fmTime "HH:MM:ss",
+ * @property {string} fmUtcTime "UTC:HH:MM:ss",
+ * @property {string} isoUtcDateTime "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+*/
+FM.dateFormat.masks = {    
+    "default": "ddd mmm dd yyyy HH:MM:ss", 
     shortDate: "m/d/yy",
     shortDateTime: "m/d/yy HH:MM:ss",
     mediumDate: "mmm d, yyyy",
@@ -152,20 +181,24 @@ FM.dateFormat.masks = {
  */
 FM.dateFormat.i18n = {
     dayNames: [
-        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
     ],
     monthNames: [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ]
 };
 
 
 
 /**
+ * Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.
  * 
- * @ignore
+ * @param {string|Date} [dat=new Date()] Date to format.
+ * @param {boolean} [utc=false] Format UTC values.
+ * @returns {string} Returns empty string on error.
+ * @see FM.dateFormat.masks
  */
 FM.dateToString = function(dat, utc) {
     dat = FM.isset(dat) ? dat : new Date();
@@ -178,6 +211,14 @@ FM.dateToString = function(dat, utc) {
     }
 }
 
+
+/**
+ * Check if string representing date is parsable.
+ * 
+ * @param {string} sdate Date string to check.
+ * @returns {boolean} 
+ * @see FM.dateFormat.masks
+ */
 FM.isDateString = function(sdate) { 
     if (!FM.isString(sdate)) {
         return false;
@@ -192,19 +233,15 @@ FM.isDateString = function(sdate) {
     }
 }
 
-FM.parseLocalDateString = function(sdate) {
-    if (!FM.isset(sdate) || sdate == null || sdate == '')
-        return(null);
 
-    try {
-        var s = FM.dateFormat(sdate);
-        var d = new Date(s);
-        return d;
-    } catch(e) {
-        return null;
-    }
-}
-
+/**
+ * Parse date string.
+ * 
+ * @param {string} sdate String to parse.
+ * @param {boolean} [utc=false] Date string represents UTC values.
+ * @returns {Date} Returns null on error.
+ * @see FM.dateFormat.masks
+ */
 FM.parseDateString = function(sdate, utc) { 
     if (!FM.isset(sdate) || sdate == null || sdate == '') {
         return(null);
@@ -218,6 +255,19 @@ FM.parseDateString = function(sdate, utc) {
         return null;
     }
 }
+
+/**
+ * Parse local date using.
+ * This function is shortcut for <i>FM.parseDateString(sdate,false)</i>.
+ * 
+ * @param {string} sdate String to parse.
+ * @returns {Date} Returns null on error.
+ * @see FM.parseDateString
+ */
+FM.parseLocalDateString = function(sdate) {
+    return FM.parseDateString(sdate, false);
+}
+
 
 /* UTC to local date string */
 FM.srv2locDate = function(srvstr) {
@@ -246,7 +296,7 @@ FM.timeBetween = function(d1, d2) {
     if (
         !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) || 
         !FM.isset(d2) || !d2 || !FM.isset(d2.getTime)
-    ) {
+        ) {
         return false;    
     }
     // Calculate the difference in milliseconds

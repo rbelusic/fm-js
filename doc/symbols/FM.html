@@ -195,6 +195,8 @@ ul.inheritsList
 	
 	<li><a href="../symbols/FM.AppObject.html">FM.AppObject</a></li>
 	
+	<li><a href="../symbols/FM.dateFormat.masks.html">FM.dateFormat.masks</a></li>
+	
 	<li><a href="../symbols/FM.DmGenericError.html">FM.DmGenericError</a></li>
 	
 	<li><a href="../symbols/FM.DmGenericValue.html">FM.DmGenericValue</a></li>
@@ -424,9 +426,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateFormat">dateFormat</a></b>()
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateFormat">dateFormat</a></b>(date, mask, utc)
 								</div>
 								<div class="description">Basic date and time function.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateToString">dateToString</a></b>(dat, utc)
+								</div>
+								<div class="description">Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.</div>
 							</td>
 						</tr>
 					
@@ -579,6 +590,15 @@ until end of list or <i>false</i> is returned.</div>
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isDateString">isDateString</a></b>(sdate)
+								</div>
+								<div class="description">Check if string representing date is parsable.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.isFunction">isFunction</a></b>(v)
 								</div>
 								<div class="description">Determine if a variable is function.</div>
@@ -663,6 +683,24 @@ until end of list or <i>false</i> is returned.</div>
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.md5">md5</a></b>(str)
 								</div>
 								<div class="description">Calculate the md5 hash of a string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.parseDateString">parseDateString</a></b>(sdate, utc)
+								</div>
+								<div class="description">Parse date string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.parseLocalDateString">parseLocalDateString</a></b>(sdate)
+								</div>
+								<div class="description">Parse local date using.</div>
 							</td>
 						</tr>
 					
@@ -1247,7 +1285,7 @@ after a whitespace or minus sign.
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">FM.</span><b>dateFormat</b>()
+					<span class="light">FM.</span><b>dateFormat</b>(date, mask, utc)
 					
 					</div>
 					<div class="description">
@@ -1263,6 +1301,29 @@ Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date for
 					
 					
 						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Date|string=new Date()}</span> <b>date</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The Date class instance or string representing date.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>mask</b>
+									<i>Optional, Default: FM.dateFormat.masks.default</i>
+								</dt>
+								<dd>Format mask to use.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>utc</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Format UTC values.</dd>
+							
+							</dl>
+						
 						
 						
 						
@@ -1273,6 +1334,65 @@ Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date for
 							<dt class="heading">See:</dt>
 							
 								<dd><a href="http://blog.stevenlevithan.com/archives/date-time-format">Steven Levithan blog article</a> for full list of options.</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".dateToString"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>dateToString</b>(dat, utc)
+					
+					</div>
+					<div class="description">
+						Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string|Date}</span> <b>dat</b>
+									<i>Optional, Default: new Date()</i>
+								</dt>
+								<dd>Date to format.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>utc</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Format UTC values.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> Returns empty string on error.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.dateFormat.masks.html">FM.dateFormat.masks</a></dd>
 							
 							</dl>
 						
@@ -2028,6 +2148,59 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 
 					<hr />
 				
+					<a name=".isDateString"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">FM.</span><b>isDateString</b>(sdate)
+					
+					</div>
+					<div class="description">
+						Check if string representing date is parsable.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sdate</b>
+									
+								</dt>
+								<dd>Date string to check.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.dateFormat.masks.html">FM.dateFormat.masks</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
 					<a name=".isFunction"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -2500,6 +2673,119 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 							</dl>
 						
 						
+						
+
+					<hr />
+				
+					<a name=".parseDateString"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{Date}</span>
+					<span class="light">FM.</span><b>parseDateString</b>(sdate, utc)
+					
+					</div>
+					<div class="description">
+						Parse date string.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sdate</b>
+									
+								</dt>
+								<dd>String to parse.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>utc</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Date string represents UTC values.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Date}</span> Returns null on error.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.dateFormat.masks.html">FM.dateFormat.masks</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".parseLocalDateString"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{Date}</span>
+					<span class="light">FM.</span><b>parseLocalDateString</b>(sdate)
+					
+					</div>
+					<div class="description">
+						Parse local date using.
+This function is shortcut for <i>FM.parseDateString(sdate,false)</i>.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sdate</b>
+									
+								</dt>
+								<dd>String to parse.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Date}</span> Returns null on error.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.html#.parseDateString">FM.parseDateString</a></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -3418,7 +3704,7 @@ JSON parsing will occur.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Oct 10 2013 16:02:39 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Oct 10 2013 16:57:34 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>
