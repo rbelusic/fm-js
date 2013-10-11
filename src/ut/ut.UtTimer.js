@@ -1,32 +1,24 @@
 /**
-* Timer class. <b>Ovo bi trebalo srediti da extend FM.object</b>
+* Timer class. 
 * 
 * @class FM.UtTimer
 */
-FM.UtTimer = function() {
-    //this._init.apply(this, arguments); // new poziva _init()
-}
-FM.extendClass(FM.UtTimer,null); 
 
-// properties
-FM.UtTimer.prototype.objectSubClass = "UtTimer";
-
-// static
-FM.UtTimer.className = "UtTimer";
-FM.UtTimer.fullClassName = 'ut.UtTimer';
+FM.UtTimer = FM.defineClass('UtTimer',FM.Object);
 
 FM.UtTimer.minPeriod = 1;
 FM.UtTimer.timeoutHandle = null;
 FM.UtTimer.jobsList = [];
 FM.UtTimer.suspended = false;
 
+
 FM.UtTimer.__checklist__ = function() {
-    if(!FM.UtTimer.suspended) {
+    if(!FM.UtTimer.isQueueSuspended()) {
         var nlist = [];
         for(var i=0; i < FM.UtTimer.jobsList.length; i++) {
             var job = FM.UtTimer.jobsList[i];
             if(
-                job.executecount != 0 && job.suspeded != false &&
+                job.executecount != 0 && !job.isSuspended() &&
                 job.lastRun + job.period * 1000 < new Date().getTime()
             ) {
                 job.lastRun = new Date().getTime();
@@ -40,13 +32,37 @@ FM.UtTimer.__checklist__ = function() {
         FM.UtTimer.jobsList = nlist;
 
         if(FM.UtTimer.jobsList.length > 0) {
-            FM.UtTimer.timeoutHandle = setTimeout("FM.UtTimer.__checklist__()",FM.UtTimer.minPeriod * 1000);
+            FM.UtTimer.timeoutHandle = setTimeout(
+                "FM.UtTimer.__checklist__()",
+                FM.UtTimer.minPeriod * 1000
+            );
         }else {
             FM.UtTimer.timeoutHandle = null;
         }
     } else { // za svaki slucaj
         FM.UtTimer.timeoutHandle = null;
     }
+}
+
+FM.UtTimer.removeFromQueue = function(job) {
+    var nlist = [];
+    for(var i=0; i < FM.UtTimer.jobsList.length; i++) {
+        if(FM.UtTimer.jobsList[i] != job) {
+            nlist.push(FM.UtTimer.jobsList[i]);
+        }
+    }
+    FM.UtTimer.jobsList = nlist;    
+}
+
+FM.UtTimer.addToQueue = function(job) {
+    FM.UtTimer.jobsList.push(job);
+    if(!FM.UtTimer.timeoutHandle) {
+        FM.UtTimer.__checklist__();
+    }    
+}
+
+FM.UtTimer.isQueueSuspended = function() {
+    return FM.UtTimer.suspended;
 }
 
 FM.UtTimer.suspendQueue = function() {

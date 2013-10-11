@@ -9,19 +9,11 @@
 * @param {number} number of times to execute
 */    
 FM.UtTimerJob = FM.defineClass('UtTimerJob',FM.Object);
-FM.UtTimerJob.className = "UtTimerJob";
 
 FM.UtTimerJob.prototype._init = function(event,evdata,period,executecount) {
-    this.objectSubClass = "TimerJob";
-    this.event = '';
-    this.evdata = null;
-    this.period = -1;
-    this.executecount = -1;
-    this.suspended = false;
-    this.started = false;
-    this.lastRun = 0;
-
     this._super("_init",evdata);
+    
+    this.objectSubClass = "TimerJob";
 
     this.event = event;
     this.evdata = evdata;
@@ -34,10 +26,12 @@ FM.UtTimerJob.prototype._init = function(event,evdata,period,executecount) {
 
 FM.UtTimerJob.prototype.start = function() {
     this.started = true;
-    FM.UtTimer.jobsList.push(this);
-    if(!FM.UtTimer.timeoutHandle) {
-        FM.UtTimer.__checklist__();
-    }
+    FM.UtTimer.addToQueue(this);
+}
+
+FM.UtTimerJob.prototype.stop = function() {
+    this.started = false;
+    FM.UtTimer.removeFromToQueue(this);
 }
 
 FM.UtTimerJob.prototype.isStarted = function() {
@@ -57,22 +51,12 @@ FM.UtTimerJob.prototype.resume = function() {
     this.suspended = false;
 }
 
-FM.UtTimerJob.prototype.dispose = function() {    
-    FM.UtTimer.suspended = true;
+FM.UtTimerJob.prototype.dispose = function() {
+    FM.UtTimer.suspendQueue();
     
-    this.suspended = true;
-    this.started = false;
-    
-    var nlist = [];
-    for(var i=0; i < FM.UtTimer.jobsList.length; i++) {
-        if(FM.UtTimer.jobsList[i] != this) {
-            nlist.push(FM.UtTimer.jobsList[i]);
-        }
-    }
-    FM.UtTimer.jobsList = nlist;
-    
+    this.suspend();
+    this.stop();
     this.removeAllListeners();
-    
 }
 
 

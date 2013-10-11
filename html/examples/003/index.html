@@ -26,9 +26,9 @@
             <tbody class="fmmlListItems">
                 <tr class="fmmlListItemsTemplate" data-fmml-host="Host">
                     <td data-fmml-observer="ListIndex"></td>
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="id"></td> 
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="name"></td>
-                    <td data-fmml-observer="Attribute" data-fmml-attr-name="description"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="id"></td> 
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="name"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="description"></td>
                 </tr>
             </tbody>
         </table>
@@ -36,30 +36,64 @@
         <hr />
         
         <span>Display list item (using MlListOfValues extension) and run single item host on change</span>
-        <div data-fmml-host="Host" data-fmml-object-class="Object">
-            <!-- 
-            use 
-            data-fmml-list-text-template="[:name] - [:description]"
-            instead
-            data-fmml-list-text-attr="description"
-            for custom format
-            -->
-            <select data-fmml-observer="Attribute"
+        <div data-fmml-host="Host" data-fmml-object-class="Object"
+             data-fmml-object-attr-id="1"
+             >
+            LOV in SELECT:
+            <select 
+                data-fmml-observer="Observer"
                 data-fmml-attr-name="id"
+                data-fmml-extensions="ListOfValues"
+                data-fmml-update-condition="change"                
                 data-fmml-run-on-lov-change="single-demo-host"
-                data-fmml-extensions="MlListOfValues"
                 data-fmml-list="staticListExample"
                 data-fmml-list-id-attr="id"
                 data-fmml-list-text-attr="description"                
                 >
-            </select>
+            </select><br />
+            
+            <input type="radio" 
+                data-fmml-observer="Observer"
+                data-fmml-attr-name="id"
+                data-fmml-extensions="ListOfValues"
+                data-fmml-update-condition="change"
+                data-fmml-run-on-lov-change="single-demo-host"
+                data-fmml-lov-description="LOV in RADIO"
+                data-fmml-list="staticListExample"
+                data-fmml-list-id-attr="id"
+                data-fmml-list-text-attr="description"                
+                /><br />
+            
+            LOV in SPAN as SELECT:
+            <span data-fmml-observer="Observer"
+                data-fmml-attr-name="id"
+                data-fmml-extensions="ListOfValues"
+                data-fmml-update-condition="change"
+                data-fmml-attr-edittype="select"
+                data-fmml-run-on-lov-change="single-demo-host"
+                data-fmml-list="staticListExample"
+                data-fmml-list-id-attr="id"
+                data-fmml-list-text-attr="description"                
+                ></span><br />
+            
+            <span data-fmml-observer="Observer"
+                data-fmml-attr-name="id"
+                data-fmml-extensions="ListOfValues"
+                data-fmml-update-condition="change"
+                data-fmml-attr-edittype="radio"
+                data-fmml-run-on-lov-change="single-demo-host"
+                data-fmml-lov-description="LOV in SPAN as RADIO"                
+                data-fmml-list="staticListExample"
+                data-fmml-list-id-attr="id"
+                data-fmml-list-text-attr="description"                
+                ></span><br />
         </div>
         <div id="single-demo-host" 
-            data-fmml-host="Host" data-fmml-object-class="Object" data-xfmml-run-on-init="false"
+            data-fmml-host="Host" data-fmml-object-class="Object" data-fmml-run-on-init="false"
              >
-            ID:<span data-fmml-observer="Attribute" data-fmml-attr-name="id"></span>;
-            Name:<span data-fmml-observer="Attribute" data-fmml-attr-name="name"></span>;
-            Description:<span data-fmml-observer="Attribute" data-fmml-attr-name="description"></span>
+            ID:<span data-fmml-observer="Observer" data-fmml-attr-name="id"></span>;
+            Name:<span data-fmml-observer="Observer" data-fmml-attr-name="name"></span>;
+            Description:<span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
         </div>        
     </body>
 </html>

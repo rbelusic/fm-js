@@ -1,4 +1,5 @@
 [
+"<%=js_dir%>/namespace.js_",
 "<%=js_dir%>/fm.js",
 "<%=js_dir%>/ob/ob.Object.js",
 "<%=js_dir%>/ut/ut.UtAjax.js",
@@ -22,7 +23,6 @@
 "<%=js_dir%>/lm/ml/hosts/lm.MlHostQueryParams.js",
 "<%=js_dir%>/lm/ml/hosts/lm.MlHostGenericCollection.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserver.js",
-"<%=js_dir%>/lm/ml/observers/lm.MlObserverAttribute.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverDisplay.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverEvent.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListState.js",
@@ -30,9 +30,8 @@
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListSelection.js",
 "<%=js_dir%>/lm/ml/observers/lm.MlObserverListOrder.js",
 "<%=js_dir%>/gui/ml/gui.MlExtension.js",
-"<%=js_dir%>/gui/ml/gui.MlAttributeEdit.js",
-"<%=js_dir%>/gui/ml/gui.MlDateAttributeEdit.js",
+"<%=js_dir%>/gui/ml/gui.MlEdit.js",
+"<%=js_dir%>/gui/ml/gui.MlDateEdit.js",
 "<%=js_dir%>/gui/ml/gui.MlListOfValues.js",
-"<%=js_dir%>/gui/ml/gui.MlTypeaheadMenu.js",
-"<%=js_dir%>/terminator.js"
+"<%=js_dir%>/terminator.js_"
 ]
