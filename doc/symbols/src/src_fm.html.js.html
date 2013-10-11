@@ -476,6 +476,18 @@
 <span class='line'>469</span>  * @returns {string}
 <span class='line'>470</span>  */</span><span class="WHIT">
 <span class='line'>471</span> </span><span class="NAME">FM.getPreferedLanguage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>472</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">window.navigator.userLanguage</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">window.navigator.language</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">split</span><span class="PUNC">(</span><span class="STRN">'-'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>472</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">FM.getlocale</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">split</span><span class="PUNC">(</span><span class="STRN">'-'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>473</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>474</span> </span></pre></body></html>
+<span class='line'>474</span> 
+<span class='line'>475</span> </span><span class="COMM">/**
+<span class='line'>476</span>  * Returns browser defined locale string.
+<span class='line'>477</span>  * 
+<span class='line'>478</span>  * @static
+<span class='line'>479</span>  * @function 
+<span class='line'>480</span>  * @returns {string}
+<span class='line'>481</span>  */</span><span class="WHIT">
+<span class='line'>482</span> </span><span class="NAME">FM.getlocale</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">larr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">window.navigator.userLanguage</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">window.navigator.language</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">split</span><span class="PUNC">(</span><span class="STRN">'-'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>484</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">larr</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"-"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">larr</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">toUpperCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>486</span> </span></pre></body></html>

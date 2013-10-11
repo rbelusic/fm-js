@@ -399,7 +399,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.base64_encode">base64_encode</a></b>(input)
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.base64_encode">base64_encode</a></b>(data)
 								</div>
 								<div class="description">Encodes string with MIME base64.</div>
 							</td>
@@ -435,7 +435,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateToString">dateToString</a></b>(dat, utc)
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.dateToString">dateToString</a></b>(dat, utc, format)
 								</div>
 								<div class="description">Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.</div>
 							</td>
@@ -521,6 +521,15 @@ until end of list or <i>false</i> is returned.</div>
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getAttr">getAttr</a></b>(options, key, defv)
 								</div>
 								<div class="description">Get attribute value from object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.getlocale">getlocale</a></b>()
+								</div>
+								<div class="description">Returns browser defined locale string.</div>
 							</td>
 						</tr>
 					
@@ -653,9 +662,36 @@ until end of list or <i>false</i> is returned.</div>
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.l_timestamp">l_timestamp</a></b>(date)
+								</div>
+								<div class="description">Returns the number of milliseconds between midnight of January 1, 1970 and the specified date.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.loadCookie">loadCookie</a></b>(name, asstring, domain)
 								</div>
 								<div class="description">Get cookie value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.loc2srvDate">loc2srvDate</a></b>(sdate, format)
+								</div>
+								<div class="description">Parses local date string, converts it to Date object and returns UTC date string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.locNow">locNow</a></b>(format)
+								</div>
+								<div class="description">Returns current date and time string in <i>FM.dateFormat.masks.fmDateTime</i> format.</div>
 							</td>
 						</tr>
 					
@@ -770,6 +806,24 @@ until end of list or <i>false</i> is returned.</div>
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.srv2locDate">srv2locDate</a></b>(sdate, format)
+								</div>
+								<div class="description">Parses UTC date string, converts it to Date object and returns local date string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.srvNow">srvNow</a></b>(format)
+								</div>
+								<div class="description">Returns current UTC date and time string in <i>FM.dateFormat.masks.fmDateTime</i> format.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.startsWith">startsWith</a></b>(instr, fstr)
 								</div>
 								<div class="description">Determines whether the beginning of this string matches a specified string.</div>
@@ -782,6 +836,33 @@ until end of list or <i>false</i> is returned.</div>
 								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.stripslashes">stripslashes</a></b>(s)
 								</div>
 								<div class="description">Un-quotes a quoted string</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.strTimeBetween">strTimeBetween</a></b>(d1, d2)
+								</div>
+								<div class="description">Returns time difference in seconds between two dates in descriptive sentence.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.timeBetween">timeBetween</a></b>(d1, d2)
+								</div>
+								<div class="description">Returns time difference in seconds between two dates.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.<b><a href="../symbols/FM.html#.timestamp">timestamp</a></b>(date)
+								</div>
+								<div class="description">Returns the number of seconds between midnight of January 1, 1970 and the specified date.</div>
 							</td>
 						</tr>
 					
@@ -1122,6 +1203,7 @@ until end of list or <i>false</i> is returned.</div>
 					</div>
 					<div class="description">
 						Decodes string encoded with MIME base64.
+Derived from <a href="http://phpjs.org/functions/base64_decode/">php.js</a> base64 decode function.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/src_fm.encoding.js.html">fm.encoding.js</a>.
@@ -1163,11 +1245,12 @@ until end of list or <i>false</i> is returned.</div>
 					<div class="fixedFont">&lt;static&gt; 
 					
 					<span class="light">{string}</span>
-					<span class="light">FM.</span><b>base64_encode</b>(input)
+					<span class="light">FM.</span><b>base64_encode</b>(data)
 					
 					</div>
 					<div class="description">
 						Encodes string with MIME base64.
+ Derived from <a href="http://phpjs.org/functions/base64_encode/">php.js</a> base64 encode function.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/src_fm.encoding.js.html">fm.encoding.js</a>.
@@ -1182,7 +1265,7 @@ until end of list or <i>false</i> is returned.</div>
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{string}</span> <b>input</b>
+									<span class="light fixedFont">{string}</span> <b>data</b>
 									
 								</dt>
 								<dd>The input string.</dd>
@@ -1344,7 +1427,7 @@ Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date for
 					<div class="fixedFont">&lt;static&gt; 
 					
 					<span class="light">{string}</span>
-					<span class="light">FM.</span><b>dateToString</b>(dat, utc)
+					<span class="light">FM.</span><b>dateToString</b>(dat, utc, format)
 					
 					</div>
 					<div class="description">
@@ -1373,6 +1456,12 @@ Derived from <a href="https://github.com/slevithan">Steven Levithan</a> date for
 									<i>Optional, Default: false</i>
 								</dt>
 								<dd>Format UTC values.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>format</b>
+									<i>Optional, Default: "fmUtcDateTime"</i>
+								</dt>
+								<dd>Format mask.</dd>
 							
 							</dl>
 						
@@ -1822,6 +1911,41 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{..|}</span> Value of attribute or default value.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getlocale"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>getlocale</b>()
+					
+					</div>
+					<div class="description">
+						Returns browser defined locale string.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.html.js.html">fm.html.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
 							
 							</dl>
 						
@@ -2477,6 +2601,52 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 
 					<hr />
 				
+					<a name=".l_timestamp"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">FM.</span><b>l_timestamp</b>(date)
+					
+					</div>
+					<div class="description">
+						Returns the number of milliseconds between midnight of January 1, 1970 and the specified date.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>date</b>
+									
+								</dt>
+								<dd>Date.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name=".loadCookie"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -2524,6 +2694,118 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 						
 						
 						
+						
+
+					<hr />
+				
+					<a name=".loc2srvDate"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>loc2srvDate</b>(sdate, format)
+					
+					</div>
+					<div class="description">
+						Parses local date string, converts it to Date object and returns UTC date string.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sdate</b>
+									
+								</dt>
+								<dd>UTC date string to parse.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>format</b>
+									<i>Optional, Default: "fmUtcDateTime"</i>
+								</dt>
+								<dd>Format mask.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> .</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.html#.parseDateString">FM.parseDateString</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".locNow"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>locNow</b>(format)
+					
+					</div>
+					<div class="description">
+						Returns current date and time string in <i>FM.dateFormat.masks.fmDateTime</i> format.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>format</b>
+									<i>Optional, Default: "fmDateTime"</i>
+								</dt>
+								<dd>Format mask.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> .</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>FM.dateFormat.masks.fmDateTime</dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -2640,6 +2922,7 @@ FM.PageInfo is embeded as <i>_page</i> property in result of FM.getPageArgs func
 					</div>
 					<div class="description">
 						Calculate the md5 hash of a string.
+Derived from <a href="http://phpjs.org/functions/md5/">php.js</a> md5 function.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/src_fm.encoding.js.html">fm.encoding.js</a>.
@@ -3128,6 +3411,118 @@ generates JSON representing <i>obj</i> object.
 
 					<hr />
 				
+					<a name=".srv2locDate"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>srv2locDate</b>(sdate, format)
+					
+					</div>
+					<div class="description">
+						Parses UTC date string, converts it to Date object and returns local date string.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sdate</b>
+									
+								</dt>
+								<dd>UTC date string to parse.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>format</b>
+									<i>Optional, Default: "fmDateTime"</i>
+								</dt>
+								<dd>Format mask.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> .</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/FM.html#.parseDateString">FM.parseDateString</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".srvNow"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>srvNow</b>(format)
+					
+					</div>
+					<div class="description">
+						Returns current UTC date and time string in <i>FM.dateFormat.masks.fmDateTime</i> format.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>format</b>
+									<i>Optional, Default: "fmUtcDateTime"</i>
+								</dt>
+								<dd>Format mask.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> .</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>FM.dateFormat.masks.fmDateTime</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
 					<a name=".startsWith"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -3218,6 +3613,159 @@ generates JSON representing <i>obj</i> object.
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".strTimeBetween"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{string}</span>
+					<span class="light">FM.</span><b>strTimeBetween</b>(d1, d2)
+					
+					</div>
+					<div class="description">
+						Returns time difference in seconds between two dates in descriptive sentence.
+Examples:
+ "3 seconds ago", "3 minutes ago", "3 hours ago", "Yesterday", "3 days ago",
+ "In 3 seconds", "In 3 minutes", "In 3 hours", "Tomorow", "In 3 days"
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>d1</b>
+									
+								</dt>
+								<dd>From date.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>d2</b>
+									
+								</dt>
+								<dd>To date.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> On error returns empty string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".timeBetween"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">FM.</span><b>timeBetween</b>(d1, d2)
+					
+					</div>
+					<div class="description">
+						Returns time difference in seconds between two dates.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>d1</b>
+									
+								</dt>
+								<dd>From date.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>d2</b>
+									
+								</dt>
+								<dd>To date.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> On error returns <i>false</i>.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".timestamp"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">FM.</span><b>timestamp</b>(date)
+					
+					</div>
+					<div class="description">
+						Returns the number of seconds between midnight of January 1, 1970 and the specified date.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/src_fm.date.js.html">fm.date.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Date}</span> <b>date</b>
+									
+								</dt>
+								<dd>Date.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> </dd>
 							
 							</dl>
 						
@@ -3704,7 +4252,7 @@ JSON parsing will occur.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Oct 10 2013 16:57:34 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Oct 11 2013 14:24:38 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

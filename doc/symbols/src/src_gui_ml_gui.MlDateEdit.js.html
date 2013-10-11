@@ -64,13 +64,21 @@
 <span class='line'> 57</span> 
 <span class='line'> 58</span> </span><span class="NAME">FM.MlDateEdit.prototype.render</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 59</span> </span><span class="WHIT">    </span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="STRN">"render"</span><span class="PUNC">,</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">    
-<span class='line'> 61</span>     </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.editWidgetDate</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">this.editWidgetDate</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">datepicker</span><span class="PUNC">(</span><span class="WHIT"> 
-<span class='line'> 63</span>             </span><span class="STRN">"setDate"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.getObserver</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getValue</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 67</span> 
-<span class='line'> 68</span> </span><span class="NAME">FM.MlExtension.addExtensionType</span><span class="PUNC">(</span><span class="STRN">'DateEdit'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">FM.MlDateEdit</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 69</span> </span></pre></body></html>
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">d</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">d</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">FM.parseDateString</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">            </span><span class="NAME">this.getObserver</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getValue</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">            </span><span class="NAME">this.getAttr</span><span class="PUNC">(</span><span class="STRN">'data-fmml-date-is-utc'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'true'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">'false'</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">        
+<span class='line'> 68</span>     </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.editWidgetDate</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">        </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">this.editWidgetDate</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">datepicker</span><span class="PUNC">(</span><span class="WHIT"> 
+<span class='line'> 71</span>             </span><span class="STRN">"setDate"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">d</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 75</span> 
+<span class='line'> 76</span> </span><span class="NAME">FM.MlExtension.addExtensionType</span><span class="PUNC">(</span><span class="STRN">'DateEdit'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">FM.MlDateEdit</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 77</span> </span></pre></body></html>

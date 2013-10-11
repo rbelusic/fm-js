@@ -340,6 +340,9 @@ FM.MlObserver.prototype._formatValue = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
+    var dateFormat = this.getAttr('data-fmml-date-format', 
+        this.getApp().getAttr('fm_templates_date_format',undefined))
+    ;
 
 // dates
     if (attrtype == "date") {
@@ -353,7 +356,7 @@ FM.MlObserver.prototype._formatValue = function(value) {
         }
 
         if (dateObj) {
-            value = FM.dateToString(dateObj, dateIsUtc);
+            value = FM.dateToString(dateObj, dateIsUtc,dateFormat);
         }
     } else if (attrtype == "number") {
         value = parseFloat(0.0 + value);
@@ -368,7 +371,11 @@ FM.MlObserver.prototype._formatValue = function(value) {
 FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
-    var dateFormat = this.getAttr('data-fmml-date-display-as', 'date');
+    var dateFormat = this.getAttr(
+        'data-fmml-date-display-as', 
+        this.getApp().getAttr('fm_templates_date_display_as',undefined)
+    );
+
     var decplaces = parseInt(
         this.getAttr(
         'data-fmml-nuber-display-decimals',
@@ -390,14 +397,10 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
         if (dateObj) {
             if (dateFormat == 'local') {
                 value = FM.dateLocalFormat(dateObj);
-            } else if (dateFormat == 'date') {
-                value = FM.dateFormat(dateObj, 'mediumDate');
-            } else if (dateFormat == 'datetime') {
-                value = FM.dateFormat(dateObj, 'mediumDateTime');
-            } else if (dateFormat == 'time') {
-                value = FM.dateFormat(dateObj, 'isoTime');
             } else if (dateFormat == 'ago') {
                 value = FM.strTimeBetween(dateObj, new Date());
+            } else {
+                value = FM.dateFormat(dateObj, dateFormat);
             }
         }
     } else if (attrtype == "number") {

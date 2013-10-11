@@ -57,10 +57,18 @@ FM.MlDateEdit.prototype.disposeWidget = function() {
 
 FM.MlDateEdit.prototype.render = function(value) {
     this._super("render",value);
-    
+    var d = null;
+    try {
+        d = FM.parseDateString(
+            this.getObserver().getValue(),
+            this.getAttr('data-fmml-date-is-utc', 'true') != 'false'
+        );
+    } catch (e) {
+        
+    }
     if (this.editWidgetDate) {
         $(this.editWidgetDate).datepicker( 
-            "setDate", this.getObserver().getValue()
+            "setDate", d
         );
     }
 }

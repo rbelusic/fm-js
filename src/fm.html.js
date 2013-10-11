@@ -469,5 +469,17 @@ FM.expandToFullSCreen = function(elmid) {
  * @returns {string}
  */
 FM.getPreferedLanguage = function() {
-    return (window.navigator.userLanguage || window.navigator.language).split('-')[0];
+    return FM.getlocale().split('-')[0];
+}
+
+/**
+ * Returns browser defined locale string.
+ * 
+ * @static
+ * @function 
+ * @returns {string}
+ */
+FM.getlocale = function() {
+    var larr = (window.navigator.userLanguage || window.navigator.language).split('-');
+    return larr[0].toLowerCase() + "-" + larr[1].toUpperCase();
 }

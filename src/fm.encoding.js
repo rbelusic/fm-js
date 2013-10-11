@@ -5,7 +5,7 @@
 
 /**
  * Calculate the md5 hash of a string.
- * 
+ * Derived from <a href="http://phpjs.org/functions/md5/">php.js</a> md5 function.
  * @static
  * @function 
  * @param {string} str The input string.
@@ -119,11 +119,11 @@ FM.md5 = function(str) {
     };
 
     var x = {},
-        k, AA, BB, CC, DD, a, b, c, d,
-        S11 = 7, S12 = 12, S13 = 17, S14 = 22,
-        S21 = 5, S22 = 9, S23 = 14, S24 = 20,
-        S31 = 4, S32 = 11, S33 = 16, S34 = 23,
-        S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+    k, AA, BB, CC, DD, a, b, c, d,
+    S11 = 7, S12 = 12, S13 = 17, S14 = 22,
+    S21 = 5, S22 = 9, S23 = 14, S24 = 20,
+    S31 = 4, S32 = 11, S33 = 16, S34 = 23,
+    S41 = 6, S42 = 10, S43 = 15, S44 = 21;
 
     str = this.utf8_encode(str);
     x = convertToWordArray(str);
@@ -215,81 +215,131 @@ FM.md5 = function(str) {
 
 // -- base64 ---------------------------------------------------------------
 /**
- *  Decodes string encoded with MIME base64.
- * 
+ * Decodes string encoded with MIME base64.
+ * Derived from <a href="http://phpjs.org/functions/base64_decode/">php.js</a> base64 decode function.
  * @static
  * @function 
  * @param {string} input The input string.
  * @returns {string} 
  */
-FM.base64_decode = function(input) {
-    var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var output = "";
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
+FM.base64_decode=function (data) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Tyler Akins (http://rumkin.com)
+    // +   improved by: Thunder.m
+    // +      input by: Aman Gupta
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Onno Marsman
+    // +   bugfixed by: Pellentesque Malesuada
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +      input by: Brett Zamir (http://brett-zamir.me)
+    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // *     example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
+    // *     returns 1: 'Kevin van Zonneveld'
+    // mozilla has this native
+    // - but breaks in 2.0.0.12!
+    //if (typeof this.window['atob'] === 'function') {
+    //    return atob(data);
+    //}
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+    ac = 0,
+    dec = "",
+    tmp_arr = [];
 
-    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    if (!data) {
+        return data;
+    }
 
-    do {
-        enc1 = keyStr.indexOf(input.charAt(i++));
-        enc2 = keyStr.indexOf(input.charAt(i++));
-        enc3 = keyStr.indexOf(input.charAt(i++));
-        enc4 = keyStr.indexOf(input.charAt(i++));
+    data += '';
 
-        chr1 = (enc1 << 2) | (enc2 >> 4);
-        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-        chr3 = ((enc3 & 3) << 6) | enc4;
+    do { // unpack four hexets into three octets using index points in b64
+        h1 = b64.indexOf(data.charAt(i++));
+        h2 = b64.indexOf(data.charAt(i++));
+        h3 = b64.indexOf(data.charAt(i++));
+        h4 = b64.indexOf(data.charAt(i++));
 
-        output = output + String.fromCharCode(chr1);
+        bits = h1 << 18 | h2 << 12 | h3 << 6 | h4;
 
-        if (enc3 != 64) {
-            output = output + String.fromCharCode(chr2);
+        o1 = bits >> 16 & 0xff;
+        o2 = bits >> 8 & 0xff;
+        o3 = bits & 0xff;
+
+        if (h3 == 64) {
+            tmp_arr[ac++] = String.fromCharCode(o1);
+        } else if (h4 == 64) {
+            tmp_arr[ac++] = String.fromCharCode(o1, o2);
+        } else {
+            tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
         }
-        if (enc4 != 64) {
-            output = output + String.fromCharCode(chr3);
-        }
-    } while (i < input.length);
+    } while (i < data.length);
 
-    return output;
+    dec = tmp_arr.join('');
+
+    return dec;
 }
-
+/**
+ * Decodes string encoded with MIME base64.
+ * Derived from <a href="http://phpjs.org/functions/base64_decode/">php.js</a> base64 decode function.
+ * @static
+ * @function 
+ * @param {string} input The input string.
+ * @returns {string} 
+ */
 
 /**
  *  Encodes string with MIME base64.
+ *  Derived from <a href="http://phpjs.org/functions/base64_encode/">php.js</a> base64 encode function.
  * 
  * @static
  * @function 
- * @param {string} input The input string.
+ * @param {string} data The input string.
  * @returns {string} 
  */
-FM.base64_encode = function(input) {
-    var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var output = "";
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
+FM.base64_encode = function(data) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Tyler Akins (http://rumkin.com)
+    // +   improved by: Bayron Guevara
+    // +   improved by: Thunder.m
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Pellentesque Malesuada
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Rafał Kukawski (http://kukawski.pl)
+    // *     example 1: base64_encode('Kevin van Zonneveld');
+    // *     returns 1: 'S2V2aW4gdmFuIFpvbm5ldmVsZA=='
+    // mozilla has this native
+    // - but breaks in 2.0.0.12!
+    //if (typeof this.window['btoa'] === 'function') {
+    //    return btoa(data);
+    //}
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+    ac = 0,
+    enc = "",
+    tmp_arr = [];
 
-    do {
-        chr1 = input.charCodeAt(i++);
-        chr2 = input.charCodeAt(i++);
-        chr3 = input.charCodeAt(i++);
+    if (!data) {
+        return data;
+    }
 
-        enc1 = chr1 >> 2;
-        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-        enc4 = chr3 & 63;
+    do { // pack three octets into four hexets
+        o1 = data.charCodeAt(i++);
+        o2 = data.charCodeAt(i++);
+        o3 = data.charCodeAt(i++);
 
-        if (isNaN(chr2)) {
-            enc3 = enc4 = 64;
-        } else if (isNaN(chr3)) {
-            enc4 = 64;
-        }
+        bits = o1 << 16 | o2 << 8 | o3;
 
-        output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-            keyStr.charAt(enc3) + keyStr.charAt(enc4);
-    } while (i < input.length);
+        h1 = bits >> 18 & 0x3f;
+        h2 = bits >> 12 & 0x3f;
+        h3 = bits >> 6 & 0x3f;
+        h4 = bits & 0x3f;
 
-    return output;
+        // use hexets to index into b64, and append result to encoded string
+        tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+    } while (i < data.length);
+
+    enc = tmp_arr.join('');
+
+    var r = data.length % 3;
+
+    return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
 }
