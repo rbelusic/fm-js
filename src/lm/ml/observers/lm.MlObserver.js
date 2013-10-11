@@ -1,7 +1,7 @@
 /**
  * 
  * Basic ML observer class. 
- *  
+ *   
  * <table>
  * <th>List of ML node attributes</th>
  * <tr><td>data-fmml-attr-name</td><td>name of attribute</td></tr>
