@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "fm-js is a simple and flexible HTML5 webapp framework based on observer pattern",
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "grunt travis --verbose"
   },
   "keywords": [
     "javascript",
