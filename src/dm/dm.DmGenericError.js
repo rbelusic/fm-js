@@ -4,11 +4,12 @@
 * @class FM.DmGenericError
 * @extends FM.DmObject
 * @memberOf FM
-* @param {object} attrs list of attribute name and values
-* @param {object} options list of additional attributes
+* @param {object} attrs list of supported attribute names and values:
+* @param attrs.messageId Error id.
+* @param attrs.text Error message.
+* 
 * 
 */
-
 FM.DmGenericError = FM.defineClass('DmGenericError',FM.DmObject);
 
 // methods

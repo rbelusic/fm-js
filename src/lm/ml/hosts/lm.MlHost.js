@@ -3,7 +3,7 @@
 * 
 * @class FM.MlHost
 * @memberOf FM
-* @extends FM.Object
+* @extends FM.LmObject
 * @param {FM.AppObject} app application object
 * @param {object} [attrs] DOM node attributes
 * @param {DOMnode} node DOM node
@@ -603,43 +603,14 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                 } 
 
                 // ako je template                
-                if(jqobj.attr('data-fmml-template')) {
-                    if(
-                        FM.isset(jqobj.attr('data-fmml-use-global-args')) && 
-                        jqobj.attr('data-fmml-use-global-args') == 'true'
-                        ) {
-                        var args = FM.getArgs();
-                        FM.forEach(args, function(n,v) {
-                            var attname = 'data-fmml-template-attr-' + n; 
-                            if(!FM.isAttr(attrlist,attname)) {
-                                if(FM.isString(v) && FM.startsWith(v,'@@')) {                                    
-                                    v = FM.resolveAttrValue(null,"-",v,{
-                                        A: app,
-                                        D: oObj
-                                    });
-                                } else {
-                                    attrlist[attname] = v;
-                                }
-                            }
-                            return true;
-                        });
-                    }
-                    var tname = jqobj.attr('data-fmml-template');
-                    tname = FM.applyTemplate(FM.UtTemplate.getTemplateArgs(attrlist), tname, false, false);
-                    FM.UtTemplate.getTemplate(app,attrlist,tname,function(isok,templ) {
-                        if(isok) {
-                            var tmplnode = $(templ);
-                            if(jqobj.attr('data-fmml-template-replace') == "true") {
-                                jqobj.replaceWith(tmplnode);
-                                domobj = tmplnode;
-                            } else {
-                                jqobj.html(templ);
-                            }
-                            FM.MlHost.initChildNodes(app,domobj,oObj);                            
-                        }
-                    });
-                
-                }                 
+                if(jqobj.attr('data-fmml-template')) { // begin
+                    try {
+                        FM.MlTemplate.newTemplate(app,attrlist,domobj,oObj);
+                    } catch(e) {
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                    }                  
+                }
+                // end
             }            
         }
         
@@ -657,16 +628,19 @@ FM.MlHost.disposeChildNodes = function(checknode,childsOnly) {
         checknode = checknode.length > 0 ? checknode[0] : null;
     }    
     childsOnly = FM.isset(childsOnly) && childsOnly == false ? false : true;
-    var nodes = $(checknode).find("[data-fmml-host]");
-    if(!childsOnly && $(checknode).is("[data-fmml-host]")) {
+    var nodes = $(checknode).find("[data-fmml-host],[data-fmml-template]");
+    if(!childsOnly && $(checknode).is("[data-fmml-host],[data-fmml-template]")) {
         nodes = nodes.add(checknode);
     }
     
     nodes.each(function(i, n){
+        if(FM.isset(n.fmmlTemplate) && n.fmmlTemplate) {
+            n.fmmlTemplate.dispose();
+        }        
         if(FM.isset(n.fmmlHost) && n.fmmlHost) {
             n.fmmlHost.dispose();
         }        
-    });  
+    });
 }
 
 //

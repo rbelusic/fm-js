@@ -1,5 +1,6 @@
 /**
-* Basic DM class. Provide groups
+* Basic DM class. Provide groups.
+* 
 * @class FM.DmObject
 * @extends FM.Object
 * @memberOf FM

@@ -53,5 +53,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','exec']);
+    grunt.registerTask('travis', ['clean', 'concat', 'uglify','copy','exec']);
 };
 
