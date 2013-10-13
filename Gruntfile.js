@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         js_dir: "src",
         project_dir: ".",
         clean: [
-            "build","doc"
+            "build","doc/generated"
         ],
         concat: {
             "options": {"separator": ";"},
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         },
         exec: {
             run_jsdoc2: {
-              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/outline.template-0.1 -d=doc',
+              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/outline.template-0.1 -d=doc/generated',
               stdout: true
             }
           }
@@ -54,5 +54,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','exec']);
     grunt.registerTask('travis', ['clean', 'concat', 'uglify','copy','exec']);
+
 };
 
