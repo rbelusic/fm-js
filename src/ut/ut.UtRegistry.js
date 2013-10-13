@@ -7,7 +7,6 @@
 */    
 
 FM.UtRegistry = FM.defineClass('UtRegistry',FM.Object);
-FM.UtRegistry.className = "UtRegistry";
 
 FM.UtRegistry.prototype._init = function(opt) {            
     this.cookieName = '';
@@ -94,7 +93,7 @@ FM.UtRegistry.prototype.remove = function(pkey) {
 }
 
 FM.UtRegistry.prototype.findKey = function(key,force) {
-    return FM.UtRegistry(this.registry,key,force);
+    return FM.UtRegistry.findKey(this.registry,key,force);
 }
 
 // static

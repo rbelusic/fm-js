@@ -6,32 +6,37 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
         <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
         <script src="../../../js/fm-js-all.js"></script> 
         <script src="../common/ex-common.js"></script> 
         <script src="ex001.js"></script>             
     </head>
     <body onload="fmdemo.AppFmDemo.startApp()">
         <div>Press btns to increse / descrese count.</div>
-        <!-- Create host which holds new GenericValue data object    
-            GenericValue is DmObject with one (value) atribute
-            Eventualy this events ends up in application
+        <!-- Create host which holds new   
+            DmObject with one (value) number atribute and
+            one (when) date attribute
         --> 
         <div data-fmml-host="Host"
-             data-fmml-object-class="GenericValue" 
+             data-fmml-object-class="Object" 
              data-fmml-object-attr-value="0"
-            >
+             data-fmml-object-attr-when="2013-10-01"
+             data-fmml-object-attr-proceed="YES"
+             >
             <!-- init Attribute observer -->
             Current value:
             <span 
-                data-fmml-observer="Attribute" 
+                data-fmml-observer="Observer" 
+                data-fmml-extensions="Edit"
                 data-fmml-attr-name="value"
                 data-fmml-attr-type="number"
-                data-fmml-attr-decimals="0"
+                data-fmml-attr-decimals="2"
                 >                
             </span>
             <hr />
-            
+
             <!-- init Event observers 
                 events are propagated first to host and then to app
             -->
@@ -40,7 +45,48 @@
                     >+</button>            
             <button data-fmml-observer="Event"
                     data-fmml-event-type="onDecreaseValue" 
-                    >-</button>            
+                    >-</button>  
+            <hr />
+            Last update() call received at:
+            <span 
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="@this.O.getProperty('updateTimestamp','never')"
+                data-fmml-attr-type="date"
+                data-fmml-date-display-as="time"
+                >                
+            </span>
+            <hr />
+            <b>Required <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a></b>
+            <br />
+            Edit date extension:
+            <br />
+            <input 
+                data-fmml-observer="Observer" 
+                data-fmml-extensions="DateEdit"
+                data-fmml-wg-option-show-anim="fold"
+                data-fmml-wg-option-button-image="../common/images/datepicker.gif"
+                
+                data-fmml-attr-name="when"
+                data-fmml-attr-type="date"
+                data-fmml-date-display-as="local"
+                />
+            <hr />
+            <b>radio buttons</b>
+            <br />
+            proceed?
+            <label><input type="radio" name="proceed" value="YES">Yes</label>
+            <label><input type="radio" name="proceed" value="NO"
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="proceed"
+                data-fmml-extensions="Edit"
+                data-fmml-update-condition="click"
+                />No
+            </label>
+            Current proceed value:
+            <div 
+                data-fmml-observer="Observer" 
+                data-fmml-attr-name="proceed"
+                ></div>
         </div>
     </body>
 </html>
