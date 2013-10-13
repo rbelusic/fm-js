@@ -1,5 +1,14 @@
-Prerequisites
-===
+# Basic info #
+
+fm-js is a modern light-weight HTML5 full web application framework. 
+
+ - [documentation]()
+ - [examples]()
+ - tutorial from scratch TODO
+ - tutorial for angular programmers TODO
+
+## Prerequisites ##
+
 
  - [node js](http://nodejs.org/)
  - [grunt](http://gruntjs.com/)
@@ -43,6 +52,14 @@ Build system setup
 Build
 ====
 
-Run grunt from project root. If you have maven installed you can also run it via mvn compile or any later phase. Maven pom.xml is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
+Run from project root:
+
+		grunt 
+
+If you have maven installed you can also run:
+		
+		mvn compile 
+
+or any later phase. Maven pom.xml is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
 
 NE MRĐAJ U MASTER NE RADI MI OVO NA VIRTUALKI !!!
