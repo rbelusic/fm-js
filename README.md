@@ -1,14 +1,14 @@
 Prerequisites
-=====
+===
 
  - [node js](http://nodejs.org/)
  - [grunt](http://gruntjs.com/)
  - [bower](http://bower.io/)
 
-If you already have Nodejs installed, its version must be >= 0.4 (run node --version verifiy).
+If you already have Nodejs installed, its version must be >= 0.4 (run node --version verify).
 
 Build system setup
-====
+=====
 
  - [install nodejs](http://howtonode.org/how-to-install-nodejs)
 
