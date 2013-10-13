@@ -1,4 +1,4 @@
-# Basic info #
+### Basic info
 
 fm-js is a modern light-weight HTML5 full web application framework. 
 
@@ -7,8 +7,7 @@ fm-js is a modern light-weight HTML5 full web application framework.
  - tutorial from scratch TODO
  - tutorial for angular programmers TODO
 
-## Prerequisites ##
-
+### Prerequisites 
 
  - [node js](http://nodejs.org/)
  - [grunt](http://gruntjs.com/)
@@ -16,8 +15,7 @@ fm-js is a modern light-weight HTML5 full web application framework.
 
 If you already have Nodejs installed, its version must be >= 0.4 (run node --version verify).
 
-Build system setup
-=====
+### Build system setup
 
  - [install nodejs](http://howtonode.org/how-to-install-nodejs)
 
@@ -49,8 +47,7 @@ Build system setup
 
 		bower install
 
-Build
-====
+### Build
 
 Run from project root:
 
@@ -60,6 +57,6 @@ If you have maven installed you can also run:
 		
 		mvn compile 
 
-or any later phase. Maven pom.xml is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
+or any later phase. Maven `pom.xml` is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
 
 NE MRĐAJ U MASTER NE RADI MI OVO NA VIRTUALKI !!!
