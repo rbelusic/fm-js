@@ -5,10 +5,10 @@ module.exports = function(grunt) {
         js_dir: "src",
         project_dir: ".",
         clean: [
-            "build","doc"
+            "build", "doc", "release"
         ],
         concat: {
-            "options": {"separator": ";"},
+            "options": {"separator": "\n"},
             "build": {
                 "src": require("./config/js.json"),
                 "dest": "build/debug/js/fm-js-all.js"
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             }
         },
         copy: {
-           main: {
+            resources: {
                 files: [
                     {
                         expand: true,
@@ -39,11 +39,39 @@ module.exports = function(grunt) {
             }
         },
         exec: {
+            mkreleasedir: {
+                command: "mkdir -p release/gh-pages/releases && cp -r doc release/gh-pages/apidoc"
+            },
             run_jsdoc2: {
-              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc',
-              stdout: true
+                command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc',
+                stdout: true
             }
-          }
+        },
+        compress: {
+            release: {
+                options: {
+                    archive: 'release/gh-pages/releases/fm-js-latest.zip'
+                },
+                files: [
+                    {src: ['build/**','doc'], dest: 'fm-js'}
+                ]
+            }
+        },
+        shell: {
+            ghpagesclone: {
+                command: 'git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages'
+            }
+        },
+        git_deploy: {
+            relzip: {
+                options: {
+                    url: 'https://github.com/rbelusic/fm-js.git',
+                    branch: 'gh-pages'
+                },
+                src: 'release/gh-pages',
+                message: "Travis build"
+            },
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -51,8 +79,21 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-git-deploy');
+    grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('default', ['clean', 'concat', 'uglify','copy','exec']);
-    grunt.registerTask('travis', ['clean', 'concat', 'uglify','copy','exec']);
+
+
+    grunt.registerTask('build', ['clean','concat', 'uglify','copy:resources']);
+    grunt.registerTask('apidoc', ['exec:run_jsdoc2']);
+    grunt.registerTask('publish', [
+        'shell:ghpagesclone', 'exec:mkreleasedir', 'compress:release',
+        'git_deploy:relzip'
+    ]);
+ 
+
+    grunt.registerTask('default', ['build', 'apidoc']);
+    grunt.registerTask('travis', ['default', 'publish']);
 };
 
