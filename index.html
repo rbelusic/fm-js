@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Fm-js : fm-js is Model View ViewModel pattern implementation in Javascript." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Fm-js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/rbelusic/fm-js">View on GitHub</a>
+
+          <h1 id="project_title">Fm-js</h1>
+          <h2 id="project_tagline">fm-js is Model View ViewModel pattern implementation in Javascript.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/rbelusic/fm-js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/rbelusic/fm-js/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+            <a class="" href="http://rbelusic.github.io/fm-js/apidoc/">API documentation</a>
+            |<a class="" href="http://rbelusic.github.io/fm-js/releases/fm-js-latest.zip">Latest build</a>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="fm-js" class="anchor" href="#fm-js"><span class="octicon octicon-link"></span></a>fm-js</h1>
+
+<p>fm-js is <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel">Model View ViewModel</a> pattern implementation in Javascript. <em>Model</em> is implemented by <a href="">FM.DmObject</a> class and its subclasses. The purpose of the model is to represent the data of interest to the application. The application is represented by the <a href="">FM.AppObject</a> class. The <em>view</em> is implemented with standard HTML and CSS, which is the user interface. The <em>viewmodel</em> is implemented by <a href="">FM.MlHost</a>, <a href="">FM.MlObserver</a> and <a href="">MlExtension</a> classes and its subclasses. The purpose of the viewmodel is to implement the application logic and two way data binding between the model and the view. In other words, any update in the model is reflected in the view, and any (user) action on the view updates the model.</p>
+
+<p>The framework employs heavy use of the <a href="http://en.wikipedia.org/wiki/Observer_pattern">observer pattern</a>. E.g. the host (implemented by <a href="">FM.MlHost</a>) is an observable HTML element (<em>subject</em> in terms of the observer pattern) which receives DOM events and notifies the registered observers (implemented by <a href="">FM.MlObserver</a>). The easiest (and most common) way to register an observer to a host is to nest the observer HTML element inside the host HTML element. The application is the top layer and can register an observer, or be registered as observable, to/from any object/layer. Observer pattern among arbitrary objects/layers can be implemented easily. </p>
+
+<p>The framework also implements a dynamic templating mechanism. All objects extend from <a href="">FM.Object</a> which enables them to:</p>
+
+<ul>
+<li>Have attributes. Attributes are usually serializable and can be rendered in the view in a transparent manner.</li>
+<li>Have properties. Properties are usually non serializable an represent the state of the object.</li>
+<li>Be registered as observable or observer.</li>
+</ul><p>readme TODO: </p>
+
+<ul>
+<li>templating</li>
+<li>observer pattern among arbitrary elements </li>
+<li>illustrative (not SSCCE) code examples</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Fm-js maintained by <a href="https://github.com/rbelusic">rbelusic</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
