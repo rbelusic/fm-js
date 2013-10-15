@@ -6,7 +6,6 @@
  * -----------------------------------------------------------------------------
  */
 
-
 /**
  * Basic FM class. Provide listeners, attributes, propertyes, logger.
  * 
@@ -185,16 +184,12 @@ FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
     if (!this.isEnabled())
         return false;
 
-    //  ako imaš event fn
     if (FM.isset(this[ev])) {
         this[ev](sender, data);
         cl[this.getID()] = '1';
         FM.setAttr(cl, '_executed', '1');
-    //return cl;
     }
 
-    // proslijedi dalje ako nemas ev fn
-    //return this.fireEvent(ev,data,cl);
     return cl;
 }
 
@@ -233,7 +228,6 @@ FM.Object.prototype.fireEvent = function(ev, evdata, calledlist) {
             } catch (err) {
                 FM.log(null, err, FM.logLevels.error, 'Object.fireEvent');
             }
-        //if(FM.getAttr(cl,'_executed','0') == '1') break;            
         }
     }
 
@@ -273,6 +267,7 @@ FM.Object.prototype.getAttr = function(key, defv) {
  * @function 
  * @param {string} key Attribute name.
  * @param {string|number|...} val Value of attribute.
+ * @param {boolean} [callevent=false] Fire <i>onChange</i> event.
  * @returns {boolean} <i>true</i> if value of attribute is changed, otherwise <i>false</i>.
  */
 FM.Object.prototype.setAttr = function(key, val, callevent) {
@@ -305,7 +300,6 @@ FM.Object.prototype.s = function(key, val, callevent) {
  * @function 
  * @param {string} [key] Attribute name. If <i>key</i> is undefined this method
  *  check for any attribute change.
- *  
  * @returns {boolean} 
  */
 FM.Object.prototype.isChanged = function(key) {
@@ -324,7 +318,7 @@ FM.Object.prototype.isChanged = function(key) {
  * @public
  * @function 
  * @param {boolean} v true or false
- * @param {boolean} callevent Fire <i>onChange</i> event after object update (default is false).
+ * @param {boolean} [callevent=false] Fire <i>onChange</i> event after object update.
  */
 FM.Object.prototype.setChanged = function(v, callevent) {
     this.setProperty('dirty', v == true);
@@ -335,7 +329,7 @@ FM.Object.prototype.setChanged = function(v, callevent) {
 }
 
 /**
- * Discard object attribute changes,
+ * Discard object attribute changes, <i>onChange</i> event is fired.
  * 
  * @public
  * @function 
@@ -415,7 +409,6 @@ FM.Object.prototype.setProperty = function(key, val, callevent) {
 
 
 /** 
- * For each attribute call function <i>doFn(id,attr)</i> until end of attributes or <i>false</i> return value.    
  * For each object attribute call function <i>doFn(id,elm)</i> 
  * until end of list or <i>false</i> is returned. 
  * 
@@ -437,7 +430,8 @@ FM.Object.prototype.resolvePropertyValue = function(attrName, def, context) {
 
 
 /** 
- * For each property call function <i>doFn(id,prop)</i> until end of properties or <i>false</i> return value.    
+ * For each object property call function <i>doFn(id,prop)</i> 
+ * until end of list or <i>false</i> is returned. 
  * 
  * @public
  * @function 
@@ -493,7 +487,7 @@ FM.Object.prototype.log = function(msg, level, callerinfo) {
 }
 
 /**
- * Set log level.
+ * Set global log level.
  * 
  * @public
  * @function 
@@ -510,7 +504,7 @@ FM.Object.prototype.setLogLevel = function(level) {
 }
 
 /**
- * Get log level,
+ * Get global log level,
  * 
  * @public
  * @function 

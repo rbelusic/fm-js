@@ -1,4 +1,5 @@
 /build/
+/release/
 /bower_components/
 /node_modules/
 /target/

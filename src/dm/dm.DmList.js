@@ -23,14 +23,13 @@
  * @class FM.DmList
  * @extends FM.DmObject
  * @memberOf FM
- * @param {object} attrs list of attribute name and values
- * @param {object|String} [config] configuration. Literal presentation or object
+ * @param {object} attrs List of attribute names and values.
+ * @param {object|string} [config] configuration. 
+ *  Object or literal presentation of object.
  * 
  */
 FM.DmList = FM.defineClass('DmList', FM.DmObject);
 
-// properties
-FM.DmList.prototype.app = null;
 
 FM.DmList.prototype._init = function(attrs, config, app) {
     this.objectsList = {};
@@ -66,14 +65,29 @@ FM.DmList.prototype._init = function(attrs, config, app) {
 
 }
 
+/**
+ * Returns application instance.
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
 FM.DmList.prototype.getApp = function() {
     return this.app;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.DmList.prototype.setApp = function(a) {
     this.app = FM.isset(a) && a ? a : null;
 }
 
+/**
+ * @ignore
+ * 
+ */
 FM.DmList.prototype._addPredefinedData = function(data) {
     var clsName = this.getProperty('config.responseClass', 'Object');
     var responseObjectType = FM.DmObject.getConfiguration(this.getApp(), clsName);
@@ -102,31 +116,35 @@ FM.DmList.prototype._addPredefinedData = function(data) {
 
 // -- func AJAX --------------------------------------------------------
 /**
- * Get arguments of last fetch
+ * Returns arguments of last AJAX call.
+ * 
  * @public
  * @function
- * @returns {object} List of arguments of last fetch or null
+ * @returns {object}
  */
 FM.DmList.prototype.getLastFetchArgs = function() {
     return this.lastFetchArgs;
 }
 
 /**
- * Get arguments of last sucessfull fetch  
+ * Returns arguments of last successful AJAX call.
+ * 
  * @public
  * @function
- * @returns {object} List of arguments of last sucessfull fetch or null
+ * @returns {object}
  */
 FM.DmList.prototype.getLastFetchedArgs = function() {
     return this.lastFetchedArgs;
 }
 
 /**
- * Get arguments for fetch
+ * Prepare arguments for AJAX call.
+ * 
  * @public
  * @function
- * @param {boolean} getMore New fetch or fetch more data
- * @returns {object} List of arguments for new fetch
+ * @param {boolean} [getMore=false] Add data to list or refresh complete list.
+ * 
+ * @returns {object} List of arguments.
  */
 FM.DmList.prototype.getDataArgs = function(getMore) {
     var args = {};
@@ -187,10 +205,7 @@ FM.DmList.prototype.getDataArgs = function(getMore) {
 
 
 /**
- * Before start of fetch. Fires <i>onListStart</i> event
- * @event
- * @param {object} oAjax UtAjax object
- * @param {object} oArgs data Fetch arguments
+ * @ignore
  */
 FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
     this.log("Starting fetch ...", FM.logLevels.info, 'onAjaxStateStart');
@@ -198,13 +213,7 @@ FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
 }
 
 /**
- * After successfull fetch. 
- * 
- * @public
- * @event
- * @param {object} oAjax UtAjax object
- * @param {object} response 
- * 
+ * @ignore
  */
 FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
     this.log("Fetch completed.", FM.logLevels.info, 'onAjaxStateEnd');
@@ -237,11 +246,7 @@ FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
 }
 
 /**
- * After fetch error. 
- * @public
- * @event
- * @param {object} oAjax UtAjax object
- * @param {object} errObj (class extending FM.DmGenericError)
+ * @ignore
  */
 FM.DmList.prototype.onAjaxStateError = function(oAjax, errTxt) {
     var errObj = new FM.DmGenericError({
@@ -260,6 +265,9 @@ FM.DmList.prototype.onAjaxStateError = function(oAjax, errTxt) {
     this.fireEvent("onListError", errObj);
 }
 
+/**
+ * @ignore
+ */
 FM.DmList.prototype._checkResponseStatus = function(oAjax) {
     if (!FM.isset(oAjax) || !oAjax) {
         return true;
@@ -286,10 +294,13 @@ FM.DmList.prototype._checkResponseStatus = function(oAjax) {
 
 
 /**
- * Get data from server. 
+ * Get data from server.
+ * <i>onListStart</i> and <i>onListEnd</i> or <i>onListError</i> will be fired
+ *  on start and completition of AJAX call.
+ *  
  * @public
  * @function    
- * @param {boolean} getMore Continue or start new fetch
+ * @param {boolean} [getMore=false] Add data to list or refresh complete list.
  */
 FM.DmList.prototype.getData = function(getMore) {
     if (this.isStaticList()) { // Ako je static lista
@@ -331,14 +342,15 @@ FM.DmList.prototype.getData = function(getMore) {
     return true;
 }
 
-/** !!!
- * Add DmObject to list
+/** 
+ * Add FM.DmObject to list.
+ * 
  * @public
  * @function    
  * @param {DmObject} inmember DmObject to add
- * @param {string} mid DmObject id
- * @param {boolean} callevent Send <i>onListEnd</i> event
- * @param {string} groupid Id of DmObject group
+ * @param {string} [mid=inmember.getDataID()] Object data ID.
+ * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
+ * @param {string} [groupName=null]. 
  */
 FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
     var addlst = [];
@@ -358,12 +370,14 @@ FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
 }
 
 /**
- * Remove DmObject from list
+ * Remove FM.DmObject from list,
+ * 
  * @public
  * @function    
- * @param {string} id Id of DmObject to remove or object with list od DmObjects to remove
- * @param {boolean} callevent Send <i>onListEnd</i> event
- * @param {string} groupid Id of DmObject group
+ * @param {string|object} id Id of DmObject to remove 
+ *  or object with list od DmObjects to remove.
+ * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
+ * @param {string} [groupName=null]. 
  */
 FM.DmList.prototype.removeFromList = function(id, callevent, groupid) {
     var rmlist = {};
@@ -419,13 +433,14 @@ FM.DmList.prototype.removeFromList = function(id, callevent, groupid) {
 }
 
 /**
- * Remove all DmObjects with <i>attr</i> attribute value equal to <i>value</i> from list
+ * Remove all list members with <i>attr</i> attribute value equal to <i>value</i>.
+ * 
  * @public
  * @function    
- * @param {string} attr Attribute name
- * @param {string} value Attribute value
- * @param {boolean} callevent Send <i>onListEnd</i> event
- * @param {string} groupid Id of DmObject group
+ * @param {string} attr Attribute name.
+ * @param {string} value Attribute value.
+ * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
+ * @param {string} [groupName=null]. 
  */
 FM.DmList.prototype.removeFromListByAttr = function(attr, value, callevent, groupid) {
     var rmlist = {};
@@ -442,16 +457,20 @@ FM.DmList.prototype.removeFromListByAttr = function(attr, value, callevent, grou
 }
 
 /**
- * Remove all DmObjects from list
+ * Empty list.
+ * 
  * @public
  * @function    
+ * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
+ * @param {string} [groupName=null]. 
  */
 FM.DmList.prototype.clearList = function(callevent, groupid) {
     return this.removeFromList(FM.cloneObject(this.objectsList), callevent, groupid);
 }
 
 /**
- * Dispose list
+ * Dispose list.
+ * 
  * @public
  * @function    
  */
@@ -478,12 +497,13 @@ FM.DmList.prototype.dispose = function() {
 }
 
 /**
- * Get DmObject from list by id or attribute name/value pair
+ * Get FM.DmObject from list by data ID or attribute name-value pair.
+ * 
  * @public
  * @function    
- * @param {string} key id of DmObject to remove or attribute value
- * @param {string} aname undefined or attribute name
- * @returns {DmObject} 
+ * @param {string} key Data ID of DmObject to remove or attribute value.
+ * @param {string} [aname=FM.DmObject#getDataID()] Attribute name.
+ * @returns {FM.DmObject} 
  */
 FM.DmList.prototype.get = function(key, aname) {
     // ako je aname def onda je par name/value attributa a ne dataid
@@ -501,40 +521,53 @@ FM.DmList.prototype.get = function(key, aname) {
 }
 
 /**
- * See DmList.get
- * @see DmList#get
+ * @ignore
  */
 FM.DmList.prototype.c = function(key, aname) {
     return this.get(key, aname);
 }
 
+
 /**
- * Add DmObject to list
- * Examples:
- *  this.set(obj,'1234')
- *  this.set(false,[o1,o2,o3],'uid')
- *  (R)
- *  
+ * Add group of FM.DmObject to list.
+ * 
+ * @name set&nbsp;
+ * @memberOf FM.DmList#
  * @public
  * @function    
- * @param {DmObject} member DmObject to add
- * @param {string} id Id of DmObject to add
- * @param {String} idattr - 
- * @returns {DmObject} 
+ * @param {boolean} onlyExisting Replace only. 
+ * @param {FM.DmObject{}} lst List of FM.DmObject 's to add.
+ * @param {String} [idattr] Attribute to use instead of data ID. 
  */
-// FM.DmList.prototype.set = function(onlyExisting,objList []{},idattr) 
+
+/**
+ * Add FM.DmObject to list or replace object with same data ID with new one.
+ * 
+ * 
+ * @public
+ * @function    
+ * @param {FM.DmObject} member FM.DmObject to add.
+ * @param {string} [id=FM.DmObject#getDataID()] Id of FM.DmObject to add.
+ */
 FM.DmList.prototype.set = function(member, id, idattr) {
-    if (FM.isset(idattr)) {
-        var olist = id;
+    if (FM.isBoolean(member)) {
         var onlyExisting = member;
+        var olist = id;
+        idattr = FM.isset(idattr) && idattr != null ? idattr : null;
+        
         for (var k in olist) {
             var obj = olist[k];
-            if (FM.isObject(obj)) {
-                if (!onlyExisting || (this.get(obj[idattr]) != null))
-                    this.set(obj, obj[idattr]);
+            if (FM.isObject(obj) && FM.isset(obj.getDataID)) {
+                var did = idattr ? obj.getAttr(idattr,'') : obj.getDataID();
+                var oldObj = this.get(did);
+                if (!onlyExisting || oldObj == null) {
+                    this.set(obj, did);
+                }
             }
         }
     } else {
+        id = FM.isset(id) && id ? id : member.getDataID();
+        
         if (!FM.isset(this.objectsList[id.toString()])) {
             this.listIndex.push(id.toString());
         }
@@ -544,32 +577,34 @@ FM.DmList.prototype.set = function(member, id, idattr) {
 }
 
 /**
- * See DmList.set
- * @see DmList#set
+ * @ignore
  */
 FM.DmList.prototype.l = function(member, id, idattr) {
     return this.set(member, id, idattr);
 }
 
 /**
- * Get list of objects
+ * Get list of all DM.Object 's.
+ * 
  * @public
  * @function    
- * @returns {object} 
+ * @returns {DM.Object{}} 
  */
 FM.DmList.prototype.getList = function() {
     return this.objectsList;
 }
 
 /**
- * Find DmObject(s) 
+ * Find FM.DmObject 's in list.
+ *  
  * @public
  * @function    
- * @param {string} aname Attribute name 
- * @param {string} value Attribute value
- * @param {boolean} all Return all objects (or only first that mach criteria)
- * @param {object} orderList List index 
- * @returns {object} DMObject or DmObject collection
+ * @param {string} aname Attribute name. 
+ * @param {string} value Attribute value.
+ * @param {boolean} [all=false] Return all objects (or only first that match criteria).
+ * @param {object} [orderList] List index.
+ *  
+ * @returns {FM.DmObject|FM.DmObject{}}
  */
 FM.DmList.prototype.findByAttr = function(aname, value, all, orderList) {
     var getall = (FM.isset(all) ? all : false);
@@ -595,12 +630,13 @@ FM.DmList.prototype.findByAttr = function(aname, value, all, orderList) {
 }
 
 /**
- * Find DmObject data id by attribute name/value pair 
+ * Find list index of FM.DmObject with given attribute name-value pair. 
+ * 
  * @public
  * @function    
  * @param {string} attrname Attribute name 
  * @param {string} attrval Attribute value
- * @returns {object} DmObject or null
+ * @returns {number} Returns -1 when no object is found.
  */
 FM.DmList.prototype.findElementIndex = function(attrname, attrval) {
     var i = this.forEachListElement(
@@ -615,24 +651,28 @@ FM.DmList.prototype.findElementIndex = function(attrname, attrval) {
 }
 
 /**
- * Get list size
+ * Returns list size.
+ * 
  * @public
  * @function    
- * @param {function} filterFn Callback function,filtering
- * @returns {number} Number of DmObject in list
+ * @param {function} [filterFn] Callback function for filtering (<i>filterFn(id,attr)</i>). 
+ * @returns {number} 
  */
 FM.DmList.prototype.getListSize = function(filterFn) {
     return FM.DmList.getListSize(this,filterFn);
 }
 
 /**
- * For each DmObject in list call function <i>doFn(id,attr)</i> until end of list or <i>false</i> return value.    
+ * For each FM.DmObject in list call function <i>doFn(id,attr)</i> 
+ * until end of list or <i>false</i> return value.    
+ * 
  * @public
  * @function    
- * @param {function} doFn Callback function
- * @param {boolean} returnIndex Return index of DmObject instead DmObject itself
+ * @param {function} doFn Callback function.
+ * @param [boolean=false]} returnIndex Return index of DmObject instead DmObject itself
  * @param {boolean} doSort Sort index by orderAttribute (from config)
- * @return {string} In case of <i>false</i> return value of <i>doFn()</i> call return DmObject (or data id of DmObject) otherwise null or -1
+ * @return {string} In case of <i>false</i> return value of <i>doFn()</i> call 
+ *  this function returns FM.DmObject (or data id of DmObject) otherwise null or -1
  */
 FM.DmList.prototype.forEachListElement = function(doFn, returnIndex) {
     // pokreni
