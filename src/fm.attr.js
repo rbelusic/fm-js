@@ -1,14 +1,14 @@
 /**
  * @fileOverview This file has functions related to object attributes.
- * @review isipka
+ * @review isipka r0
  */
 
 /**
- * Check if attribute exists in object.
+ * Check if an object has the attribute.
  * 
  * @static
  * @function 
- * @param {Object} options Object with attributes.
+ * @param {Object} options Object.
  * @param {string} key Attribute name.
  * @returns {boolean}
  */
@@ -29,14 +29,14 @@ FM.isAttr = function(options, key) {
 }
 
 /**
- * Get attribute value from object.
+ * Get the attribute value from an object.
  * 
  * @static
  * @function 
  * @param {Object} options Object with attributes.
  * @param {string} key Attribute name.
  * @param {...} [defv=""] Default value of attribute.
- * @returns {..,} Value of attribute or default value.
+ * @returns {...} Value of attribute or default value.
  */
 FM.getAttr = function(options, key, defv) {
     if (!options)
@@ -64,7 +64,7 @@ FM.getAttr = function(options, key, defv) {
 }
 
 /**
- * Set attribute of object
+ * Set the attribute value for an object.
  * 
  * @static
  * @function 

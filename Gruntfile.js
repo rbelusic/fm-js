@@ -28,12 +28,6 @@ module.exports = function(grunt) {
                         src: require("./config/resources.json"),
                         dest: 'build/debug',
                         filter: 'isFile'
-                    },
-                    {
-                        expand: true,
-                        src: require("./config/resources.json"),
-                        dest: 'build/production',
-                        filter: 'isFile'
                     }
                 ]
             }
@@ -43,8 +37,8 @@ module.exports = function(grunt) {
                 command: "mkdir -p release/gh-pages/releases && cp -r doc release/gh-pages/apidoc"
             },
             run_jsdoc2: {
-                command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc',
-                stdout: true
+              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/outline.template-0.1 -d=doc/generated',
+              stdout: true
             }
         },
         compress: {
