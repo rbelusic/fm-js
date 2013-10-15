@@ -13,7 +13,7 @@ fm-js is a modern light-weight HTML5 full web application framework.
  - [grunt](http://gruntjs.com/)
  - [bower](http://bower.io/)
 
-If you already have Nodejs installed, its version must be >= 0.4 (run node --version verify).
+If you already have Nodejs installed, its version must be >= 0.4 (run `node --version` verify).
 
 ### Build system setup
 
@@ -24,14 +24,14 @@ If you already have Nodejs installed, its version must be >= 0.4 (run node --ver
 		git clone git://github.com/ry/node.git
 		cd node
 		./configure
-		make
+		sudo make
 		sudo make install
 
- - install grunt globally 
+ - install grunt CLI [globally](http://blog.nodejs.org/2011/03/23/npm-1-0-global-vs-local-installation/) 
 
 		sudo npm install -g grunt-cli
 
- - install bower globally 
+ - install bower globally
 
 		sudo npm install -g bower
 
@@ -49,14 +49,6 @@ If you already have Nodejs installed, its version must be >= 0.4 (run node --ver
 
 ### Build
 
-Run from project root:
-
-		grunt 
-
-If you have maven installed you can also run:
-		
-		mvn compile 
-
-or any later phase. Maven `pom.xml` is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
+Run from project root: `grunt`. If you have maven installed you can also run: `mvn compile` or any later phase. Maven `pom.xml` is just a wrapper that calls native installed grunt and it's purpose is seamless project integration with Netbeans IDE.
 
 NE MRĐAJ U MASTER NE RADI MI OVO NA VIRTUALKI !!!
