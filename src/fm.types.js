@@ -39,7 +39,7 @@ FM.isNumber = function(v) {
     return !isNaN(parseFloat(v));
 }
 /**
- * Determine if a variable is number.
+ * Determine if a variable is of boolean type.
  * 
  * @static
  * @function 
