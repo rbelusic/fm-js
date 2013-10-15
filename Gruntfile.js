@@ -56,9 +56,6 @@ module.exports = function(grunt) {
         },
         shell: {
             mk_release: {
-                
-            },
-            mk_release1: {
                 command: 'bash bin/mk_release'
             }
         },
