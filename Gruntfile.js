@@ -42,6 +42,10 @@ module.exports = function(grunt) {
             run_jsdoc2: {
                 command: 'mkdir -p build && node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=build/apidoc',
                 stdout: true
+            },
+            mk_release: {
+                command: 'bash bin/mk_release',
+                stdout: true
             }
         },
         compress: {
@@ -85,7 +89,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean', 'concat', 'uglify', 'copy:resources']);
     grunt.registerTask('apidoc', ['exec:run_jsdoc2']);
     grunt.registerTask('publish', [
-        'shell:mk_release', 'compress:release',
+        'exec:mk_release', 'compress:release',
         'git_deploy:release'
     ]);
 
