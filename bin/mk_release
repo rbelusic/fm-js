@@ -1,0 +1,17 @@
+#!/bin/bash
+BCWD=$(cwd)
+git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages
+cd release/gh-pages
+git checkout gh-pages
+mkdir -p releases
+cp -r $BCWD/build/apidoc .
+## deplykeys
+git config user.name "$GIT_NAME"
+git config user.email "$GIT_EMAIL"
+git config credential.helper "store --file=.git/credentials"
+echo "https://$GH_TOKEN:@github.com" >.git/credentials
+git add .
+git commit -m "CI script build"
+# git push                    
+cd $BCWD
+                 

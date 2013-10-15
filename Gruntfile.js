@@ -56,23 +56,10 @@ module.exports = function(grunt) {
         },
         shell: {
             mk_release: {
-                command: [
-                    'git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages',
-                    'export BCWD=$(cwd)',
-                    'cd release/gh-pages',
-                    'git checkout gh-pages',
-                    'mkdir -p releases',
-                    'cp -r $BCWD/build/apidoc .',
-                    '## deplykeys',
-                    'git config user.name "$GIT_NAME"',
-                    'git config user.email "$GIT_EMAIL"',
-                    'git config credential.helper "store --file=.git/credentials"',
-                    'echo "https://$GH_TOKEN:@github.com" >.git/credentials',
-                    'git add *',
-                    'git commit -m "CI script build"',
-                    '# git push',                    
-                    'cd $BCWD'                 
-                ].join('&&')
+                
+            },
+            mk_release1: {
+                command: 'bash bin/mk_release'
             }
         },
         git_deploy: {
