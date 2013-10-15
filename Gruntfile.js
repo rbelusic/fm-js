@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         js_dir: "src",
         project_dir: ".",
         clean: [
-            "build", "doc", "release"
+            "build","doc/generated","release"
         ],
         concat: {
             "options": {"separator": "\n"},
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
                 command: "mkdir -p release/gh-pages/releases && cp -r doc release/gh-pages/apidoc"
             },
             run_jsdoc2: {
-              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/outline.template-0.1 -d=doc/generated',
+              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc/generated',
               stdout: true
             }
         },
