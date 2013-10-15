@@ -2,7 +2,9 @@ language: node_js
 node_js:
   - 0.10
 before_script:
-  - npm install -g grunt-cli  
+  - npm install -g grunt-cli
+script:
+  - grunt default publish 
 env:
   global:
   - secure: "XDozX3oheH3rQIgoO+A08T2hqnhAryIPuYt5w1Z94PqH7QUZ2HkGNVzpjWXSZRj+wkWbTaggIJZadGAyJ9vlZoBphWGaIxNm+NEd+gz1zEcCZzqeUtvy7prtPEJvxnHJOAUnTIB3+r/5oHVY8OEUfsgUtwd5wJrKwXcZlRNiA7E="

@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         js_dir: "src",
         project_dir: ".",
         clean: [
-            "build","doc/generated","release"
+            "build", "release"
         ],
         concat: {
             "options": {"separator": "\n"},
@@ -28,17 +28,20 @@ module.exports = function(grunt) {
                         src: require("./config/resources.json"),
                         dest: 'build/debug',
                         filter: 'isFile'
+                    },
+                    {
+                        expand: true,
+                        src: require("./config/resources.json"),
+                        dest: 'build/production',
+                        filter: 'isFile'
                     }
                 ]
             }
         },
         exec: {
-            mkreleasedir: {
-                command: "mkdir -p release/gh-pages/releases && cp -r doc release/gh-pages/apidoc"
-            },
             run_jsdoc2: {
-              command: 'node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=doc/generated',
-              stdout: true
+                command: 'mkdir -p build && node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=build/apidoc',
+                stdout: true
             }
         },
         compress: {
@@ -47,23 +50,39 @@ module.exports = function(grunt) {
                     archive: 'release/gh-pages/releases/fm-js-latest.zip'
                 },
                 files: [
-                    {src: ['build/**','doc'], dest: 'fm-js'}
+                    {src: ['build/**'], dest: 'fm-js'}
                 ]
             }
         },
         shell: {
-            ghpagesclone: {
-                command: 'git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages'
+            mk_release: {
+                command: [
+                    'git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages',
+                    'export BCWD=$(cwd)',
+                    'cd release/gh-pages',
+                    'git checkout gh-pages',
+                    'mkdir -p releases',
+                    'cp -r $BCWD/build/apidoc .',
+                    '## deplykeys',
+                    'git config user.name "$GIT_NAME"',
+                    'git config user.email "$GIT_EMAIL"',
+                    'git config credential.helper "store --file=.git/credentials"',
+                    'echo "https://$GH_TOKEN:@github.com" >.git/credentials',
+                    'git add *',
+                    'git commit -m "CI script build"',
+                    '# git push',                    
+                    'cd $BCWD'                 
+                ].join('&&')
             }
         },
         git_deploy: {
-            relzip: {
+            release: {
                 options: {
                     url: 'https://github.com/rbelusic/fm-js.git',
                     branch: 'gh-pages'
                 },
                 src: 'release/gh-pages',
-                message: "Travis build"
+                message: "CI release build"
             },
         }
     });
@@ -79,15 +98,15 @@ module.exports = function(grunt) {
 
 
 
-    grunt.registerTask('build', ['clean','concat', 'uglify','copy:resources']);
+    grunt.registerTask('build', ['clean', 'concat', 'uglify', 'copy:resources']);
     grunt.registerTask('apidoc', ['exec:run_jsdoc2']);
     grunt.registerTask('publish', [
-        'shell:ghpagesclone', 'exec:mkreleasedir', 'compress:release',
-        'git_deploy:relzip'
+        'shell:mk_release', 'compress:release',
+        'git_deploy:release'
     ]);
- 
+
 
     grunt.registerTask('default', ['build', 'apidoc']);
-    grunt.registerTask('travis', ['default', 'publish']);
+    grunt.registerTask('ci', ['default', 'publish']);
 };
 
