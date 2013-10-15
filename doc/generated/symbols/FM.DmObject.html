@@ -335,11 +335,129 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#addGroup">addGroup</a></b>(gname, callevent)
+								</div>
+								<div class="description">Add object to group.</div>
+							</td>
+						</tr>
+					
+						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">FM.DmObject.<b><a href="../symbols/FM.DmObject.html#.getConfiguration">getConfiguration</a></b>(app, name)
+								<div class="fixedFont">FM.DmObject.<b><a href="../symbols/FM.DmObject.html#.addSubClassType">addSubClassType</a></b>(sctype, clsFn, scapp)
 								</div>
-								<div class="description">Returns DmObject <b>config</b> class function for <b>config</b> subclass type</div>
+								<div class="description">Register application subclass type.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#forEachGroup">forEachGroup</a></b>(doFn)
+								</div>
+								<div class="description">For each object group call function <i>doFn(groupName,groupObject)</i> 
+until end of list or <i>false</i> is returned.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.DmObject.<b><a href="../symbols/FM.DmObject.html#.getConfiguration">getConfiguration</a></b>(app, sctype)
+								</div>
+								<div class="description">Returns DmObject class function for <b>sctype</b> subclass type.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#getDataID">getDataID</a></b>()
+								</div>
+								<div class="description">Returns data ID of data model.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#getDefaultGroup">getDefaultGroup</a></b>()
+								</div>
+								<div class="description">Returns default group.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#getGroups">getGroups</a></b>()
+								</div>
+								<div class="description">Get list of all groups object belongs to.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#getGroupsCount">getGroupsCount</a></b>()
+								</div>
+								<div class="description">Returns object group count.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.DmObject.<b><a href="../symbols/FM.DmObject.html#.getSubClassType">getSubClassType</a></b>(sctype, scapp)
+								</div>
+								<div class="description">Returns application registered subclass type function.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#isInGroup">isInGroup</a></b>(gname)
+								</div>
+								<div class="description">Check if object is in named group.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">FM.DmObject.<b><a href="../symbols/FM.DmObject.html#.newObject">newObject</a></b>(app, sctype, oAttrs)
+								</div>
+								<div class="description">Returns new instance of chosen <b>sctype</b> subclass type.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#removeAllGroups">removeAllGroups</a></b>(callevent)
+								</div>
+								<div class="description">Remove object from all groups.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#removeGroup">removeGroup</a></b>(gname, callevent)
+								</div>
+								<div class="description">Remove object from group.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/FM.DmObject.html#setDefaultGroup">setDefaultGroup</a></b>(gname, callevent)
+								</div>
+								<div class="description">Set default object group.</div>
 							</td>
 						</tr>
 					
@@ -349,7 +467,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/FM.Object.html">FM.Object</a>: </dt><dd><a href="../symbols/FM.Object.html#addListener">addListener</a>, <a href="../symbols/FM.Object.html#disable">disable</a>, <a href="../symbols/FM.Object.html#discardChanges">discardChanges</a>, <a href="../symbols/FM.Object.html#dispose">dispose</a>, <a href="../symbols/FM.Object.html#enable">enable</a>, <a href="../symbols/FM.Object.html#fireEvent">fireEvent</a>, <a href="../symbols/FM.Object.html#forEachAttr">forEachAttr</a>, <a href="../symbols/FM.Object.html#forEachProperty">forEachProperty</a>, <a href="../symbols/FM.Object.html#getAttr">getAttr</a>, <a href="../symbols/FM.Object.html#getChangedAttrList">getChangedAttrList</a>, <a href="../symbols/FM.Object.html#getClassName">getClassName</a>, <a href="../symbols/FM.Object.html#getDataHash">getDataHash</a>, <a href="../symbols/FM.Object.html#getDataID">getDataID</a>, <a href="../symbols/FM.Object.html#getID">getID</a>, <a href="../symbols/FM.Object.html#getLogLevel">getLogLevel</a>, <a href="../symbols/FM.Object.html#getProperty">getProperty</a>, <a href="../symbols/FM.Object.html#getSubClassName">getSubClassName</a>, <a href="../symbols/FM.Object.html#isAttr">isAttr</a>, <a href="../symbols/FM.Object.html#isChanged">isChanged</a>, <a href="../symbols/FM.Object.html#isEnabled">isEnabled</a>, <a href="../symbols/FM.Object.html#log">log</a>, <a href="../symbols/FM.Object.html#onEvent">onEvent</a>, <a href="../symbols/FM.Object.html#removeAllListeners">removeAllListeners</a>, <a href="../symbols/FM.Object.html#removeListener">removeListener</a>, <a href="../symbols/FM.Object.html#setAttr">setAttr</a>, <a href="../symbols/FM.Object.html#setChanged">setChanged</a>, <a href="../symbols/FM.Object.html#setLogLevel">setLogLevel</a>, <a href="../symbols/FM.Object.html#setProperty">setProperty</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/FM.Object.html">FM.Object</a>: </dt><dd><a href="../symbols/FM.Object.html#addListener">addListener</a>, <a href="../symbols/FM.Object.html#disable">disable</a>, <a href="../symbols/FM.Object.html#discardChanges">discardChanges</a>, <a href="../symbols/FM.Object.html#dispose">dispose</a>, <a href="../symbols/FM.Object.html#enable">enable</a>, <a href="../symbols/FM.Object.html#fireEvent">fireEvent</a>, <a href="../symbols/FM.Object.html#forEachAttr">forEachAttr</a>, <a href="../symbols/FM.Object.html#forEachProperty">forEachProperty</a>, <a href="../symbols/FM.Object.html#getAttr">getAttr</a>, <a href="../symbols/FM.Object.html#getChangedAttrList">getChangedAttrList</a>, <a href="../symbols/FM.Object.html#getClassName">getClassName</a>, <a href="../symbols/FM.Object.html#getDataHash">getDataHash</a>, <a href="../symbols/FM.Object.html#getID">getID</a>, <a href="../symbols/FM.Object.html#getLogLevel">getLogLevel</a>, <a href="../symbols/FM.Object.html#getProperty">getProperty</a>, <a href="../symbols/FM.Object.html#getSubClassName">getSubClassName</a>, <a href="../symbols/FM.Object.html#isAttr">isAttr</a>, <a href="../symbols/FM.Object.html#isChanged">isChanged</a>, <a href="../symbols/FM.Object.html#isEnabled">isEnabled</a>, <a href="../symbols/FM.Object.html#log">log</a>, <a href="../symbols/FM.Object.html#onEvent">onEvent</a>, <a href="../symbols/FM.Object.html#removeAllListeners">removeAllListeners</a>, <a href="../symbols/FM.Object.html#removeListener">removeListener</a>, <a href="../symbols/FM.Object.html#setAttr">setAttr</a>, <a href="../symbols/FM.Object.html#setChanged">setChanged</a>, <a href="../symbols/FM.Object.html#setLogLevel">setLogLevel</a>, <a href="../symbols/FM.Object.html#setProperty">setProperty</a></dd>
 				</dl>
 				
 			
@@ -412,15 +530,149 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".getConfiguration"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="addGroup"> </a>
+					<div class="fixedFont">
 					
-					<span class="light">{object}</span>
-					<span class="light">FM.DmObject.</span><b>getConfiguration</b>(app, name)
+					<span class="light">{boolean}</span>
+					<b>addGroup</b>(gname, callevent)
 					
 					</div>
 					<div class="description">
-						Returns DmObject <b>config</b> class function for <b>config</b> subclass type
+						Add object to group.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>gname</b>
+									
+								</dt>
+								<dd>Group name.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>callevent</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Fire <i>onChange</i> event.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> Returns <i>true</i> if object is successfully added to gruop.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".addSubClassType"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">FM.DmObject.</span><b>addSubClassType</b>(sctype, clsFn, scapp)
+					
+					</div>
+					<div class="description">
+						Register application subclass type.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sctype</b>
+									
+								</dt>
+								<dd>Subclass type.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>clsFn</b>
+									
+								</dt>
+								<dd>DM Class to register.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>scapp</b>
+									<i>Optional, Default: "GLOBAL"</i>
+								</dt>
+								<dd>Application subclass.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="forEachGroup"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>forEachGroup</b>(doFn)
+					
+					</div>
+					<div class="description">
+						For each object group call function <i>doFn(groupName,groupObject)</i> 
+until end of list or <i>false</i> is returned.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>doFn</b>
+									<i>Optional, Default: {}</i>
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getConfiguration"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{function}</span>
+					<span class="light">FM.DmObject.</span><b>getConfiguration</b>(app, sctype)
+					
+					</div>
+					<div class="description">
+						Returns DmObject class function for <b>sctype</b> subclass type.
 						
 						
 					</div>
@@ -435,13 +687,13 @@ ul.inheritsList
 									<span class="light fixedFont">{object}</span> <b>app</b>
 									
 								</dt>
-								<dd>Application</dd>
+								<dd>Application.</dd>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>name</b>
+									<span class="light fixedFont">{String}</span> <b>sctype</b>
 									
 								</dt>
-								<dd>Configuration name</dd>
+								<dd>Subclass type.</dd>
 							
 							</dl>
 						
@@ -452,7 +704,425 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{object}</span> object configuration or null if not found</dd>
+								<dd><span class="light fixedFont">{function}</span> Class function.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getDataID"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{string}</span>
+					<b>getDataID</b>()
+					
+					</div>
+					<div class="description">
+						Returns data ID of data model. 
+Data ID is usulay value of some attribute with unique value.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getDefaultGroup"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>getDefaultGroup</b>()
+					
+					</div>
+					<div class="description">
+						Returns default group.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getGroups"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>getGroups</b>()
+					
+					</div>
+					<div class="description">
+						Get list of all groups object belongs to.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getGroupsCount"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{number}</span>
+					<b>getGroupsCount</b>()
+					
+					</div>
+					<div class="description">
+						Returns object group count.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getSubClassType"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{function}</span>
+					<span class="light">FM.DmObject.</span><b>getSubClassType</b>(sctype, scapp)
+					
+					</div>
+					<div class="description">
+						Returns application registered subclass type function.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>sctype</b>
+									<i>Optional, Default: "Object"</i>
+								</dt>
+								<dd>Subclass type.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>scapp</b>
+									<i>Optional, Default: "GLOBAL"</i>
+								</dt>
+								<dd>Application subclass type.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{function}</span> Class function or <i>FM.DmObject</i> if <i>sctype</i> 
+ is ommited, empty string or null.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="isInGroup"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>isInGroup</b>(gname)
+					
+					</div>
+					<div class="description">
+						Check if object is in named group.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>gname</b>
+									
+								</dt>
+								<dd>Group name.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".newObject"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{object}</span>
+					<span class="light">FM.DmObject.</span><b>newObject</b>(app, sctype, oAttrs)
+					
+					</div>
+					<div class="description">
+						Returns new instance of chosen <b>sctype</b> subclass type.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{object}</span> <b>app</b>
+									
+								</dt>
+								<dd>Application.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>sctype</b>
+									
+								</dt>
+								<dd>Subclass type.</dd>
+							
+								<dt>
+									<b>oAttrs</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{object}</span> Class function.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="removeAllGroups"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>removeAllGroups</b>(callevent)
+					
+					</div>
+					<div class="description">
+						Remove object from all groups.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>callevent</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Fire <i>onChange</i> event.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> Returns <i>true</i> if object is successfully removed.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="removeGroup"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>removeGroup</b>(gname, callevent)
+					
+					</div>
+					<div class="description">
+						Remove object from group.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>gname</b>
+									
+								</dt>
+								<dd>Group name.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>callevent</b>
+									<i>Optional, Default: false</i>
+								</dt>
+								<dd>Fire <i>onChange</i> event.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> Returns <i>true</i> if object is successfully removed.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="setDefaultGroup"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>setDefaultGroup</b>(gname, callevent)
+					
+					</div>
+					<div class="description">
+						Set default object group.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>gname</b>
+									
+								</dt>
+								<dd>Group name.</dd>
+							
+								<dt>
+									<b>callevent</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
 							
 							</dl>
 						
@@ -473,7 +1143,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Oct 15 2013 11:21:19 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Oct 15 2013 17:24:55 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>
