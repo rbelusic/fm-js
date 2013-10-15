@@ -30,14 +30,30 @@
             >
             If you see this text you did some mistake :) 
         </p>
+        <p>Route template:</p>
+        <i>See local templates definition bellow in index.html</i>
+        <a href="#route1">First template</a>
+        <a href="#route2">Second template</a>
+        <p
+            data-fmml-template="local.[:hash].html"
+            data-fmml-template-type="route"
+            data-fmml-template-attr-hash="@FM.getArgs('_page.hash','route1')"
+            >
+            If you see this text you did some mistake :) 
+        </p>
 
         <!-- local templates -->
         <div style="display: none;">
             <div data-fmml-template-def="local.dummy.html">
                 <div>local dummy template</div>
             </div>
+            <div data-fmml-template-def="local.route1.html">
+                <div>route 1 template</div>
+            </div>
+            <div data-fmml-template-def="local.route2.html">
+                <div>route 2 template</div>
+            </div>
         </div>
         
-        <hr>
     </body>
 </html>

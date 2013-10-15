@@ -4,7 +4,7 @@
 * @class FM.AppObject
 * @extends FM.LmObject
 * @memberOf FM
-* @param {object} [options] Options
+* @param {Object} [opt] Options (application attributes).
 */
     
 FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
@@ -22,11 +22,25 @@ FM.AppObject.prototype._init = function(opt) {
 }
 
 FM.AppObject.prototype.run = function() {
+    // err
     this.lastError = FM.DmObject.newObject(this,'GenericError', {});
 
     // registry
     this.appRegistry = new FM.UtRegistry();
+    
+    // start sys events
+    var me = this;
+    $(window).bind('hashchange.'+this.getID(), function () {
+        me.fireEvent("onUrlHashChange",FM.getArgs('_page.hash',''));
+    });
+        
 }
+
+FM.AppObject.prototype.dispose = function() {    
+    $(window).unbind('hashchange.'+this.getID());
+    this._super("dispose");    
+}
+
 
 FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
     var lst = new FM.DmList(dmData,dmConfig,this);
@@ -102,6 +116,7 @@ FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
         return;        
     }
 }
+
 
 FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     this.submitForm(

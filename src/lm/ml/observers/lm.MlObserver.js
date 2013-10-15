@@ -1,6 +1,7 @@
 /**
- * Basic ML observer class. 
  * 
+ * Basic ML observer class. 
+ *   
  * <table>
  * <th>List of ML node attributes</th>
  * <tr><td>data-fmml-attr-name</td><td>name of attribute</td></tr>
@@ -12,6 +13,7 @@
  * <tr><td>data-fmml-nuber-display-decimals</td><td>display value rounded to number of decimals</td></tr>
  * <tr><td>data-fmml-validation-rules</td><td>validation rules for observer</td></tr>
  * <tr><td>data-fmml-validation-message</td><td>validation error message</td></tr>
+ * <tr><td>data-fmml-force-validation</td><td>force validation on value change if value is empty too</td></tr>
  * <tr><td>data-fmml-run-on-update</td><td>node id of host to run on update</td></tr>
  * </table>
  * 
@@ -37,22 +39,6 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
     this.executed = false;
     this.node = node;
     
-    this.slaveNodes = [];
-    /*
-    this.slaveNodes = $(node).is(':radio') ?
-        $("input:radio[name ='" + $(node).attr("name") + "']") :
-        []
-    ;
-    
-    for(var i=0; i < this.slaveNodes; i++) {
-        if(FM.isset(this.slaveNodes[i].fmmlObserver) && this.slaveNodes[i].fmmlObserver) {
-            throw "Node is radio with initialized observer";
-        }
-    }
-    for(var i=0; i < this.slaveNodes; i++) {
-        this.slaveNodes[i].fmmlObserver = this;
-    }
-    */
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -114,9 +100,6 @@ FM.MlObserver.prototype.dispose = function() {
     this.log("Removing observer from DOM node ...", FM.logLevels.debug, 'MlObserver.dispose');
     if (this.node) {
         this.node.fmmlObserver = null;
-        for(var i=0; i < this.slaveNodes; i++) {
-            this.slaveNodes[i].fmmlObserver = null;
-        }
     }
 
     this.log("Removing observer from host ...", FM.logLevels.debug, 'MlObserver.dispose');
@@ -185,7 +168,12 @@ FM.MlObserver.prototype.isValid = function(force) {
     var value = this.getValue();
 
     if (rules != '') {
-        force = FM.isset(force) ? force : false;
+        force = FM.isset(force) ? force : 
+            (
+                this.getAttr('data-fmml-force-validation','false') == 'true' ? 
+                true : false
+            );
+        
         if (force || value != "") {
             var allRules = rules != null && rules != '' ? rules.split(";") : [];
 
@@ -352,6 +340,9 @@ FM.MlObserver.prototype._formatValue = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
+    var dateFormat = this.getAttr('data-fmml-date-format', 
+        this.getApp().getAttr('fm_templates_date_format',undefined))
+    ;
 
 // dates
     if (attrtype == "date") {
@@ -365,7 +356,7 @@ FM.MlObserver.prototype._formatValue = function(value) {
         }
 
         if (dateObj) {
-            value = FM.dateToString(dateObj, dateIsUtc);
+            value = FM.dateToString(dateObj, dateIsUtc,dateFormat);
         }
     } else if (attrtype == "number") {
         value = parseFloat(0.0 + value);
@@ -380,7 +371,11 @@ FM.MlObserver.prototype._formatValue = function(value) {
 FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
-    var dateFormat = this.getAttr('data-fmml-date-display-as', 'date');
+    var dateFormat = this.getAttr(
+        'data-fmml-date-display-as', 
+        this.getApp().getAttr('fm_templates_date_display_as',undefined)
+    );
+
     var decplaces = parseInt(
         this.getAttr(
         'data-fmml-nuber-display-decimals',
@@ -402,14 +397,10 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
         if (dateObj) {
             if (dateFormat == 'local') {
                 value = FM.dateLocalFormat(dateObj);
-            } else if (dateFormat == 'date') {
-                value = FM.dateFormat(dateObj, 'mediumDate');
-            } else if (dateFormat == 'datetime') {
-                value = FM.dateFormat(dateObj, 'mediumDateTime');
-            } else if (dateFormat == 'time') {
-                value = FM.dateFormat(dateObj, 'isoTime');
             } else if (dateFormat == 'ago') {
                 value = FM.strTimeBetween(dateObj, new Date());
+            } else {
+                value = FM.dateFormat(dateObj, dateFormat);
             }
         }
     } else if (attrtype == "number") {

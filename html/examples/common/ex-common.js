@@ -9,6 +9,8 @@ FM.setLogLevel(FM.logLevels.debug); // set global log level
 fmdemo = {};
 
 // == kreiramo aplikaciju ==
+// data-fmml-tag za startanje app
+// 
 // (copy & paste)
 fmdemo.AppFmDemo = FM.defineClass('AppFmDemo',FM.AppObject);
 

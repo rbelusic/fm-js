@@ -14,7 +14,7 @@ FM.DmList.addConfiguration('getTemplate', {
     auth: null,        
     responseFormat: 'TEXT',
     validResponseCodes: '200',
-    listType: 'single',
+    listType: 'single'
 },'GLOBAL');
 
 // -- web UI templates ---------------------------------------------------------
