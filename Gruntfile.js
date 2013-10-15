@@ -47,31 +47,6 @@ module.exports = function(grunt) {
                 command: 'bash bin/mk_release',
                 stdout: true
             }
-        },
-        compress: {
-            release: {
-                options: {
-                    archive: 'release/gh-pages/releases/fm-js-latest.zip'
-                },
-                files: [
-                    {src: ['build/**'], dest: 'fm-js'}
-                ]
-            }
-        },
-        shell: {
-            mk_release: {
-                command: 'bash bin/mk_release'
-            }
-        },
-        git_deploy: {
-            release: {
-                options: {
-                    url: 'https://github.com/rbelusic/fm-js.git',
-                    branch: 'gh-pages'
-                },
-                src: 'release/gh-pages',
-                message: "CI release build"
-            },
         }
     });
 
@@ -80,19 +55,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-exec');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-git-deploy');
-    grunt.loadNpmTasks('grunt-shell');
-
-
 
     grunt.registerTask('build', ['clean', 'concat', 'uglify', 'copy:resources']);
     grunt.registerTask('apidoc', ['exec:run_jsdoc2']);
     grunt.registerTask('publish', [
-        'exec:mk_release', 'compress:release',
-        'git_deploy:release'
+        'exec:mk_release'
     ]);
-
 
     grunt.registerTask('default', ['build', 'apidoc']);
     grunt.registerTask('ci', ['default', 'publish']);
