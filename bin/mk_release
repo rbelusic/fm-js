@@ -10,7 +10,7 @@ fi
 echo "Version: $GIT_LAST_VER_TAG"; 
 
 VER_MAJOR=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\1/' 2> /dev/null)
-VER_MINOR=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\2/'2> /dev/null)
+VER_MINOR=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\2/' 2> /dev/null)
 VER_FIX=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\3/' 2> /dev/null)
 VER_COMMITS_CNT=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\4/' 2> /dev/null)
 VER_COMMIT_ID=$(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\5/' 2> /dev/null)
