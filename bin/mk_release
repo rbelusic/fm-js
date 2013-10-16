@@ -26,7 +26,7 @@ elif [[ $VER_FIX == rc* ]]; then
     REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
 else
     REL_NAME0="$VER_MAJOR-latest-unstable"
-    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
+    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX-unstable"
 fi
 echo "Release names: [$REL_NAME0], [$REL_NAME1]"
 
