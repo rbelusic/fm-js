@@ -17,7 +17,7 @@ git add .
 git commit -m "CI script build"
 
 echo "Pushing back to Github ..."
-# git push                    
+git push                    
 
 echo "Done."
 cd $BCWD
