@@ -7,6 +7,7 @@ if [ "$GIT_LAST_VER_TAG" == "" ]; then
     echo "Version tag is not present, aborting release deployment"; 
     exit 0
 fi
+
 echo "Version: $GIT_LAST_VER_TAG"; 
 
 VER_MAJOR=$(echo $GIT_LAST_VER_TAG       | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\1/' 2> /dev/null)
