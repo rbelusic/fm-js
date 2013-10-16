@@ -1,8 +1,34 @@
 #!/bin/bash
 echo "Release setup ..."
 GIT_REV=$( git rev-parse --short HEAD) # 86fc88d
-GIT_LAST_VER_TAG_LONG=$(git describe --tags --long --match v[0-9]* 2> /dev/null) # v0.8.0-1-g86fc88d
-GIT_LAST_VER_TAG_SHORT=$(git describe --tags --abbrev=0 --match v[0-9]* 2> /dev/null) # v0.8.0
+
+GIT_LAST_VER_TAG=$(git describe --match  v[0-9]*.[0-9]*.* 2> /dev/null) # v0.8.0-1-g86fc88d
+if [ "$GIT_LAST_VER_TAG" == "" ]; then 
+    echo "Version tag is not present, aborting release deployment"; 
+    exit 0
+fi
+
+VER_MAJOR = $(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\1/' 2> /dev/null)
+VER_MINOR = $(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\2/'2> /dev/null)
+VER_FIX = $(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\3/' 2> /dev/null)
+VER_COMMITS_CNT = $(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\4/' 2> /dev/null)
+VER_COMMIT_ID = $(echo $GIT_LAST_VER_TAG | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)-\([0-9]*\)-\(.*\)/\5/' 2> /dev/null)
+
+REL_NAME0=""
+REL_NAME1=""
+
+if [[ $VER_FIX == rel* ]]; then 
+    REL_NAME0="$VER_MAJOR-latest-stable"
+    REL_NAME1="$VER_MAJOR.$VER_MINOR"
+elif [[ $VER_FIX == rc* ]]; then 
+    REL_NAME0="$VER_MAJOR-latest-unstable"
+    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
+else
+    REL_NAME0="$VER_MAJOR-latest-unstable"
+    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
+fi
+
+
 
 echo "Cloning gh-pages branch ..."
 BCWD=$(pwd)
@@ -11,16 +37,23 @@ cd release/gh-pages
 git checkout gh-pages
 
 echo "Preparing release ..."
-mkdir -p releases
-cp -r $BCWD/build/apidoc .
-zip -r $BCWD/release/gh-pages/releases/fm-js-latest $BCWD/build/*
+mkdir -p {releases,apidoc}
+if [ "$REL_NAME0" != "" ]; then
+    cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME0
+    zip -r releases/fm-js-$REL_NAME0 $BCWD/build/*
+fi
+if [ "$REL_NAME1" != "" ]; then
+    cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
+    zip -r releases/fm-js-$REL_NAME1 $BCWD/build/*
+fi
+
 
 git config user.name "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
 git config credential.helper "store --file=.git/credentials"
 echo "https://$GH_TOKEN:@github.com" >.git/credentials
 git add .
-git commit -m "CI script build"
+git commit -m "CI script build ($GIT_LAST_VER_TAG)"
 
 echo "Pushing back to Github ..."
 git push                    
