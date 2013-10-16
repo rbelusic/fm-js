@@ -1,4 +1,9 @@
 #!/bin/bash
+echo "Release setup ..."
+GIT_REV=$( git rev-parse --short HEAD) # 86fc88d
+GIT_LAST_VER_TAG_LONG=$(git describe --tags --long --match v[0-9]* 2> /dev/null) # v0.8.0-1-g86fc88d
+GIT_LAST_VER_TAG_SHORT=$(git describe --tags --abbrev=0 --match v[0-9]* 2> /dev/null) # v0.8.0
+
 echo "Cloning gh-pages branch ..."
 BCWD=$(pwd)
 git clone -b gh-pages https://github.com/rbelusic/fm-js.git release/gh-pages
@@ -8,6 +13,7 @@ git checkout gh-pages
 echo "Preparing release ..."
 mkdir -p releases
 cp -r $BCWD/build/apidoc .
+zip -r $BCWD/release/gh-pages/releases/fm-js-latest $BCWD/build/*
 
 git config user.name "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
