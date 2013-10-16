@@ -41,11 +41,11 @@ echo "Preparing release ..."
 mkdir -p {releases,apidoc}
 if [ "$REL_NAME0" != "" ]; then
     cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME0
-    zip -r releases/fm-js-$REL_NAME0 $BCWD/build/*
+    zip -r "releases/fm-js-$REL_NAME0.zip" $BCWD/build/*
 fi
 if [ "$REL_NAME1" != "" ]; then
     cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
-    zip -r releases/fm-js-$REL_NAME1 $BCWD/build/*
+    zip -r "releases/fm-js-$REL_NAME1.zip" $BCWD/build/*
 fi
 
 
