@@ -1,0 +1,48 @@
+<!-- download route template -->
+<div class="container" style="width: 100%; height: 100%;">
+    <h4>Download page</h4>
+    <h5>
+        This page provides download links for obtaining the latest version of fm-js, 
+        as well as links to the archives of older releases.
+    </h5>
+    <table style="width: 100%;"
+           data-fmml-host="GenericCollection"
+           data-fmml-list="getReleases"
+           >
+        <thead>
+            <tr>
+                <th>#</th> 
+                <th>Release</th>
+                <th>Download</th>                
+                <th>API documentation</th>
+                <th>Date</th>
+            </tr>  
+        </thead>
+        <tbody class="fmmlListItems">
+            <tr class="fmmlListItemsTemplate" data-fmml-host="Host">
+                <td data-fmml-observer="ListIndex"></td>
+                <td data-fmml-observer="Observer" data-fmml-attr-name="version"></td>               
+                <td>
+                    <a data-fmml-observer="Observer" data-fmml-attr-name="link">
+                        <span data-fmml-observer="Observer" data-fmml-attr-name="version">                            
+                        </span>&nbsp; build
+                    </a>                     
+                </td>
+                <td>
+                    <a data-fmml-observer="Observer" data-fmml-attr-name="doc">
+                        <span data-fmml-observer="Observer" data-fmml-attr-name="version">                            
+                        </span>&nbsp; API documentation
+                    </a>                     
+                </td>
+                <td>
+                    <span data-fmml-observer="Observer" data-fmml-attr-name="deployed"
+                          data-fmml-attr-type="date"
+                          data-fmml-date-display-as="mediumDate"
+                          >                            
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div data-fmml-template="disqus" style="width: 100%"></div>
+</div>
