@@ -55,7 +55,7 @@ cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
 
 # make releases list
 cd releases
-for frel in *.zip
+for frel in $(ls -r *.zip)
 do
     fdoc=${frel/\.zip/}
     ver=${frel/fm-js-/}
