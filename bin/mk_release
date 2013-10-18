@@ -44,9 +44,9 @@ mkdir -p {releases,apidoc,tmp}
 
 cd tmp
 cp -r $BCWD/build fm-js-$REL_NAME0
-zip -r "releases/fm-js-$REL_NAME0.zip" build fm-js-$REL_NAME0/*
+zip -r ../releases/fm-js-$REL_NAME0.zip fm-js-$REL_NAME0
 mv fm-js-$REL_NAME0 fm-js-$REL_NAME1
-zip -r "releases/fm-js-$REL_NAME1.zip" build fm-js-$REL_NAME1/*
+zip -r ../releases/fm-js-$REL_NAME1.zip fm-js-$REL_NAME1
 cd ..
 rm -rf tmp
 
