@@ -68,8 +68,8 @@ do
     lstSize=${#relList[@]}
     relList[$lstSize]="{\"version\": \"$ver\", \"link\": \"releases/$frel\", \"doc\": \"apidoc/$fdoc/index.html\",\"deployed\": \"$dat\"},"
 done
-lastIndex=expr ${#relList[@]} - 1
-lastRel=$relList[$lastIndex]
+lastIndex=$(expr ${#relList[@]} - 1)
+lastRel=${relList[$lastIndex]}
 relList[$lastIndex]=${lastRel%?}
 cd ..
 
