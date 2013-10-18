@@ -60,7 +60,7 @@ FM.UtTemplate.getLoadedTemplate = function(app, name) {
         });
     }
 
-    if (!obj && FM.isset(list['GLOBAL'][name])) {
+    if (!obj && FM.isset(list['GLOBAL']) && FM.isset(list['GLOBAL'][name])) {
         obj = list['GLOBAL'][name];
     }
 
