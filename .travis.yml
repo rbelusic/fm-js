@@ -10,8 +10,7 @@ env:
   - secure: "XDozX3oheH3rQIgoO+A08T2hqnhAryIPuYt5w1Z94PqH7QUZ2HkGNVzpjWXSZRj+wkWbTaggIJZadGAyJ9vlZoBphWGaIxNm+NEd+gz1zEcCZzqeUtvy7prtPEJvxnHJOAUnTIB3+r/5oHVY8OEUfsgUtwd5wJrKwXcZlRNiA7E="
 
 # whitelist
-# branches:
-#   only:
-#     - master
-#     - /^v[0-9]*$/
+branches:
+  only:
+    - /^v.*$/
 
