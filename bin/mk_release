@@ -54,7 +54,8 @@ cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME0
 cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
 
 # make releases list
-for frel in releases/*.zip
+cd releases
+for frel in *.zip
 do
     ver=${frel/fm-js-/}
     ver=${ver/-unstable\./ (unstable)\.}
@@ -64,8 +65,9 @@ do
     dat=$(date +%Y-%m-%d)
 
     lstSize=${#relList[@]}
-    relList[$lstSize]="{\"version\": '$ver', \"link\": '/releases/$frel', \"doc\": '/apidoc/$frel/index.html',\"deployed\": '$dat'},"
+    relList[$lstSize]="{\"version\": \"$ver\", \"link\": \"/releases/$frel\", \"doc\": \"/apidoc/$frel/index.html\",\"deployed\": \"$dat\"},"
 done
+cd ..
 
 # save releases list
 echo "[" ${relList[@]} "]" > data/releases.json
