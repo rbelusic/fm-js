@@ -18,18 +18,18 @@ REL_NAME1=""
 
 if [[ $VER_FIX == rel* ]]; then 
     echo "Stable release."
-    REL_NAME0="$VER_MAJOR-latest-stable"
+    REL_NAME0="latest-stable"
     REL_NAME1="$VER_MAJOR.$VER_MINOR"
 elif [[ $VER_FIX == rc* ]]; then 
     echo "RC release."
-    REL_NAME0="$VER_MAJOR-latest-unstable"
+    REL_NAME0="latest-unstable"
     REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
 else
     echo "Unstable release."
-    REL_NAME0="$VER_MAJOR-latest-unstable"
-    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX-unstable"
+    REL_NAME0="latest-unstable"
+    REL_NAME1="$VER_MAJOR.$VER_MINOR.$VER_FIX"
 fi
-echo "$VER_MAJOR $VER_MINOR $VER_FIX"
+echo "Version parsed: $VER_MAJOR $VER_MINOR $VER_FIX"
 echo "Release names: [$REL_NAME0], [$REL_NAME1]"
 
 
@@ -40,16 +40,35 @@ cd release/gh-pages
 git checkout gh-pages
 
 echo "Preparing release ..."
-mkdir -p {releases,apidoc}
-if [ "$REL_NAME0" != "" ]; then
-    cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME0
-    zip -r "releases/fm-js-$REL_NAME0.zip" $BCWD/build/*
-fi
-if [ "$REL_NAME1" != "" ]; then
-    cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
-    zip -r "releases/fm-js-$REL_NAME1.zip" $BCWD/build/*
-fi
+mkdir -p {releases,apidoc,tmp}
 
+cd tmp
+cp -r $BCWD/build fm-js-$REL_NAME0
+zip -r "releases/fm-js-$REL_NAME0.zip" build fm-js-$REL_NAME0/*
+mv fm-js-$REL_NAME0 fm-js-$REL_NAME1
+zip -r "releases/fm-js-$REL_NAME1.zip" build fm-js-$REL_NAME1/*
+cd ..
+rm -rf tmp
+
+cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME0
+cp -r $BCWD/build/apidoc apidoc/fm-js-$REL_NAME1
+
+# make releases list
+for frel in releases/*.zip
+do
+    ver=${frel/fm-js-/}
+    ver=${ver/-unstable\./ (unstable)\.}
+    ver=${ver/-stable\./ (stable)\.}
+    ver=${ver/\.zip/}
+    echo "|$ver|"
+    dat=$(date +%Y-%m-%d)
+
+    lstSize=${#relList[@]}
+    relList[$lstSize]="{version: '$ver', link: '/releases/$frel', doc: '/apidoc/$frel/index.html',deployed: '$dat'},"
+done
+
+# save releases list
+echo "[" ${relList[@]} "]" > data/releases.json
 
 git config user.name "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
