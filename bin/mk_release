@@ -64,7 +64,7 @@ do
     dat=$(date +%Y-%m-%d)
 
     lstSize=${#relList[@]}
-    relList[$lstSize]="{version: '$ver', link: '/releases/$frel', doc: '/apidoc/$frel/index.html',deployed: '$dat'},"
+    relList[$lstSize]="{\"version\": '$ver', \"link\": '/releases/$frel', \"doc\": '/apidoc/$frel/index.html',\"deployed\": '$dat'},"
 done
 
 # save releases list
