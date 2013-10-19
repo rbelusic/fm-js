@@ -21,7 +21,7 @@ VER_MINOR=$(echo $GIT_LAST_VER_TAG       | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9]
 VER_FIX=$(echo $GIT_LAST_VER_TAG         | sed 's/v\([0-9]*\).\([0-9]*\).\([0-9][a-Z]*\)/\3/' 2> /dev/null)
 
 REL_VER="$VER_MAJOR.$VER_MINOR.$VER_FIX"
-REL_FILE_NAME="fm-js-$REL_VER"
+REL_FNAME="fm-js-$REL_VER"
 echo "Version parsed: $VER_MAJOR $VER_MINOR $VER_FIX"
 echo "Release filename: $REL_FILE_NAME"
 
