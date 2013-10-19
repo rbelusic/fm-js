@@ -78,11 +78,13 @@ module.exports = function(grunt) {
                 }
                 var x = version.substring(1).split('.');
                 var verArr = {
-                    major: parseInt(x[0]) || -1,
-                    minor: parseInt(x[1]) || -1,
+                    major: parseInt(x[0]),
+                    minor: parseInt(x[1]),
                     fix: x[2] || ""
                 };                
-                if (verArr.major == -1 || verArr.minor == -1) {
+                grunt.log.writeln('Ver array: ' + JSON.stringify(verArr));
+
+                if (isNaN(verArr.major) || isNaN(verArr.minor)) {
                     grunt.log.error('This is not release tag. Abortiong (2) ...');
                     return false;
                 }
