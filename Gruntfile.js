@@ -166,7 +166,7 @@ module.exports = function(grunt) {
 
             // save release table back
             grunt.log.writeln('New release table: ' + JSON.stringify(relarr));
-            //grunt.file.write('release/gh-pages/data/releases.json', JSON.stringify(relarr));
+            grunt.file.write('release/gh-pages/data/releases.json', JSON.stringify(relarr));
 
             return true;
         });
