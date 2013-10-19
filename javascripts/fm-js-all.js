@@ -1266,6 +1266,10 @@ FM.dateFormat = function(date, mask, utc) {
     };
     var dF = FM.dateFormat;
 
+        if(date && !FM.isObject(date) && (FM.isNumber(date) || (FM.isString(date) && !isNaN(parseInt(date))))) {
+            date = new Date(FM.isString(date) ? parseInt(date) : date);
+        }
+
     // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
     if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
         mask = date;
@@ -3441,7 +3445,7 @@ FM.UtRegistry.findKey = function(reg,key,force) {
  * @param {object} opt Options
  */
 FM.UtTemplate = FM.defineClass('UtTemplate', FM.Object);
-FM.UtTemplate.loadedTemplates = {'GLOBAL': {}};
+FM.UtTemplate.loadedTemplates = {};
 
 FM.UtTemplate.prototype._init = function(attrs) {
     this._super("_init", attrs);
@@ -3495,7 +3499,7 @@ FM.UtTemplate.getLoadedTemplate = function(app, name) {
         });
     }
 
-    if (!obj && FM.isset(list['GLOBAL'][name])) {
+    if (!obj && FM.isset(list['GLOBAL']) && FM.isset(list['GLOBAL'][name])) {
         obj = list['GLOBAL'][name];
     }
 
@@ -5063,7 +5067,7 @@ FM.DmList.prototype.getStaticList = function() {
 // -- private ------------------------------------------------------------------
 FM.DmList.prototype._resFn = function(value, args) {
     var is = value;
-    if (FM.isString(is) && is != 'JSON') { // hack
+    if (FM.isString(is && is != 'JSON')) { // hack
         var isFn = FM.stringPtrToObject(is);
         if (isFn)
             is = isFn;
