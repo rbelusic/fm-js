@@ -4,6 +4,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         js_dir: "src",
         project_dir: ".",
+        ci_branch: process.env.TRAVIS_BRANCH,
         gitinfo: {
         },
         clean: [
@@ -61,21 +62,18 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-exec');
-    grunt.loadNpmTasks('grunt-gitinfo');
+        
     grunt.registerTask(
         'create_releases_list',
         'Parse JSON table with releases and add new one.',
         function() {
-
-            grunt.task.requires('gitinfo');
-            // grunt.task.requires('prepare_release');
+            
+            grunt.task.requires('prepare_release');
 
             function getVersion() {
-                grunt.log.writeln('Git info: ' + JSON.stringify(grunt.config('gitinfo')));
+                var version = grunt.config('ci_branch');
 
-                var version = grunt.config('gitinfo.local.branch.current.name');
-
-                grunt.log.writeln("Version: " + version + "/ " + version.substring(0, 1));
+                grunt.log.writeln("Version: " + version + "/ " + version.substring(1));
 
                 if (!version || version.substring(0, 1) != 'v') {
                     grunt.log.error('This is not release tag. Abortiong ...');
@@ -182,6 +180,6 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('default', ['build', 'apidoc']);
-    grunt.registerTask('ci', ['default', 'gitinfo','publish']);
+    grunt.registerTask('ci', ['default', 'publish']);
 };
 
