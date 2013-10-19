@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "Commiting release ..."
+BCWD=$(pwd)
+cd release/gh-pages
+git config user.name "$GIT_NAME"
+git config user.email "$GIT_EMAIL"
+git config credential.helper "store --file=.git/credentials"
+echo "https://$GH_TOKEN:@github.com" > .git/credentials
+git add .
+git commit -m "CI script build"
+
+echo "Pushing back to Github ..."
+git push                    
+
+echo "Done."
+cd $BCWD
+
