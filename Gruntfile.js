@@ -180,6 +180,6 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('default', ['build', 'apidoc']);
-    grunt.registerTask('ci', ['default', 'publish']);
+    grunt.registerTask('ci', ['default', 'gitinfo','publish']);
 };
 
