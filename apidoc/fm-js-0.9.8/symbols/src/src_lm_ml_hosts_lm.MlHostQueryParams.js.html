@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span> * HTTP request query parameters host class. 
+<span class='line'>  3</span> * 
+<span class='line'>  4</span> * @class FM.MlHostQueryParams
+<span class='line'>  5</span> * @memberOf FM
+<span class='line'>  6</span> * @extends FM.MlHost
+<span class='line'>  7</span> * @param {FM.AppObject} app application object
+<span class='line'>  8</span> * @param {object} [attrs] DOM node attributes
+<span class='line'>  9</span> * @param {DOMnode} node DOM node
+<span class='line'> 10</span> */</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="NAME">FM.MlHostQueryParams</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">FM.defineClass</span><span class="PUNC">(</span><span class="STRN">'MlHostQueryParams'</span><span class="PUNC">,</span><span class="NAME">FM.MlHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 12</span> 
+<span class='line'> 13</span> </span><span class="NAME">FM.MlHostQueryParams.prototype._init</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">app</span><span class="PUNC">,</span><span class="NAME">attrs</span><span class="PUNC">,</span><span class="NAME">node</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">            
+<span class='line'> 14</span>     </span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="STRN">"_init"</span><span class="PUNC">,</span><span class="NAME">app</span><span class="PUNC">,</span><span class="NAME">attrs</span><span class="PUNC">,</span><span class="NAME">node</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="NAME">this.objectSubClass</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="STRN">"QueryParams"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 17</span> 
+<span class='line'> 18</span> </span><span class="NAME">FM.MlHostQueryParams.prototype.run</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">    </span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="STRN">"run"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">                
+<span class='line'> 20</span>     </span><span class="NAME">this.setDmObject</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">FM.DmObject</span><span class="PUNC">(</span><span class="NAME">FM.getArgs</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> 
+<span class='line'> 24</span> 
+<span class='line'> 25</span> </span><span class="NAME">FM.MlHost.addHost</span><span class="PUNC">(</span><span class="STRN">"QueryParams"</span><span class="PUNC">,</span><span class="NAME">FM.MlHostQueryParams</span><span class="PUNC">,</span><span class="STRN">'GLOBAL'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span></pre></body></html>
