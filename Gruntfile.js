@@ -67,9 +67,6 @@ module.exports = function(grunt) {
         'create_releases_list',
         'Parse JSON table with releases and add new one.',
         function() {
-            
-            grunt.task.requires('prepare_release');
-
             function getVersion() {
                 var version = grunt.config('ci_branch');
 
