@@ -71,6 +71,8 @@ module.exports = function(grunt) {
             // grunt.task.requires('prepare_release');
 
             function getVersion() {
+                grunt.log.writeln('Git info: ' + JSON.stringify(grunt.config('gitinfo')));
+
                 var version = grunt.config('gitinfo.local.branch.current.name');
 
                 grunt.log.writeln("Version: " + version + "/ " + version.substring(0, 1));
