@@ -51,6 +51,10 @@ FM.dateFormat = function(date, mask, utc) {
     };
     var dF = FM.dateFormat;
 
+        if(date && !FM.isObject(date) && (FM.isNumber(date) || (FM.isString(date) && !isNaN(parseInt(date))))) {
+            date = new Date(FM.isString(date) ? parseInt(date) : date);
+        }
+
     // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
     if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
         mask = date;
