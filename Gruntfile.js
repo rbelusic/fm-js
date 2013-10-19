@@ -136,7 +136,7 @@ module.exports = function(grunt) {
                     relid: 99999999,
                     link: "releases/" + ver.filename + ".zip",
                     doc: "apidoc/" + ver.filename + "/index.html",
-                    deployed: rel.date
+                    deployed: ver.date
                 };
             } else {
                 relObjs["99999990"] = {
@@ -144,7 +144,7 @@ module.exports = function(grunt) {
                     relid: 99999990,
                     link: "releases/" + ver.filename + ".zip",
                     doc: "apidoc/" + ver.filename + "/index.html",
-                    deployed: rel.date
+                    deployed: ver.date
                 };
             }
             relObjs['' + ver.relID] = {
@@ -152,7 +152,7 @@ module.exports = function(grunt) {
                 relid: ver.relID,
                 link: "releases/" + ver.filename + ".zip",
                 doc: "apidoc/" + ver.filename + "/index.html",
-                deployed: rel.date
+                deployed: ver.date
             };
             grunt.log.writeln('New release objects: ' + JSON.stringify(relObjs));
 
