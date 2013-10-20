@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<title>Source - src/lm/ml/observers/lm.MlObserverEvent.js</title>
+	<meta name="generator" content="JsDoc Toolkit" />
+
+	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/bootstrap.min.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/prettify.css" type="text/css" />
+	<link media="print" rel="stylesheet" href="../../css/print.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="../../js/prettify.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body><div class="container-fluid">
+<!-- ============================== header ================================= -->
+	<!-- begin static/header.html -->
+	<header class="header navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="http://rbelusic.github.io/fm-js/index.html">
+                                    <strong>Fm-js</strong> API Reference</a>
+				<ul id="class-file-selector" class="nav">
+					<li><a href="../../index.html">Class Index</a></li>
+					<li><a href="../../files.html">File Index</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../../symbols/FM.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">FM</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.AppObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">AppObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericError.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericError</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericValue.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericValue</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmTranslation.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmTranslation</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.LmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">LmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlDateEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlDateEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlExtension.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlExtension</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHost.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHost</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostGenericCollection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostGenericCollection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostQueryParams.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostQueryParams</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlListOfValues.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlListOfValues</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserver</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.validationRules.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">validationRules</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverDisplay.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverDisplay</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverEvent.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverEvent</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListIndex.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListIndex</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListOrder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListOrder</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListSelection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListSelection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListState.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListState</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.Object.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Object</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.PageInfo.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">PageInfo</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstDmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstDmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstGeneric.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstGeneric</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtRegistry.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtRegistry</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimer.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimer</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimerJob.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimerJob</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTranslations.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTranslations</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.dateFormat.masks.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">masks</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevelNames.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevelNames</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevels.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevels</span></span></a></li>
+		
+			<li></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+
+		<div id="content" class="span9">
+<!-- ============================== source code ============================ -->
+
+			<pre id="source-code" class="prettyprint linenums">/**
+* Event ML observer class. Sends event to host.
+* 
+* Applicable on HTML nodes with &lt;click&gt; event.
+* 
+* &lt;table&gt;
+* &lt;th&gt;List of ML node attributes&lt;/th&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-dom-event&lt;/td&gt;&lt;td&gt;DOM event which trigger FM event. Default is &lt;b&gt;click&lt;/b&gt; event&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-event-type&lt;/td&gt;&lt;td&gt;type (name) of event. In case of event type is not defined, successful action processing is triggered immediately&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-event-host&lt;/td&gt;&lt;td&gt;DOM node id of host which will receive event instead of default host&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-event-data&lt;/td&gt;&lt;td&gt;instead current host dmObject send FM.GenericValue object with this value&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-verify-observers&lt;/td&gt;&lt;td&gt;verify all observers first&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-event-async&lt;/td&gt;&lt;td&gt;Signals that event is async (AJAX request wil be triggered)&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-exec-on-success&lt;/td&gt;&lt;td&gt;code to exec when event is successfully completed&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-exec-on-error&lt;/td&gt;&lt;td&gt;code to exec when event error occurred&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-redirect-on-success&lt;/td&gt;&lt;td&gt;redirect to specified URL when event is successfully completed&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-redirect-on-error&lt;/td&gt;&lt;td&gt;redirect to specified URL when event error occurred&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-run-on-success&lt;/td&gt;&lt;td&gt;run host on DOM node with specified id when event is successfully completed&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-run-on-error&lt;/td&gt;&lt;td&gt;run host on DOM node with specified id when event error occurred&lt;/td&gt;&lt;/tr&gt;
+* &lt;tr&gt;&lt;td&gt;data-fmml-send-form&lt;/td&gt;&lt;td&gt;send form on host node to URL specified in data-fmml-redirect-on-success node attribute. Host node type must be FORM&lt;/td&gt;&lt;/tr&gt;
+* &lt;/table&gt;
+*
+* On case of multiple actions defined on succes or on error, all of them will be executed in following order: 
+*  data-fmml-exec-on-*, data-fmml-run-on-*, data-fmml-redirect-on-*
+* 
+* &lt;table&gt;
+* &lt;th&gt;List of ML CSS classes&lt;/th&gt;
+* &lt;tr&gt;&lt;td&gt;fmmlWaitButton&lt;/td&gt;&lt;td&gt;Async event is in progress&lt;/td&gt;&lt;/tr&gt;
+* &lt;/table&gt;
+* 
+* @class FM.MlObserverEvent
+* @extends FM.MlObserver
+* @param {object} [attrs] DOM node attributes
+* @param {DOMnode} node DOM node
+*/    
+FM.MlObserverEvent = FM.defineClass('MlObserverEvent',FM.MlObserver);
+
+FM.MlObserverEvent.prototype._init = function(app,attrs,node) {
+    this._super("_init",app,attrs,node);
+    this.objectSubClass ="Event";
+
+    this.eventHost = null;
+    this.eventHostNode = null;
+}
+
+
+FM.MlObserverEvent.prototype.run = function() {
+    this._super("run");
+    
+    var me = this;
+    
+    // dom event
+    var evtrigger = this.getAttr('data-fmml-dom-event','click');
+
+    $(this.node)[evtrigger](function(event) {
+        event.preventDefault();
+        
+        // blur form change processing (bad, bad, bad)
+        if(document.activeElement != this) { // this -&gt; ev node
+            document.activeElement.blur();
+        }
+        
+        // my host &amp; host node
+        var myhost = me.getHost();
+        var myhostnode = myhost ? myhost.getNode() : null;
+        
+        // obs verify
+        if(myhost &amp;&amp; me.getAttr('data-fmml-verify-observers','false') == 'true') {
+            if(!myhost.verifyAllObservers(true)) {
+                me.setLastError(new FM.DmGenericError({
+                    messageId: 'UIVALIDATION',
+                    text: 'Please enter all required fields'
+                }));
+                return false; // force validation of empty attributes
+            }
+        }
+        
+        // event host
+        me.eventHost = null;
+        me.eventHostNode = null;
+        var evhostid = me.getAttr('data-fmml-event-host','');
+        if(evhostid != '') {
+            if(evhostid == 'parent' &amp;&amp; myhostnode) {
+                me.eventHostNode = FM.findNodeWithAttr(myhostnode.parentNode, "fmmlHost");
+            } else {
+                me.eventHostNode = FM.getNodeWithId(evhostid);
+            }
+            if (me.eventHostNode != null) {
+                me.eventHost = FM.isset(me.eventHostNode.fmmlHost) ? me.eventHostNode.fmmlHost : null;
+            }
+            if(me.eventHost == null) me.eventHostNode = null;            
+        } else {
+            me.eventHost = myhost;    
+            me.eventHostNode = myhostnode;    
+        }
+    
+        // data to send
+        var evdmobj = null;
+        var evdata = me.getAttr('data-fmml-event-data','');
+        if(evdata != '') {
+            if(FM.startsWith(evdata,'@')) {
+                evdata = me.resolveAttrValue("-",evdata);
+            } 
+            evdmobj = FM.isset(evdata) &amp;&amp; evdata &amp;&amp; FM.isset(evdata.getAttr) ? evdata : new FM.DmGenericValue({
+                value: evdata
+            });            
+        } else {
+            evdmobj = me.getDmObject();
+        }
+
+        // event to send
+        var ev = me.getAttr('data-fmml-event-type','');
+        
+        // we are now ready to send
+        if(ev &amp;&amp; ev != '') {
+            // set async class
+            if(me.getAttr('data-fmml-event-async','false') === 'true') {
+                $(me.node).addClass("fmmlWaitButton");
+            }
+            
+            // clear old success &amp; error hosts
+            me._runHostOnNode(document.getElementById(me.getAttr('data-fmml-run-on-success','')),null);
+            me._runHostOnNode(document.getElementById(me.getAttr('data-fmml-run-on-error','')),null);
+            
+            // send event
+            me.eventHost.onEvent(me,ev,{
+                object: evdmobj,
+                callback: function(isok, o) {
+                    me.eventCallback(isok, o);
+                }
+            });
+        } else {
+            me.eventCallback(true, null);
+        }
+        return false;
+    });
+}
+ 
+FM.MlObserverEvent.prototype._runHostOnNode = function(hostnode,dmobj) {
+    if(FM.isset(hostnode) &amp;&amp; hostnode &amp;&amp; FM.isset(hostnode.fmmlHost) &amp;&amp; hostnode.fmmlHost) {
+        hostnode.fmmlHost.run(dmobj);
+    }
+}
+
+FM.MlObserverEvent.prototype._redirectToPage = function(url,dmobj) {
+    var redirApl = FM.isset(url) &amp;&amp; url &amp;&amp; url != '' ?
+         this.resolveAttrValue('-',FM.isset(dmobj) &amp;&amp; dmobj ? FM.applyTemplate(dmobj.getAttr(),url) : url) : 
+        ''
+    ;
+    window.location = redirApl;
+}
+
+FM.MlObserverEvent.prototype._sendFormToPage = function(url,dmobj) {
+    if(!this.eventHost || !FM.isset(this.eventHostNode.submit)) return;
+    
+    var redirApl = FM.isset(url) &amp;&amp; url &amp;&amp; url != '' ?
+         this.resolveAttrValue('-',FM.isset(dmobj) &amp;&amp; dmobj ? FM.applyTemplate(dmobj.getAttr(),url) : url) : 
+        ''
+    ;
+    
+    this.eventHostNode.action = redirApl;
+    this.eventHostNode.submit();    
+}
+            
+FM.MlObserverEvent.prototype._execCode = function(code,dmobj) {
+    try {
+        var val = FM.resolveAttrValue(this.options,"-", code,{
+            A: this.getApp(),
+            H: this.getHost(),
+            O: this,
+            D: dmobj
+        });
+    } catch(e) {
+        this.log(e,FM.logLevels.error,'MlObserverEvent._execCode');
+    }
+}
+
+FM.MlObserverEvent.prototype.eventCallback = function(isok,oResponse) {
+    // remove async class 
+    $(this.node).removeClass("fmmlWaitButton");
+
+    // exec
+    var code = isok ?
+        this.getAttr('data-fmml-exec-on-success','') :
+        this.getAttr('data-fmml-exec-on-error','')
+    ;
+    if(code != '') {
+        this._execCode(code,oResponse);
+    }
+    
+    // host run
+    var hostid = isok ?
+        this.getAttr('data-fmml-run-on-success','') :
+        this.getAttr('data-fmml-run-on-error','')
+    ;
+    if(hostid != '') {
+        this._runHostOnNode(document.getElementById(hostid),oResponse);
+    }        
+
+    // redirect
+    var redir = isok ?
+        this.getAttr('data-fmml-redirect-on-success','') :
+        this.getAttr('data-fmml-redirect-on-error','')
+    ;
+    if(redir != '') {
+        if(this.getAttr('data-fmml-send-form','false') == 'true') {
+            this._sendFormToPage(redir,oResponse);
+        } else{
+            this._redirectToPage(redir,oResponse);
+        }
+    }
+}
+
+FM.MlObserver.addObserver("Event",FM.MlObserverEvent,'GLOBAL');
+</pre>
+		</div>
+	</div>
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Sun Oct 20 2013 15:30:07 GMT+0000 (UTC)</p>
+	</footer>
+</div>
+<script type="text/javascript">
+	prettyPrint();
+	var i = 1;
+	$('#source-code li').each(function() {
+		$(this).attr({ id: 'line' + (i++) });
+	});
+</script>
+</body>
+</html>

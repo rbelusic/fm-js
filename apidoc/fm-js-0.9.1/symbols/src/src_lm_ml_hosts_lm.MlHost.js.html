@@ -1,0 +1,798 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<title>Source - src/lm/ml/hosts/lm.MlHost.js</title>
+	<meta name="generator" content="JsDoc Toolkit" />
+
+	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/bootstrap.min.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/prettify.css" type="text/css" />
+	<link media="print" rel="stylesheet" href="../../css/print.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="../../js/prettify.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body><div class="container-fluid">
+<!-- ============================== header ================================= -->
+	<!-- begin static/header.html -->
+	<header class="header navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="http://rbelusic.github.io/fm-js/index.html">
+                                    <strong>Fm-js</strong> API Reference</a>
+				<ul id="class-file-selector" class="nav">
+					<li><a href="../../index.html">Class Index</a></li>
+					<li><a href="../../files.html">File Index</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../../symbols/FM.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">FM</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.AppObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">AppObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericError.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericError</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericValue.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericValue</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmTranslation.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmTranslation</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.LmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">LmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlDateEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlDateEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlExtension.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlExtension</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHost.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHost</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostGenericCollection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostGenericCollection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostQueryParams.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostQueryParams</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlListOfValues.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlListOfValues</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserver</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.validationRules.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">validationRules</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverDisplay.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverDisplay</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverEvent.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverEvent</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListIndex.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListIndex</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListOrder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListOrder</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListSelection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListSelection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListState.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListState</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.Object.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Object</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.PageInfo.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">PageInfo</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstDmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstDmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstGeneric.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstGeneric</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtRegistry.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtRegistry</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimer.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimer</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimerJob.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimerJob</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTranslations.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTranslations</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.dateFormat.masks.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">masks</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevelNames.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevelNames</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevels.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevels</span></span></a></li>
+		
+			<li></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+
+		<div id="content" class="span9">
+<!-- ============================== source code ============================ -->
+
+			<pre id="source-code" class="prettyprint linenums">/**
+* ML host class. 
+* 
+* @class FM.MlHost
+* @memberOf FM
+* @extends FM.LmObject
+* @param {FM.AppObject} app application object
+* @param {object} [attrs] DOM node attributes
+* @param {DOMnode} node DOM node
+* 
+* 
+* data-fmml-run-maximized, data-fmml-object-class, data-fmml-object-id,
+* data-fmml-object-ref, data-fmml-object-destroy-on-dispose,
+* data-fmml-master-host, data-fmml-use-global-args,
+* data-fmml-object-attr-*, data-fmml-linked-host,
+* data-fmml-error-host, data-fmml-run-on-update,data-fmml-host-event-*
+* data-fmml-run-on-init
+* 
+*/    
+FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
+
+// methods
+FM.MlHost.prototype._init = function(app,attrs,node) {
+    this._super("_init",app,attrs);
+    this.objectSubClass = "Host";
+    
+    this.setNode(node);        
+    this.masterHost = null;
+    this.masterHostDm = null;
+    
+    this.listOfObservers = {};
+    
+    this.clsParams = {
+        id: '',
+        className: ''
+    }
+
+    // two way binding
+    this.node.fmmlHost = this;    
+    this.getApp().addListener(this);
+    this.addListener(this.getApp());
+}
+
+FM.MlHost.prototype.run = function(dmObj) {
+    if(this.getAttr('data-fmml-run-maximized','false') == 'true') {
+        this.onMaximize();
+    }
+
+    var id = this.getAttr("data-fmml-object-id",'');
+    var className = this.getAttr("data-fmml-object-class",'');
+    var objRef = this.getAttr("data-fmml-object-ref",'');
+    this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
+    
+    // object
+    if(FM.isset(dmObj) &amp;&amp; dmObj &amp;&amp; (className == '' || dmObj.getSubClassName() == className)){
+        this.setProperty('dmObjectCreated','false');
+        this.setDmObject(dmObj);
+    } else if(objRef != '' &amp;&amp; FM.startsWith(objRef,'@')) {
+        dmObj = FM.resolveAttrValue(null,"-",objRef,{
+            A: this.getApp(),
+            H: this
+        });
+        this.setProperty('dmObjectCreated','false');
+        this.setDmObject(dmObj);
+    } else {
+        if(this.getAttr('data-fmml-master-host','') != '') {
+            var mhostid = this.getAttr('data-fmml-master-host','');
+            if(mhostid == 'true') {
+                this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
+            } else {            
+                var mhostnode = document.getElementById(mhostid);
+                if(mhostnode &amp;&amp; FM.isset(mhostnode.fmmlHost) &amp;&amp; mhostnode.fmmlHost) {
+                    this.masterHost = mhostnode.fmmlHost;
+                }
+            }
+            if(this.masterHost) {
+                this.masterHost.addListener(this);
+                this.masterHostDm = this.masterHost.getDmObject();
+                if(this.masterHostDm) this.masterHostDm.addListener(this);
+            }
+        }
+        
+        this._checkMasterReload();        
+    }
+
+    this._super("run");     
+    this.executed = true;
+    
+    var obsrv = this.listOfObservers;
+    for(var id in obsrv) {
+        try {
+            obsrv[id].run();            
+        } catch(e) {
+            this.log(e,FM.logLevels.error,'MlHost.run');
+        }
+    }
+}
+
+
+FM.MlHost.prototype._checkMasterReload = function() {
+    var id = this.getAttr("data-fmml-object-id",'');
+    var className = this.getAttr("data-fmml-object-class",'');
+    
+    if(this.getAttr('data-fmml-use-global-args') == 'true'){
+        var args = FM.getArgs();
+        if(id == '') id = FM.getAttr(args,'id','');
+        if(className == '') className = FM.getAttr(args,'cls','');        
+    }
+    
+    //FM.resolveAttrValue = function(options,attrName,def,context)
+    if(this.masterHost) {
+        id = FM.resolveAttrValue(null,"-",id,{
+            A: this.masterHost.getApp(),
+            H: this.masterHost, 
+            D: this.masterHostDm
+        });
+        className = FM.resolveAttrValue(null,"-",className,{
+            A: this.masterHost.getApp(),
+            H: this.masterHost, 
+            D: this.masterHostDm
+        });
+    } else {
+        id = FM.resolveAttrValue(null,"-",id,{
+            A: this.getApp(),
+            H: this, 
+            D: this.getDmObject()
+        });
+        className = FM.resolveAttrValue(null,"-",className,{
+            A: this.getApp(),
+            H: this, 
+            D: this.getDmObject()
+        });
+    }
+
+    if(id == this.clsParams.id &amp;&amp; className == this.clsParams.className) return;
+    
+    this.clsParams = {
+        id: id,
+        className: className
+    }
+    if(id != '') {
+        var fnName = 'get' + className;
+        if(id != '' &amp;&amp; className != '' &amp;&amp; FM.isset(this.app[fnName])) {
+            var me = this;
+            
+            this.app[fnName](id,function(isok,oObj) {
+                if(isok) {
+                    me.setDmObject(oObj);
+                    me.setProperty('dmObjectCreated','true');
+                }
+                else {
+                    me.setDmObject(null);
+                }
+            });
+        }
+    } else {
+        if(className != '') {
+            var attrs = {};
+            this.forEachAttr(function(n,v) {
+                if(FM.startsWith(n,'data-fmml-object-attr-')) {
+                    attrs[n.substr(22)] = v;
+                }
+                return true;
+            });
+            var oObj = FM.DmObject.newObject(this.getApp(),className, attrs);
+            this.setProperty('dmObjectCreated','true');
+            this.setDmObject(oObj);
+        }
+    }
+}
+
+FM.MlHost.prototype.dispose = function() {
+    if(this.masterHost) {
+        this.masterHost.removeListener(this);
+        if(this.masterHostDm) this.masterHostDm.removeListener(this);
+    }
+    
+    this.app.removeListener(this);
+    if(this.node) this.node.fmmlHost = null;
+    var obsrv = this.listOfObservers;
+    for(var id in obsrv) {
+        try {
+            obsrv[id].dispose();
+            
+        } catch(e) {
+            this.log(e,FM.logLevels.error,'MlHost.dispose');
+        }
+    }
+    this.listOfObservers = [];
+    this.setDmObject();
+    this.executed = false;
+    
+    this._super("dispose");
+    return true;
+}
+
+FM.MlHost.prototype.setNode = function(n) {
+    this.node = FM.isset(n) &amp;&amp; n ? n : null;
+}
+
+FM.MlHost.prototype.getNode = function() {
+    return this.node;
+}
+
+
+FM.MlHost.prototype.setDmObject = function(o) {
+    this._super('setDmObject',o,true);
+
+    this.updateAllObservers();    
+    this.fireEvent("onSetDmObject",this.dmObject);
+}
+
+
+FM.MlHost.prototype.getLinkedHost = function() {
+    var lhost = this.getAttr('data-fmml-linked-host','');
+    if(lhost != '') {
+        var node = document.getElementById(lhost);
+        if( node &amp;&amp; FM.isset(node.fmmlHost) &amp;&amp; node.fmmlHost) {
+            return node.fmmlHost;
+        }
+    }
+    return null;
+}
+
+FM.MlHost.prototype.addObserver = function(o) {
+    if(!FM.isset(o)  || !o || !FM.isset(o.getID)) return false;
+    this.listOfObservers[o.getID()] = o;
+    if(this.executed) o.run();
+    this.updateObserver(o);
+    return true;
+}
+
+FM.MlHost.prototype.removeObserver = function(o) {
+    if(!FM.isset(o)  || !o || !FM.isset(o.getID)) return false;
+
+    var nlist = {};
+    var objId = o.getID();
+    if(!objId) return false;
+
+    for(var id in this.listOfObservers) {
+        if(objId != id) nlist[id] = this.listOfObservers[id];
+    }
+
+    this.listOfObservers = nlist;
+
+    return true;
+}
+
+/**
+ * Call update of all observers
+ * @public     
+ * @function 
+ */   
+
+FM.MlHost.prototype.updateObserver = function(o) {
+    if(this.executed &amp;&amp; FM.isset(o.update) &amp;&amp; FM.isFunction(o.update)) {
+        try {
+            o.update(this);
+        } catch(e) {
+            this.log(e,FM.logLevels.error,'MlHost.updateObserver');
+        }
+    }
+
+    // kraj
+    return true;
+}
+
+FM.MlHost.prototype.updateAllObservers = function() {
+    for(var id in this.listOfObservers) {
+        this.updateObserver(this.listOfObservers[id]);
+    }
+
+
+    // kraj
+    return true;
+}
+
+FM.MlHost.prototype.verifyAllObservers = function(force) {
+    for(var id in this.listOfObservers) {        
+        if(!this.verifyObserver(this.listOfObservers[id],force))
+            return false;
+    }
+    return true;
+}
+
+FM.MlHost.prototype.verifyObserver = function(o,force) {
+    return o.isValid(force);
+}
+
+FM.MlHost.prototype.sendEventToObservers = function(sender,ev,data) {    
+    var fnd=false;
+    for(var id in this.listOfObservers) {
+        var o = this.listOfObservers[id];
+        if(o.executed) {
+            fnd = o.onHostEvent(sender,ev,data);
+        //this.updateObserver(o);
+        }
+    }
+
+    // kraj 
+    return fnd;
+}
+
+FM.MlHost.prototype._getErrorHost = function() {
+    var errnode = document.getElementById(this.getAttr('data-fmml-error-host',''));
+    return (
+        errnode &amp;&amp; FM.isset(errnode.fmmlHost) &amp;&amp; errnode.fmmlHost ?
+        errnode.fmmlHost : null
+        );
+}
+
+FM.MlHost.prototype.getLastError = function(oErr) {
+    var errhost = this._getErrorHost();
+    return errhost ? errhost.getDmObject() : null;
+}
+
+FM.MlHost.prototype.setLastError = function(oErr) {
+    var errhost = this._getErrorHost();
+    if(!errhost) {
+        return this.getApp() ? this.getApp().setLastError(oErr) : oErr;
+    }
+    
+    
+    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {        
+        oErr = new FM.DmGenericError();
+    }
+    
+    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
+        oErr = new FM.DmGenericError();
+    }
+    
+    if(!errhost.isExecuted()) {
+        errhost.run(oErr);
+    } else {
+        var dmobj = errhost.getDmObject();
+        if(!dmobj) {
+            errhost.setDmObject(oErr);
+        } else {
+            dmobj.forEachAttr(function(attr,value) {
+                dmobj.setAttr(attr,oErr.getAttr(attr,null));
+                return true;
+            });   
+            dmobj.setChanged(true,true);
+            oErr = dmobj;
+        }
+    }    
+    
+    return oErr;
+}
+
+// events
+FM.MlHost.prototype.onChange = function(sender,obj) {
+    if(sender == this.masterHostDm) {
+        this._checkMasterReload();
+    } else if(sender == this.getDmObject()) {
+        this.updateAllObservers();
+    }
+    
+    var hostToRun =  this.getAttr('data-fmml-run-on-update','');
+    if(hostToRun != '') {
+        var node = document.getElementById(hostToRun);
+        if( node &amp;&amp; FM.isset(node.fmmlHost) &amp;&amp; node.fmmlHost) {
+            node.fmmlHost.run(this.getDmObject());
+        }
+    }
+
+    // kraj
+    return true;
+}
+
+
+
+FM.MlHost.prototype.onSetDmObject = function(sender,obj) {
+    if(sender == this.masterHost) {
+        if(this.masterHostDm) this.masterHostDm.removeListener(this);
+        this.masterHostDm = obj;
+        if(this.masterHostDm) this.masterHostDm.addListener(this);
+        this._checkMasterReload();
+    }
+    
+    return true;
+}
+
+FM.MlHost.prototype.onMaximize = function() {
+    FM.expandToFullSCreen(this.node);
+    
+    // kraj
+    return true;
+}
+
+FM.MlHost.prototype.onEvent = function(sender,ev,data,calledlist) {
+    var cl = FM.isset(calledlist) ? calledlist : {};
+
+    if(!this.isEnabled()) return false;
+    
+    var done = false;
+    
+    //  ako imaš event fn
+    if(FM.isset(this[ev])) {
+        this[ev](sender,data);
+        cl[this.getID()] = '1';
+        FM.setAttr(cl,'_executed','1'); 
+        done = true;
+    }
+
+    //  ako imaš event fn u app
+    if(!done &amp;&amp; FM.isset(this.app[ev])) {
+        this.app[ev](sender,data);
+        cl[this.app.getID()] = '1';
+        FM.setAttr(cl,'_executed','1'); 
+        done = true;
+    }
+    if(!done) {
+        if(!this.sendEventToObservers(sender,ev, data)) {
+        // proslijedi dalje ako nemas ev fn
+        //cl = this.fireEvent(ev,data,cl);        
+        }
+        done = true;
+    }
+    
+    // ako ima def trigger u layoutu
+    var evtrg = this.getAttr('data-fmml-host-event-' + ev.toLowerCase(),'');
+    if(evtrg !== '') {
+        FM.resolveAttrValue(null,"-",evtrg,{
+            A: this.getApp(),
+            H: this, 
+            D: this.getDmObject()
+        });
+    }
+    
+    return cl;
+}
+
+// static
+FM.MlHost.hostTypes = {};
+
+/**
+ * Returns MlHost &lt;b&gt;config&lt;/b&gt; class function for &lt;b&gt;config&lt;/b&gt; subclass type
+ * @static
+ * @function    
+ * @param {object} app Application
+ * @param {String} name Configuration name
+ * @return {object} host configuration or null if not found
+ */   
+FM.MlHost.getConfiguration = function(app,name) {
+    var list = FM.MlHost.hostTypes;
+
+    app = FM.isset(app) &amp;&amp; app ? app : null;
+    var appCls = app ? app.getSubClassName() : null;
+    var appCfg = appCls &amp;&amp; FM.isset(list[appCls]) ? list[appCls] : null;
+        
+    var obj = null;
+    if(appCfg &amp;&amp; FM.isset(appCfg[name])) {
+        obj = appCfg[name];
+    } else if(app &amp;&amp; FM.isArray(app.applicationObjectsSpace)) {
+        FM.forEach(app.applicationObjectsSpace,function(i,ns) {
+            if(FM.isset(list[ns]) &amp;&amp; FM.isset(list[ns][name])) {
+                obj = list[ns][name];
+                return false;
+            }
+            return true;
+        });
+    }
+    
+    if(!obj &amp;&amp; FM.isset(list['GLOBAL'][name])) {
+        obj = list['GLOBAL'][name];
+    }
+    
+    return obj;
+}
+
+FM.MlHost.newHost = function(app,attrs,node,type,oObj) {
+    var clsFn = FM.MlHost.getConfiguration(app,type);
+    var obj = clsFn ? new clsFn(app,attrs,node) : null;
+    if(obj &amp;&amp; obj.getAttr('data-fmml-run-on-init','true') != 'false') {
+        obj.run(oObj); 
+    }
+    return obj;
+}
+
+FM.MlHost.addHost = function(type,hostfn,appCls) {
+    appCls = FM.isset(appCls) &amp;&amp; FM.isString(appCls) &amp;&amp; appCls != '' ? appCls : 'GLOBAL';
+    if(!FM.isset(hostfn) || !FM.isFunction(hostfn)) return false;
+    if(!FM.isset(type) || !type || type == '') return false;
+    if(!FM.isset(FM.MlHost.hostTypes[appCls])) {
+        FM.MlHost.hostTypes[appCls]= {};
+    }
+    FM.MlHost.hostTypes[appCls][type] = hostfn;
+    return true;
+}
+
+FM.MlHost.translateNode = function(app,node) {
+    // what to translate
+    var txtattrs = $(node).attr('data-fmml-translate');
+    var attrs = txtattrs.split(",");
+    var txttotranslate;
+    FM.forEach(attrs, function(i,name) {
+        name = FM.trim(name);
+        if(name == 'body') {
+            txttotranslate = $(node).text(); 
+            if(FM.isset(txttotranslate)) {
+                $(node).text(_T(txttotranslate,app));
+            }
+        } else {
+            txttotranslate = $(node).attr(i); 
+            if(FM.isset(txttotranslate)) {
+                $(node).attr(name,_T(txttotranslate,app));
+            }
+        }
+        return true;
+    });
+}
+    
+// radi update child nodova - promjena na dom nodu koji je nosioc
+FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
+    childsOnly = FM.isset(childsOnly) &amp;&amp; childsOnly == false ? false : true;
+    checknode = FM.isset(checknode) &amp;&amp; checknode ? checknode : $('body')[0];
+    var appsc = app.getSubClassName();
+    var nodeList = childsOnly ? $(checknode).children() : $(checknode);    
+    
+    nodeList.each(function(index) {
+        var domobj = this;        
+        var jqobj = $(this);
+        if(!jqobj) return;
+        if(
+            (!FM.isset(domobj.fmmlHost)) &amp;&amp;
+            (!FM.isset(domobj.fmmlObserver)) &amp;&amp;                
+            (
+                jqobj.attr('data-fmml-host') || 
+                jqobj.attr('data-fmml-observer') || 
+                jqobj.attr('data-fmml-extensions') ||
+                jqobj.attr('data-fmml-template') ||
+                jqobj.attr('data-fmml-translate')
+                )
+            ) {
+            var mlAppCls = jqobj.attr('data-fmml-app');
+            if(!mlAppCls &amp;&amp; !app.strictApplicationObjectsSpace) {
+                mlAppCls = app.getSubClassName();
+            }
+            if(mlAppCls == appsc) {  
+                // pokupi atribute 
+                var attrlist = {};
+                $.each(this.attributes, function(i, attrib){
+                    if(FM.isString(attrib.value) &amp;&amp; FM.startsWith(attrib.value,'@@')) { 
+                        try {
+                            attrlist[attrib.name] = FM.resolveAttrValue(null,"-",attrib.value,{
+                                A: app,
+                                D: oObj
+                            });
+                        } catch(e) {
+                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                        }
+                    } else {
+                        attrlist[attrib.name] = attrib.value;
+                    }
+                });
+                
+                
+                // ako je observer
+                if(jqobj.attr('data-fmml-observer')) { 
+                    try {
+                        obs = FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
+                        if(obs) {
+                            if(obs.getHost()) {
+                                obs.getHost().addObserver(obs);
+                            }
+                        }
+                    } catch(e) {
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                    };
+                }
+                
+                // extenzije
+                if(jqobj.attr('data-fmml-extensions')) { // ako je observer
+                    var extarr = jqobj.attr('data-fmml-extensions').split(" ");
+                    for(var i = 0; i &lt; extarr.length; i++) {
+                        var otype = extarr[i].toString();
+                        try {
+                            var oExt = FM.MlExtension.newExtension(app,attrlist,domobj,otype);
+                            if(oExt &amp;&amp; domobj.fmmlObserver) domobj.fmmlObserver.addExtension(oExt);
+                        } catch(e) {
+                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                        };
+                    }
+                }
+
+                // ako je host
+                if(jqobj.attr('data-fmml-host')) {
+                    try {
+                        FM.MlHost.newHost(app,attrlist,domobj,jqobj.attr('data-fmml-host'),oObj);
+                    } catch(e) {
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                    }                  
+                } 
+
+                // ako je translation
+                if(jqobj.attr('data-fmml-translate')) {
+                    try {
+                        FM.MlHost.translateNode(app,domobj);
+                    } catch(e) {
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                    }                  
+                } 
+
+                // ako je template                
+                if(jqobj.attr('data-fmml-template')) { // begin
+                    try {
+                        FM.MlTemplate.newTemplate(app,attrlist,domobj,oObj);
+                    } catch(e) {
+                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                    }                  
+                }
+                // end
+            }            
+        }
+        
+        // napravi isto na child nodovima
+        FM.MlHost.initChildNodes(app,this,oObj);
+    });
+    
+    return true;
+}
+
+// radi update child nodova - promjena na dom nodu koji je nosioc
+FM.MlHost.disposeChildNodes = function(checknode,childsOnly) {
+    if(FM.isString(checknode)) {
+        checknode = $('#' + checknode);
+        checknode = checknode.length &gt; 0 ? checknode[0] : null;
+    }    
+    childsOnly = FM.isset(childsOnly) &amp;&amp; childsOnly == false ? false : true;
+    var nodes = $(checknode).find("[data-fmml-host],[data-fmml-template]");
+    if(!childsOnly &amp;&amp; $(checknode).is("[data-fmml-host],[data-fmml-template]")) {
+        nodes = nodes.add(checknode);
+    }
+    
+    nodes.each(function(i, n){
+        if(FM.isset(n.fmmlTemplate) &amp;&amp; n.fmmlTemplate) {
+            n.fmmlTemplate.dispose();
+        }        
+        if(FM.isset(n.fmmlHost) &amp;&amp; n.fmmlHost) {
+            n.fmmlHost.dispose();
+        }        
+    });
+}
+
+//
+FM.MlHost.addHost("Host",FM.MlHost,"GLOBAL");
+</pre>
+		</div>
+	</div>
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Sun Oct 20 2013 15:30:07 GMT+0000 (UTC)</p>
+	</footer>
+</div>
+<script type="text/javascript">
+	prettyPrint();
+	var i = 1;
+	$('#source-code li').each(function() {
+		$(this).attr({ id: 'line' + (i++) });
+	});
+</script>
+</body>
+</html>

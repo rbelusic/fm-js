@@ -1,0 +1,561 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<title>Source - src/gui/ml/gui.MlListOfValues.js</title>
+	<meta name="generator" content="JsDoc Toolkit" />
+
+	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/bootstrap.min.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/prettify.css" type="text/css" />
+	<link media="print" rel="stylesheet" href="../../css/print.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="../../js/prettify.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body><div class="container-fluid">
+<!-- ============================== header ================================= -->
+	<!-- begin static/header.html -->
+	<header class="header navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="http://rbelusic.github.io/fm-js/index.html">
+                                    <strong>Fm-js</strong> API Reference</a>
+				<ul id="class-file-selector" class="nav">
+					<li><a href="../../index.html">Class Index</a></li>
+					<li><a href="../../files.html">File Index</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../../symbols/FM.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">FM</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.AppObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">AppObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericError.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericError</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericValue.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericValue</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmTranslation.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmTranslation</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.LmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">LmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlDateEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlDateEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlExtension.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlExtension</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHost.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHost</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostGenericCollection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostGenericCollection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostQueryParams.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostQueryParams</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlListOfValues.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlListOfValues</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserver</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.validationRules.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">validationRules</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverDisplay.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverDisplay</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverEvent.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverEvent</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListIndex.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListIndex</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListOrder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListOrder</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListSelection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListSelection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListState.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListState</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.Object.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Object</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.PageInfo.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">PageInfo</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstDmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstDmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstGeneric.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstGeneric</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtRegistry.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtRegistry</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimer.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimer</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimerJob.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimerJob</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTranslations.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTranslations</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.dateFormat.masks.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">masks</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevelNames.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevelNames</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevels.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevels</span></span></a></li>
+		
+			<li></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+
+		<div id="content" class="span9">
+<!-- ============================== source code ============================ -->
+
+			<pre id="source-code" class="prettyprint linenums">/**
+ * ML list of values edit extensions class. 
+ * 
+ * @class FM.MlListOfValues
+ * @extends FM.MlEdit
+ * @param {object} [attrs] DOM node attributes
+ * @param {DOMnode} node DOM node
+ */
+/*
+ * data-fmml-update-condition   - update event blur def
+ * data-fmml-list               - dm list conf
+ * data-fmml-list-id-attr       - list attr which correspond to attr of observer
+ * data-fmml-list-id            - menu id attr
+ * data-fmml-list-text-attr     - menu text attr
+ * data-fmml-list-def-selected  - menu def value
+ * data-fmml-list-def-selected-attr -
+ * data-fmml-list-allow-null    - add empty row in menu
+ * data-fmml-list-depends-of    - list of host attributes to send
+ */
+FM.MlListOfValues = FM.defineClass('MlListOfValues', FM.MlEdit);
+
+// methods
+FM.MlListOfValues.prototype._init = function(attrs, node) {
+    this._super("_init", attrs, node);
+    this.objectSubClass = "ListOfValues";
+
+    // LOV
+    this.lastLovArguments = null;
+    this.lovDependsOf = null;
+    this.lovItemsTemplate = null;
+    this.dmList = null;
+}
+
+FM.MlListOfValues.prototype.run = function(obs) {
+    this._super("run", obs);
+
+    // if dependsof attrs are not jet collected 
+    var dependsOfStr = obs.getAttr('data-fmml-list-depends-of', '');
+    this.lovDependsOf = dependsOfStr == '' ? [] : dependsOfStr.split(',');
+
+    // create LOV
+    var me = this;
+    this.lovFetch(this.lovGetFetchArguments(), function(isok, list) {
+        me.lovDisplay(isok, list);
+    });
+}
+
+// methods
+// fetch values for LOV from server
+FM.MlListOfValues.prototype.lovFetch = function(args, callback) {
+
+    // get observer
+    var obs = this.getObserver();
+    if (!obs) {
+        return false;
+    }
+
+    // create dmlist
+    args = FM.isset(args) &amp;&amp; args &amp;&amp; FM.isObject(args) ? args : {};
+    callback = FM.isset(callback) &amp;&amp; callback &amp;&amp; FM.isFunction(callback) ? callback : function() {
+    };
+    var dmconfName = obs.getAttr('data-fmml-list', '');
+    if (this.dmList) {
+        this.dmList.dispose();
+    }
+    this.dmList = new FM.DmList(args, dmconfName, obs.getApp());
+    this.lastLovArguments = args;
+
+    // prepare listener
+    var me = this;
+    var lstnr = {
+        /** @ignore */
+        onListStart: function(sender, data) {
+            me.log("Ajax call started", FM.logLevels.info, 'MlListOfValues.onListStart');
+            $(me.getNode()).addClass("fmmlWaitState");
+            return true;
+        },
+        /** @ignore */
+        onListEnd: function(sender, data) {
+            me.log("Ajax call completed", FM.logLevels.info, 'MlListOfValues.onListEnd');
+            $(me.getNode()).removeClass("fmmlWaitState");
+            me.dmList.removeListener(lstnr);
+            callback(true, me.dmList);
+            return true;
+        },
+        /** @ignore */
+        onListError: function(sender, data) {
+            me.log(data, FM.logLevels.error, 'MlListOfValues.onListError');
+            $(me.getNode()).removeClass("fmmlWaitState");
+            me.dmList.removeListener(lstnr);
+            callback(false, null);
+            return true;
+        }
+    };
+
+    me.dmList.addListener(lstnr);
+    me.dmList.getData();
+
+    return true;
+}
+
+FM.MlListOfValues.prototype.lovEmpty = function() {
+    $(this.editWidget ? this.editWidget : this.getNode()).empty();
+    var lovDesc = this.getAttr(
+        'data-fmml-lov-description', ''
+        );
+    if (lovDesc != '' &amp;&amp; this.editWidget) {
+        $(this.editWidget).append('&lt;legend&gt;' + lovDesc + '&lt;/legend&gt;');
+    }
+}
+
+FM.MlListOfValues.prototype.lovRenderItem = function(obj, issel, menuId, menuAttr, menuTempl, menuTemplName) {
+    var itmText = '';
+    var me = this;
+    var domnode = this.editWidget ? this.editWidget : this.getNode();
+    var attrs = obj ? obj.getAttr() : {};
+    attrs['lovSelected'] = issel ? 'selected' : '';
+    attrs['lovValue'] = FM.getAttr(attrs, menuId, '');
+    attrs['lovDataID'] = obj ? obj.getDataID() : '';
+
+    if (menuTemplName != '') {
+        if (this.lovItemsTemplate == null) {
+            FM.UtTemplate.getTemplate(
+                this.getApp(), attrs, menuTemplName, function(isok, templ) {
+                if (isok) {
+                    me.lovItemsTemplate = templ;
+                } else {
+                    me.lovItemsTemplate = '';
+                }
+                itmText = $(FM.applyTemplate(
+                    attrs, me.lovItemsTemplate, false, false
+                    ));
+                $(itmText).attr("data-fmml-object-id", FM.getAttr(attrs, 'lovDataID', ''));
+                $(domnode).append(itmText);
+            }
+            );
+            return;
+        } else {
+            itmText = FM.applyTemplate(attrs, this.lovItemsTemplate, false, false);
+            itmText = $(itmText);
+        }
+
+    } else if (menuTempl != '') {
+        itmText = FM.applyTemplate(attrs, this.menuTempl, false, false);
+        itmText = $(itmText);
+    } else {
+        var nType = domnode.nodeName;
+
+        if (nType == 'SELECT') {
+            itmText =
+                '&lt;option  class="fmmlOption"' +
+                (issel ? ' selected="selected"' : '') +
+                ' value="' + FM.getAttr(attrs, menuId, '') + '"&gt;' +
+                FM.getAttr(attrs, menuAttr, '') +
+                '&lt;/option&gt;'
+                ;
+            itmText = $(itmText);
+        } else {
+            var itmid = "fm_rg_" + this.getID();
+            itmText =
+                '&lt;label for="' + itmid + '" class="fmmlRadioLabel"&gt;' +
+                FM.getAttr(attrs, menuAttr, '') + '&lt;/label&gt;' +
+                '&lt;input type="radio" name="' + itmid + '" id="' + itmid + '"' +
+                (issel ? ' checked="checked"' : '') +
+                ' value="' + FM.getAttr(attrs, menuId, '') + '"/&gt;&lt;br /&gt;'
+                ;
+            itmText = $(itmText);
+            itmText.bind(this.triggerEvent, function() {
+                return me.widgetCb(this);
+            });
+        }
+    }
+
+
+    itmText.attr("data-fmml-object-id", obj.getDataID());
+
+    $(domnode).append(itmText);
+}
+
+FM.MlListOfValues.prototype.lovDisplay = function(isok) {
+    if (!this.isRendererEnabled() || !this.dmList) {
+        return;
+    }
+
+    // clear list
+    this.lovEmpty();
+
+    // get observer &amp; dmobject &amp; obs attribute name
+    var me = this;
+    var obs = this.getObserver();
+
+    // LOV def data-fmml-list-id-attr &gt; data-fmml-attr-name ref!
+    var menuId = obs.getAttr('data-fmml-list-id-attr', 'id');
+    var menuAttr = obs.getAttr('data-fmml-list-text-attr', '');
+    var menuTempl = obs.getAttr('data-fmml-list-text-template', '');
+    var menuTemplName = obs.getAttr('data-fmml-list-text-template-name', '');
+    var defSelValue = obs.getAttr('data-fmml-list-def-selected', '');
+    if (FM.isFunction(window[defSelValue]))
+        defSelValue = window[defSelValue](); // ref!
+    var defSelAttr = obs.getAttr('data-fmml-list-def-selected-attr', '');
+    var allowNulls = obs.getAttr('data-fmml-list-allow-null', 'false');
+
+    // state
+    var def = null, first = null, cur = null;
+    var curVal = obs.getValue();
+
+    // ok, display list
+    if (isok) {
+        // iterate list and find sel value
+        this.dmList.forEachListElement(function(index, obj) {
+            // def
+            if (defSelAttr != '' &amp;&amp; defSelValue != '') {
+                if (obj.getAttr(defSelAttr, '') == defSelValue) {
+                    def = obj;
+                }
+            }
+            if (!first) {
+                first = obj;
+            }
+            if (obj.getAttr(menuId, '') == curVal) {
+                cur = obj;
+            }
+            return(true);
+        });
+
+        // find selected (current &gt; def &gt; first &gt; none
+        var lovSelected = cur ? cur : (def ? def : first);
+
+        // null
+        if (allowNulls == 'true') {
+            this.lovRenderItem(null, false, "", "", menuTempl, menuTemplName);
+        }
+
+        // fill list
+        this.dmList.forEachListElement(function(index, obj) {
+            me.lovRenderItem(
+                obj, obj == lovSelected,
+                menuId, menuAttr,
+                menuTempl, menuTemplName
+                );
+            return(true);
+        });
+
+        // check if dm value and lov value are the same
+        this._runHost(true);
+        if (lovSelected) {
+            obs.setValue(lovSelected.getAttr(menuId, ''));
+        }
+    } else { // error
+        this.lovRenderItem(null, false, "", "Error occured", menuTempl, menuTemplName);
+    }
+}
+
+FM.MlListOfValues.prototype.render = function(value) {
+    if (this.editWidget &amp;&amp; this.editWidget.nodeName == 'FIELDSET') {
+        $(this.editWidget).find("input:radio").val([value]);
+    } else {
+        this._super("render", value);
+    }
+}
+
+
+FM.MlListOfValues.prototype.widgetCb = function(evnode) {
+    if (!this.isRendererEnabled()) {
+        return true;
+    }
+
+    this._super("widgetCb", evnode);
+
+    // host to run
+    this._runHost(true);
+}
+
+FM.MlListOfValues.prototype._runHost = function(doinit) {
+    var hostToRun = this.getAttr("data-fmml-run-on-lov-change", '');
+    if (hostToRun != '' &amp;&amp; this.dmList) {
+        var node = document.getElementById(hostToRun);
+        if (node) {
+            var menuId = this.getAttr('data-fmml-list-id-attr', 'id');
+            var curVal = this.getObserver().getValue();
+            var oObj = this.dmList.get(curVal, menuId);
+            doinit = doinit == true;
+
+            if (!FM.isset(node.fmmlHost) || !node.fmmlHost) {
+                if (!doinit || !$(node).attr('data-fmml-host'))
+                    return false;
+                FM.MlHost.initChildNodes(this.getApp(), node, oObj, false);
+                if (!FM.isset(node.fmmlHost) || !node.fmmlHost)
+                    return false;
+            }
+
+            node.fmmlHost.run(oObj);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+FM.MlListOfValues.prototype.lovGetFetchArguments = function() {
+    var args = {};
+    var obs = this.getObserver();
+    var dmobj = obs.getDmObject();
+    if (dmobj)
+        for (var i = 0; i &lt; this.lovDependsOf.length; i++) {
+            args[this.lovDependsOf[i]] = dmobj.getAttr(this.lovDependsOf[i], '');
+        }
+    return args;
+}
+
+
+FM.MlListOfValues.prototype.lovCheckDepedOfChanged = function() {
+    var obs = this.getObserver();
+    var dmobj = obs.getDmObject();
+
+    // menu is not filled yet
+    if (!dmobj || this.lastLovArguments == null)
+        return true;
+
+
+    // check attributes
+    var depchanged = false;
+    for (var i = 0; i &lt; this.lovDependsOf.length; i++) {
+        if (
+            FM.getAttr(this.lastLovArguments, this.lovDependsOf[i], '')
+            !=
+            dmobj.getAttr(this.lovDependsOf[i], '')
+            ) {
+            depchanged = true;
+            break;
+        }
+    }
+
+    // end
+    return(depchanged);
+}
+
+
+
+FM.MlListOfValues.prototype.initWidget = function() {
+    var domnode = this.getNode();
+    var me = this;
+    this.editWidget = null;
+    var nType = domnode.nodeName;
+
+    if (nType == 'SELECT') {
+        this.lovDisplay(true, this.dmList);
+        $(domnode).bind(this.triggerEvent, function() {
+            return me.widgetCb(this);
+        });
+    } else {
+        var edittype = this.getAttr(
+            'data-fmml-attr-edittype',
+            $(domnode).is(':radio') ? 'radio' : 'select'
+            );
+        if (edittype == 'select') {
+            this.editWidget = $("&lt;select class='fmmlValueInput'&gt;&lt;/select&gt;")[0];
+        } else if (edittype == 'radio') {
+            this.editWidget =
+                $("&lt;fieldset class='fmmlFieldset fmmlValueGroup'&gt;&lt;/fieldset&gt;")[0];
+        } else {
+            this.editWidget = $("&lt;" + edittype + " class='fmmlValueInput'&gt;&lt;/" + edittype + "&gt;")[0];
+        }
+        $(domnode).after(this.editWidget);
+        if ($(domnode).is(':radio') || edittype == 'radio') {
+            this.widgetShow();
+        } else {
+            $(domnode).bind("click.fmMlEdit", function() {
+                return me.widgetShow();
+            });
+            $(this.editWidget).bind("blur.fmMlEdit", function() {
+                return me.widgetHide();
+            });
+            this.widgetHide();
+        }
+
+        this.lovDisplay(true, this.dmList);
+        if (edittype != 'radio') {
+            $(this.editWidget).bind(this.triggerEvent, function() {
+                return me.widgetCb(this);
+            });
+        }
+    }
+}
+
+FM.MlListOfValues.prototype.dispose = function(obs) {
+    this._super("dispose");
+}
+
+FM.MlListOfValues.prototype.update = function(obs) {
+    this._super("update", obs);
+
+    // if dep value are not changed
+    if (!this.lovCheckDepedOfChanged()) {
+        return true;
+    }
+
+    var me = this;
+    this.lovFetch(this.lovGetFetchArguments(), function(isok, list) {
+        me.lovDisplay(isok, list);
+    });
+}
+
+
+// static
+FM.MlExtension.addExtensionType('ListOfValues', FM.MlListOfValues);
+
+
+
+
+</pre>
+		</div>
+	</div>
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Sun Oct 20 2013 15:30:07 GMT+0000 (UTC)</p>
+	</footer>
+</div>
+<script type="text/javascript">
+	prettyPrint();
+	var i = 1;
+	$('#source-code li').each(function() {
+		$(this).attr({ id: 'line' + (i++) });
+	});
+</script>
+</body>
+</html>
