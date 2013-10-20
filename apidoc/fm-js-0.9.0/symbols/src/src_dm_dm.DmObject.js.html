@@ -1,0 +1,445 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<title>Source - src/dm/dm.DmObject.js</title>
+	<meta name="generator" content="JsDoc Toolkit" />
+
+	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/bootstrap.min.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/prettify.css" type="text/css" />
+	<link media="print" rel="stylesheet" href="../../css/print.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="../../js/prettify.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body><div class="container-fluid">
+<!-- ============================== header ================================= -->
+	<!-- begin static/header.html -->
+	<header class="header navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="#"><strong>JsDoc</strong> Reference</a>
+				<ul id="class-file-selector" class="nav">
+					<li><a href="../../index.html">Class Index</a></li>
+					<li><a href="../../files.html">File Index</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../../symbols/FM.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">FM</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.AppObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">AppObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericError.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericError</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericValue.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericValue</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmTranslation.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmTranslation</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.LmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">LmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlDateEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlDateEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlExtension.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlExtension</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHost.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHost</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostGenericCollection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostGenericCollection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostQueryParams.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostQueryParams</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlListOfValues.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlListOfValues</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserver</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.validationRules.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">validationRules</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverDisplay.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverDisplay</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverEvent.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverEvent</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListIndex.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListIndex</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListOrder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListOrder</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListSelection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListSelection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListState.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListState</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.Object.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Object</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.PageInfo.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">PageInfo</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstDmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstDmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstGeneric.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstGeneric</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtRegistry.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtRegistry</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimer.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimer</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimerJob.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimerJob</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTranslations.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTranslations</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.dateFormat.masks.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">masks</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevelNames.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevelNames</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevels.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevels</span></span></a></li>
+		
+			<li></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+
+		<div id="content" class="span9">
+<!-- ============================== source code ============================ -->
+
+			<pre id="source-code" class="prettyprint linenums">/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
+
+/**
+* Basic DM class. Provide groups. 
+* 
+* @class FM.DmObject
+* @extends FM.Object
+* @memberOf FM
+* @param {object} attrs list of attribute name and values
+* @param {object} [flds] allowed attributes
+*/    
+FM.DmObject = FM.defineClass('DmObject',FM.Object);
+
+
+// methods
+FM.DmObject.prototype._init = function(attrs,flds) {            
+    this.objectGroups = {};
+    this.defaultGroup = '';               
+
+    this._super("_init",attrs,flds);
+    this.objectSubClass = "Object";
+}
+
+/**
+ * Returns data ID of data model. 
+ * Data ID is usulay value of some attribute with unique value.
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
+FM.DmObject.prototype.getDataID = function() {
+    return this.getID();
+}
+
+/**
+ * Add object to group. 
+ * 
+ * @public     
+ * @function 
+ * @param {string} gname Group name.
+ * @param {boolean} [callevent=false] Fire &lt;i&gt;onChange&lt;/i&gt; event.
+ * @returns {boolean} Returns &lt;i&gt;true&lt;/i&gt; if object is successfully added to gruop. 
+ */
+FM.DmObject.prototype.addGroup = function(gname,callevent) {
+    if(!FM.isset(gname) || !gname || gname == '') return false;
+
+    this.objectGroups[gname] = {
+        name: gname
+    }
+
+    if(FM.isset(callevent) &amp;&amp; callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+/**
+ * Remove object from group. 
+ * 
+ * @public     
+ * @function 
+ * @param {string} gname Group name.
+ * @param {boolean} [callevent=false] Fire &lt;i&gt;onChange&lt;/i&gt; event.
+ * @returns {boolean} Returns &lt;i&gt;true&lt;/i&gt; if object is successfully removed. 
+ */
+FM.DmObject.prototype.removeGroup = function(gname,callevent) {
+    if(!FM.isset(gname) || !gname || !FM.isset(this.objectGroups[gname])) return false;
+    var newglist = {};            
+    FM.forEachAttr(this.objectGroups,function(name,value) {
+        if(name != gname) {
+            newglist[name] = value;
+        }
+        return true;
+    });
+
+    this.objectGroups = newglist;
+    if(this.defaultGroup == gname) this.defaultGroup = '';
+    if(FM.isset(callevent) &amp;&amp; callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+/**
+ * Check if object is in named group.
+ * 
+ * @public     
+ * @function 
+ * @param {string} gname Group name.
+ * @returns {boolean} 
+ */
+FM.DmObject.prototype.isInGroup = function(gname) {
+    return (
+        FM.isset(gname) &amp;&amp; gname &amp;&amp; FM.isset(this.objectGroups[gname]) ?
+        true : false
+        );
+}
+
+/**
+ * Remove object from all groups. 
+ * 
+ * @public     
+ * @function 
+ * @param {boolean} [callevent=false] Fire &lt;i&gt;onChange&lt;/i&gt; event.
+ * @returns {boolean} Returns &lt;i&gt;true&lt;/i&gt; if object is successfully removed. 
+ */
+FM.DmObject.prototype.removeAllGroups = function(callevent) {
+    this.objectGroups = {};
+    this.defaultGroup = '';
+    if(FM.isset(callevent) &amp;&amp; callevent == true) this.fireEvent("onChange", this);
+    return true;
+}
+
+
+/**
+ * Get list of all groups object belongs to.
+ * 
+ * @public     
+ * @function 
+ * @returns {Object} 
+ */
+FM.DmObject.prototype.getGroups = function() {
+    return FM.cloneObject(this.objectGroups);
+}
+
+/**
+ * Returns object group count.
+ * 
+ * @public     
+ * @function 
+ * @returns {number} 
+ */
+FM.DmObject.prototype.getGroupsCount = function() {
+    return FM.sizeOf(this.objectGroups);
+}
+
+/** 
+ * For each object group call function &lt;i&gt;doFn(groupName,groupObject)&lt;/i&gt; 
+ * until end of list or &lt;i&gt;false&lt;/i&gt; is returned.    
+ * 
+ * @public
+ * @function 
+ * @param {function} [doFn={}]
+ */
+FM.DmObject.prototype.forEachGroup = function(doFn) {
+    return FM.forEach(this.objectGroups,doFn);
+}
+
+
+/** 
+ * Set default object group.
+ * 
+ * @public
+ * @function 
+ * @param {string} gname Group name.
+ * @returns {boolean}
+ */
+FM.DmObject.prototype.setDefaultGroup = function(s,callevent) {
+    s = FM.isset(s) &amp;&amp; s ? s : '';
+    if(s == '' || FM.isset(this.objectGroups[s])) {
+        this.defaultGroup = s;
+        if(FM.isset(callevent) &amp;&amp; callevent == true) this.fireEvent("onChange", this);
+        return true;
+    }            
+    return false;
+}
+
+/**
+ * Returns default group.
+ * 
+ * @public     
+ * @function 
+ * @returns {Object} 
+ */
+FM.DmObject.prototype.getDefaultGroup = function() {
+    if(this.defaultGroup != '') {
+        return FM.getAttr(this.objectGroups,this.defaultGroup,null);
+    }
+
+    // ako nema def ili nije vidljiv
+    var defgrp = null;
+    FM.forEach(this.objectGroups,function(name,value) {
+        // prvi u listi
+        defgrp = value;
+        return false;
+    }); 
+    return defgrp;
+}        
+// == static ===================================================================
+/**
+ * @ignore
+ */
+FM.DmObject.subClassTypes = {
+    GLOBAL: {}
+}; 
+
+/**
+* Returns DmObject class function for &lt;b&gt;sctype&lt;/b&gt; subclass type.
+* @static
+* @function    
+* @param {object} app Application.
+* @param {String} sctype Subclass type.
+* @return {function} Class function.
+*/   
+FM.DmObject.getConfiguration = function(app,sctype) {
+    var list = FM.DmObject.subClassTypes;
+
+    app = FM.isset(app) &amp;&amp; app ? app : null;
+    var appCls = app ? app.getSubClassName() : null;
+    var appCfg = appCls &amp;&amp; FM.isset(list[appCls]) ? list[appCls] : null;
+        
+    var obj = null;
+    if(appCfg &amp;&amp; FM.isset(appCfg[sctype])) {
+        obj = appCfg[sctype];
+    } else if(app &amp;&amp; FM.isArray(app.applicationObjectsSpace)) {
+        FM.forEach(app.applicationObjectsSpace,function(i,ns) {
+            if(FM.isset(list[ns]) &amp;&amp; FM.isset(list[ns][sctype])) {
+                obj = list[ns][sctype];
+                return false;
+            }
+            return true;
+        });
+    }
+    
+    if(!obj &amp;&amp; FM.isset(list['GLOBAL'][sctype])) {
+        obj = list['GLOBAL'][sctype];
+    }
+    
+    return obj;
+}
+
+/**
+* Returns new instance of chosen &lt;b&gt;sctype&lt;/b&gt; subclass type.
+* @static
+* @public
+* @function    
+* @param {object} app Application.
+* @param {String} sctype Subclass type.
+* @return {object} Class function.
+*/   
+FM.DmObject.newObject = function(app,sctype, oAttrs) {    
+    var clsFn = FM.DmObject.getConfiguration(app,sctype);
+    return clsFn ? new clsFn(oAttrs) : null;
+}
+
+/**
+* Returns application registered subclass type function.
+* 
+* @static
+* @public
+* @function    
+* @param {string} [sctype="Object"] Subclass type.
+* @param {string} [scapp="GLOBAL"] Application subclass type.
+* @return {function} Class function or &lt;i&gt;FM.DmObject&lt;/i&gt; if &lt;i&gt;sctype&lt;/i&gt; 
+*  is ommited, empty string or null.
+*/   
+FM.DmObject.getSubClassType = function(sctype,scapp) {
+    if(!FM.isset(sctype) || sctype == '') {
+        return FM.DmObject;
+    } 
+    scapp = FM.isset(scapp) &amp;&amp; scapp != '' ? scapp : 'GLOBAL';
+    if(!FM.isset(FM.DmObject.subClassTypes[scapp])) {
+        return null;
+    }
+    
+    var appcfg = FM.DmObject.subClassTypes[scapp];
+    
+    return FM.isset(appcfg[sctype]) ? appcfg[sctype] : null;
+}
+
+/**
+* Register application subclass type.
+* 
+* @static
+* @public
+* @function    
+* @param {string} sctype Subclass type.
+* @param {function} clsFn DM Class to register.
+* @param {string} [scapp="GLOBAL"] Application subclass.
+*/   
+FM.DmObject.addSubClassType = function(sctype, clsFn,scapp) {
+    scapp = FM.isset(scapp) &amp;&amp; FM.isString(scapp) &amp;&amp; scapp != '' ? scapp : 'GLOBAL';
+    if(!FM.isset(FM.DmObject.subClassTypes[scapp])) {
+        FM.DmObject.subClassTypes[scapp]= {};
+    }
+    
+    FM.DmObject.subClassTypes[scapp][sctype] = clsFn;
+}
+
+
+FM.DmObject.addSubClassType('Object',FM.DmObject,'GLOBAL');
+</pre>
+		</div>
+	</div>
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Sun Oct 20 2013 15:15:23 GMT+0000 (UTC)</p>
+	</footer>
+</div>
+<script type="text/javascript">
+	prettyPrint();
+	var i = 1;
+	$('#source-code li').each(function() {
+		$(this).attr({ id: 'line' + (i++) });
+	});
+</script>
+</body>
+</html>
