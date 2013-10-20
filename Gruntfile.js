@@ -43,7 +43,8 @@ module.exports = function(grunt) {
         },
         exec: {
             run_jsdoc2: {
-                command: 'mkdir -p build && node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=build/apidoc',
+                command: 'mkdir -p build && node node_modules/jsdoc-toolkit/ -r=99 src/ -t=$(pwd)/bin/JsDoc2-Template-Bootstrap -d=build/apidoc',
+//                command: 'mkdir -p build && node node_modules/jsdoc-toolkit/ -r=99 src/ -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=build/apidoc',
                 stdout: true
             },
             prepare_release: {
