@@ -33,6 +33,7 @@ zip -r ../releases/$REL_FNAME.zip $REL_FNAME
 cd ..
 rm -rf tmp
 cp -r $BCWD/build/apidoc apidoc/$REL_FNAME
+cp -r $BCWD/build/apidoc apidoc/fm-js-latest-unstable
 
 echo "Done."
 cd $BCWD
