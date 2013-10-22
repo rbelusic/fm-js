@@ -1,0 +1,43 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>        
+        <script src="../../../js/fm-js-all.js"></script> 
+        
+        <link rel="stylesheet" href="../common/ex-common.css" />
+        <script src="../common/ex-common.js"></script> 
+        <script src="ex-dates.js"></script>             
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <h2>Show current date and time in various formats.</h2>
+        <p>[example description]</p>
+        <table 
+            data-fmml-host="GenericCollection"
+            data-fmml-list="dateFormats"
+            >
+            <thead>
+                <tr>
+                    <th>#</th> 
+                    <th>Name</th>
+                    <th>Mask</th>
+                    <th>Example</th>
+                </tr>  
+            </thead>
+            <tbody class="fmmlListItems">
+                <tr class="fmmlListItemsTemplate" data-fmml-host="Host">
+                    <td data-fmml-observer="ListIndex"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="name"></td> 
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="mask"></td>
+                    <td data-fmml-observer="Observer" data-fmml-attr-name="example"></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -36,9 +36,7 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     this.log(attrs, FM.logLevels.debug, 'MlObserver._init');
 
-    this.executed = false;
-    this.node = node;
-    
+    this.node = node;    
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -52,9 +50,7 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
         new FM.DmGenericError({
         id: '',
         text: ''
-    }) :
-        null
-        ;
+    }) : null;
 
     this.log("New observer created.", FM.logLevels.debug, 'MlObserver._init');
 }

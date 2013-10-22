@@ -39,6 +39,18 @@ FM.isNumber = function(v) {
     return !isNaN(parseFloat(v));
 }
 /**
+ * Determine if a string variable holding number.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isNumeric = function(v) {
+    return !isNaN(parseFloat(v)) && isFinite(v);
+}
+
+/**
  * Determine if a variable is of boolean type.
  * 
  * @static

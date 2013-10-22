@@ -40,9 +40,9 @@ FM.dateTimeDivider = ' ';
  */
 FM.dateFormat = function(date, mask, utc) {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-    timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-    timezoneClip = /[^-+\dA-Z]/g,
-    pad = function(val, len) {
+        timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
+        timezoneClip = /[^-+\dA-Z]/g,
+        pad = function(val, len) {
         val = String(val);
         len = len || 2;
         while (val.length < len)
@@ -51,9 +51,9 @@ FM.dateFormat = function(date, mask, utc) {
     };
     var dF = FM.dateFormat;
 
-        if(date && !FM.isObject(date) && (FM.isNumber(date) || (FM.isString(date) && !isNaN(parseInt(date))))) {
-            date = new Date(FM.isString(date) ? parseInt(date) : date);
-        }
+    if (date && !FM.isObject(date) && FM.isNumeric(date)) {
+        date = parseInt(date);
+    }
 
     // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
     if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
@@ -75,16 +75,16 @@ FM.dateFormat = function(date, mask, utc) {
     }
 
     var _ = utc ? "getUTC" : "get",
-    d = date[_ + "Date"](),
-    D = date[_ + "Day"](),
-    m = date[_ + "Month"](),
-    y = date[_ + "FullYear"](),
-    H = date[_ + "Hours"](),
-    M = date[_ + "Minutes"](),
-    s = date[_ + "Seconds"](),
-    L = date[_ + "Milliseconds"](),
-    o = utc ? 0 : date.getTimezoneOffset(),
-    flags = {
+        d = date[_ + "Date"](),
+        D = date[_ + "Day"](),
+        m = date[_ + "Month"](),
+        y = date[_ + "FullYear"](),
+        H = date[_ + "Hours"](),
+        M = date[_ + "Minutes"](),
+        s = date[_ + "Seconds"](),
+        L = date[_ + "Milliseconds"](),
+        o = utc ? 0 : date.getTimezoneOffset(),
+        flags = {
         d: d,
         dd: pad(d),
         ddd: dF.i18n.dayNames[D],
@@ -149,30 +149,32 @@ FM.dateFormat = function(date, mask, utc) {
  * @property {string} fmTime "HH:MM:ss",
  * @property {string} fmUtcTime "UTC:HH:MM:ss",
  * @property {string} isoUtcDateTime "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
-*/
-FM.dateFormat.masks = {    
-    "default": "ddd mmm dd yyyy HH:MM:ss", 
+ */
+FM.dateFormat.masks = {
+    "default": "ddd mmm dd yyyy HH:MM:ss",
     shortDate: "m/d/yy",
-    shortDateTime: "m/d/yy HH:MM:ss",
     mediumDate: "mmm d, yyyy",
-    mediumDateTime: "mmm d, yyyy HH:MM:ss",
     longDate: "mmmm d, yyyy",
-    longDateTime: "mmmm d, yyyy HH:MM:ss",
     fullDate: "dddd, mmmm d, yyyy",
+    isoDate: "yyyy-mm-dd",
+    fmDate: "yyyy-mm-dd",
+    fmUtcDate: "UTC:yyyy-mm-dd",
+
+    shortDateTime: "m/d/yy HH:MM:ss",
+    mediumDateTime: "mmm d, yyyy HH:MM:ss",
+    longDateTime: "mmmm d, yyyy HH:MM:ss",
     fullDateTime: "dddd, mmmm d, yyyy HH:MM:ss",
+    isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
+    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'",
+    fmDateTime: "yyyy-mm-dd HH:MM:ss",
+    fmUtcDateTime: "UTC:yyyy-mm-dd HH:MM:ss",
+    
     shortTime: "h:MM TT",
     mediumTime: "h:MM:ss TT",
     longTime: "h:MM:ss TT Z",
-    isoDate: "yyyy-mm-dd",
     isoTime: "HH:MM:ss",
-    isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
-    fmDateTime: "yyyy-mm-dd HH:MM:ss",
-    fmUtcDateTime: "UTC:yyyy-mm-dd HH:MM:ss",
-    fmDate: "yyyy-mm-dd",
-    fmUtcDate: "UTC:yyyy-mm-dd",
     fmTime: "HH:MM:ss",
-    fmUtcTime: "UTC:HH:MM:ss",
-    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+    fmUtcTime: "UTC:HH:MM:ss"
 };
 
 
@@ -181,10 +183,10 @@ FM.dateFormat.masks = {
  * 
  * @ignore
  */
-FM.dateFormat.i18n = 
+FM.dateFormat.i18n =
     FM.isset(FM.CultureInfos[FM.getlocale()]) ?
     FM.CultureInfos[FM.getlocale()] : 'en-US'
-;
+    ;
 
 
 
@@ -192,34 +194,34 @@ FM.dateFormat.i18n =
 /**
  * Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.
  * 
- * @param {string|Date} [dat=new Date()] Date to format.
+ * @param {string|number|Date} [dat=new Date()] Date to format.
  * @param {boolean} [utc=false] Format UTC values.
  * @param {string} [format="fmUtcDateTime"] Format mask.
  * @returns {string} Returns empty string on error.
  * @see FM.dateFormat.masks
  */
-FM.dateToString = function(dat, utc,format) {
+FM.dateToString = function(dat, utc, format) {
     dat = FM.isset(dat) ? dat : new Date();
-    
+
     try {
         format = FM.isset(format) ? format : (utc ? 'fmUtcDateTime' : 'fmDateTime');
         var s = FM.dateFormat(dat, format);
         return s;
-    } catch(e) {
+    } catch (e) {
         return '';
     }
 }
 
 
 /**
- * Check if string representing date is parsable.
+ * Check if value representing date is parsable.
  * 
- * @param {string} sdate Date string to check.
+ * @param {string|number} sdate Value to check.
  * @returns {boolean} 
  * @see FM.dateFormat.masks
  */
-FM.isDateString = function(sdate) { 
-    if (!FM.isString(sdate)) {
+FM.isDateString = function(sdate) {
+    if (!FM.isString(sdate) && !FM.isNumeric(sdate)) {
         return false;
     }
 
@@ -227,39 +229,45 @@ FM.isDateString = function(sdate) {
         var ds = FM.dateFormat(sdate);
         var d = new Date(ds);
         return d ? true : false;
-    } catch(e) {
+    } catch (e) {
         return false;
     }
 }
 
 
 /**
- * Parse date string.
+ * Parse date.
  * 
- * @param {string} sdate String to parse.
+ * @param {string|number} sdate Value to parse.
  * @param {boolean} [utc=false] Date string represents UTC values.
  * @returns {Date} Returns null on error.
  * @see FM.dateFormat.masks
  */
-FM.parseDateString = function(sdate, utc) { 
+FM.parseDateString = function(sdate, utc) {
     if (!FM.isset(sdate) || sdate == null || sdate == '') {
         return(null);
     }
-
+    if(FM.isNumeric(sdate)) {
+        try {
+            return new Date(FM.isString(sdate) ? parseInt(sdate) : sdate);
+        } catch(e){
+            return null;
+        }
+    }
     try {
-        var s = FM.dateFormat((utc && !FM.startsWith(sdate,"UTC:") ? 'UTC:' : '') + sdate);
+        var s = FM.dateFormat((utc && !FM.startsWith(sdate, "UTC:") ? 'UTC:' : '') + sdate);
         var d = new Date(s);
         return d;
-    } catch(e) {
+    } catch (e) {
         return null;
     }
 }
 
 /**
- * Parse local date using.
+ * Parse local date.
  * This function is shortcut for <i>FM.parseDateString(sdate,false)</i>.
  * 
- * @param {string} sdate String to parse.
+ * @param {string|number} sdate Value to parse.
  * @returns {Date} Returns null on error.
  * @see FM.parseDateString
  */
@@ -269,28 +277,28 @@ FM.parseLocalDateString = function(sdate) {
 
 
 /**
- * Parses UTC date string, converts it to Date object and returns local date string.
+ * Parses UTC date, converts it to Date object and returns local date string.
  * 
- * @param {string} sdate UTC date string to parse.
+ * @param {string|number} sdate UTC date string to parse.
  * @param {string} [format="fmDateTime"] Format mask.
-
+ 
  * @returns {string}.
  * @see FM.parseDateString
  */
-FM.srv2locDate = function(sdate,format) {
-    return(FM.dateToString(FM.parseDateString(sdate, true), false,format));
+FM.srv2locDate = function(sdate, format) {
+    return(FM.dateToString(FM.parseDateString(sdate, true), false, format));
 }
 
 /**
- * Parses local date string, converts it to Date object and returns UTC date string.
+ * Parses local date, converts it to Date object and returns UTC date string.
  * 
- * @param {string} sdate UTC date string to parse.
+ * @param {string|number} sdate UTC date string to parse.
  * @param {string} [format="fmUtcDateTime"] Format mask.
  * @returns {string}.
  * @see FM.parseDateString
  */
-FM.loc2srvDate = function(sdate,format) {
-    return(FM.dateToString(FM.parseDateString(sdate, false), true,format));
+FM.loc2srvDate = function(sdate, format) {
+    return(FM.dateToString(FM.parseDateString(sdate, false), true, format));
 }
 
 /**
@@ -301,7 +309,7 @@ FM.loc2srvDate = function(sdate,format) {
  * @see FM.dateFormat.masks.fmDateTime
  */
 FM.locNow = function(format) {
-    return(FM.dateToString(new Date(), false,format));
+    return(FM.dateToString(new Date(), false, format));
 }
 
 /**
@@ -312,7 +320,7 @@ FM.locNow = function(format) {
  * @see FM.dateFormat.masks.fmDateTime
  */
 FM.srvNow = function(format) {
-    return(FM.dateToString(new Date(), true,format));
+    return(FM.dateToString(new Date(), true, format));
 }
 
 /**
@@ -324,18 +332,18 @@ FM.srvNow = function(format) {
  */
 FM.timeBetween = function(d1, d2) {
     if (
-        !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) || 
+        !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) ||
         !FM.isset(d2) || !d2 || !FM.isset(d2.getTime)
         ) {
-        return false;    
+        return false;
     }
     // Calculate the difference in milliseconds
-    return (d2.getTime()/1000 - d1.getTime()/1000);
+    return (d2.getTime() / 1000 - d1.getTime() / 1000);
 }
 
 
 /**
- * Returns time difference in seconds between two dates in descriptive sentence.
+ * Returns time difference between two dates in descriptive sentence.
  * Examples:
  *  "3 seconds ago", "3 minutes ago", "3 hours ago", "Yesterday", "3 days ago",
  *  "In 3 seconds", "In 3 minutes", "In 3 hours", "Tomorow", "In 3 days"
@@ -345,12 +353,12 @@ FM.timeBetween = function(d1, d2) {
  * @returns {string} On error returns empty string.
  */
 FM.strTimeBetween = function(d1, d2) {
-    var dif = FM.timeBetween(d1,d2);    
+    var dif = FM.timeBetween(d1, d2);
     if (dif == false) {
-        return '';    
+        return '';
     }
     var dif_abs = Math.abs(dif);
-    
+
 
     // The number of milliseconds in one day
     var ONE_DAY = 24;
@@ -412,14 +420,14 @@ FM.dateLocalFormat = function(d) {
  * @ignore
  */
 FM.startOfHistory = function() {
-    return FM.dateFormat(new Date(0),'fmUtcDateTime');    
+    return FM.dateFormat(new Date(0), 'fmUtcDateTime');
 }
 
 /**
  * @ignore
  */
 FM.endOfHistory = function() {
-    return FM.dateFormat(new Date(2524608000000),'fmUtcDateTime');
+    return FM.dateFormat(new Date(2524608000000), 'fmUtcDateTime');
 }
 
 

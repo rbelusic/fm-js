@@ -1,0 +1,8 @@
+[ 
+    {
+        "name": "dates",
+        "title": "Date & time formats.",
+        "description": "Show current date and time in various formats.",
+        "link": "dates/index.html"
+    }
+]
