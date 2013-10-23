@@ -1,0 +1,72 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>        
+        <script src="../../../js/fm-js-all.js"></script> 
+        
+        <link rel="stylesheet" href="../common/ex-common.css" />
+        <script src="../common/ex-common.js"></script> 
+        <script src="ex-host.js"></script>             
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <h2>Show various ways to run FM.MLHost.</h2>
+        <p>[example description]</p>
+        
+        <hr>
+        <h4>Create new DmObject with ml attributes,</h4>
+        <div id="master" data-fmml-host="Host" data-fmml-object-class="Object"
+             data-fmml-object-attr-id="1"
+             data-fmml-object-attr-title="Some title"
+             data-fmml-object-attr-price="123"
+            >
+            id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+            title: <span data-fmml-observer="Observer" data-fmml-attr-name="title"></span></br>
+            price: $<span data-fmml-observer="Observer" data-fmml-attr-name="price"></span>
+        </div>
+        
+        <hr>
+        <h4>Create new DmObject from attribute values of host above,</h4>
+        <div data-fmml-host="Host" data-fmml-object-class="Object"
+             data-fmml-linked-host="master"
+            >
+            id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+            title: <span data-fmml-observer="Observer" data-fmml-attr-name="title"></span></br>
+            price: $<span data-fmml-observer="Observer" data-fmml-attr-name="price"></span>
+        </div>
+        
+        <hr>
+        <h4>
+            Same as abowe, except the link between hosts are permanent, 
+            We will allow here changing of title attribute to demonstrate this behavior.
+            Changes of title attribute will be visible on the first host too, but not in the host above.
+        </h4>
+        <div data-fmml-host="Host" data-fmml-object-class="Object"
+             data-fmml-master-host="master"
+            data-fmml-run-on-update="slave"
+            >
+            id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+            title: <input data-fmml-observer="Observer" data-fmml-attr-name="title" data-fmml-extensions="Edit"/></br>
+            price: $<span data-fmml-observer="Observer" data-fmml-attr-name="price"></span>
+        </div>
+        
+        <hr>
+        <h4>
+            This host will not be run until title attribute change and will be runned on every change (in our case changing title attribute above),
+            See data-fmml-run-on-update ml attribute in host above.
+        </h4>
+        <div id="slave" data-fmml-host="Host" data-fmml-object-class="Object"
+             data-fmml-run-on-init="false"
+             >
+            id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+            title: <span data-fmml-observer="Observer" data-fmml-attr-name="title"></span></br>
+            price: $<span data-fmml-observer="Observer" data-fmml-attr-name="price"></span>
+        </div>
+    </body>
+</html>
