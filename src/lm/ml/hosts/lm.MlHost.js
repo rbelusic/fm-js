@@ -1,22 +1,125 @@
 /**
-* ML host class. 
+* Generic ML Host class.  
 * 
+* <br />List of DOM attributes (check inherited attributes too):
+* <table class="fm-mlattrs">
+*  <thead>
+*   <tr>
+*    <th>Name</th><th>description</th><th>Default</th>
+*   </tr>
+*  </thead>
+*  <tbody>
+*   <tr>
+*    <td>data-fmml-run-maximized</td>
+*    <td>Run host node full screen</td>
+*    <td>[false],true</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-error-host</td>
+*    <td>DOM node id of error host</td>
+*    <td>-</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-linked-host</td>
+*    <td>
+*      DOM node id of linked host. 
+*      Attributes of linked host DM object are apended to list of attributes 
+*      defined with <i>data-fmml-object-attr-&lt;attr name&gt;</i>
+*      when creating new host DM object    
+*    </td>
+*    <td>-</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-master-host</td>
+*    <td>
+*      DOM node id of master host. 
+*      Master host DM object will be used as this host DM object too.
+*      If value is <i>true</i> host from first parent DOM node will be used.
+*    </td>
+*    <td>[id],true</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-run-on-update</td>
+*    <td>
+*      DOM node id of the host to run on <i>onChange</> event. 
+*      Current host DM object is sent as argument.
+*    </td>
+*    <td>-</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-object-destroy-on-dispose</td>
+*    <td>
+*      If <i>true</i> host DM object will be disposed on host dispose.
+*    </td>
+*    <td>Depends of the way host DM object is obtained.</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-object-ref</td>
+*    <td>
+*      Evaluate content of attribute as host DM object. 
+*    </td>
+*    <td>-</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-object-class</td>
+*    <td>
+*      Restrict host DM object to one with given class. 
+*    </td>
+*    <td></td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-object-id</td>
+*    <td>
+*      if set to <i>true</i>, call fetch function with object containing all
+*      attributes defined with <i>data-fmml-object-attr-[attr]</i>, otherwise
+*      fetch DM object with given data ID and <i>data-fmml-object-class</i> class. 
+*      Function with name 'get[<i>data-fmml-object-class</i>] if one exists in host or application.      
+*    </td>
+*    <td></td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-list</td>
+*    <td>
+*      DM object is first object in response returned from named DM list.
+*      <i>data-fmml-object-id</i> is sent as argument, or object with
+*      all <i>data-fmml-object-attr-&lt;attr name&gt;</i>atributes defined.      
+*    </td>
+*    <td></td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-object-attr-[attr]</td>
+*    <td>
+*      Define value of <i>attr<i> DM object attribute. If host can't obtain DM object
+*      from other sources, new one with defined attributes will be created.
+*    </td>
+*    <td></td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-run-on-init</td>
+*    <td>
+*      Run host after creation.
+*    </td>
+*    <td>[true], false</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-host-event-[event]</td>
+*    <td>
+*      Evaluate content of attribute on <i>event</i> event.
+*    </td>
+*    <td>@...</td>
+*   </tr>
+*  </tbody>
+* </table>
+*  
 * @class FM.MlHost
 * @memberOf FM
 * @extends FM.LmObject
-* @param {FM.AppObject} app application object
-* @param {object} [attrs] DOM node attributes
-* @param {DOMnode} node DOM node
-* 
-* 
-* data-fmml-run-maximized, data-fmml-object-class, data-fmml-object-id,
-* data-fmml-object-ref, data-fmml-object-destroy-on-dispose,
-* data-fmml-master-host, data-fmml-use-global-args,
-* data-fmml-object-attr-*, data-fmml-linked-host,
-* data-fmml-error-host, data-fmml-run-on-update,data-fmml-host-event-*
-* data-fmml-run-on-init
-* 
-*/    
+* @param {FM.AppObject} app application object.
+* @param {object} [attrs] DOM node attributes.
+* @param {DOMnode} node DOM node. 
+*/
+
+
 FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
 
 // methods
@@ -26,7 +129,6 @@ FM.MlHost.prototype._init = function(app,attrs,node) {
     
     this.setNode(node);        
     this.masterHost = null;
-    this.masterHostDm = null;
     
     this.listOfObservers = {};
     
@@ -41,51 +143,17 @@ FM.MlHost.prototype._init = function(app,attrs,node) {
     this.addListener(this.getApp());
 }
 
-FM.MlHost.prototype.run = function(dmObj) {
+FM.MlHost.prototype.run = function(dmObj) {    
+    this._super("run");     
+
     if(this.getAttr('data-fmml-run-maximized','false') == 'true') {
         this.onMaximize();
     }
 
-    var id = this.getAttr("data-fmml-object-id",'');
-    var className = this.getAttr("data-fmml-object-class",'');
-    var objRef = this.getAttr("data-fmml-object-ref",'');
-    this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
-    
-    // object
-    if(FM.isset(dmObj) && dmObj && (className == '' || dmObj.getSubClassName() == className)){
-        this.setProperty('dmObjectCreated','false');
-        this.setDmObject(dmObj);
-    } else if(objRef != '' && FM.startsWith(objRef,'@')) {
-        dmObj = FM.resolveAttrValue(null,"-",objRef,{
-            A: this.getApp(),
-            H: this
-        });
-        this.setProperty('dmObjectCreated','false');
-        this.setDmObject(dmObj);
-    } else {
-        if(this.getAttr('data-fmml-master-host','') != '') {
-            var mhostid = this.getAttr('data-fmml-master-host','');
-            if(mhostid == 'true') {
-                this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
-            } else {            
-                var mhostnode = document.getElementById(mhostid);
-                if(mhostnode && FM.isset(mhostnode.fmmlHost) && mhostnode.fmmlHost) {
-                    this.masterHost = mhostnode.fmmlHost;
-                }
-            }
-            if(this.masterHost) {
-                this.masterHost.addListener(this);
-                this.masterHostDm = this.masterHost.getDmObject();
-                if(this.masterHostDm) this.masterHostDm.addListener(this);
-            }
-        }
-        
-        this._checkMasterReload();        
-    }
-
-    this._super("run");     
-    this.executed = true;
-    
+    // determine host dmobject
+    this._selectDmObject(dmObj);
+ 
+    // run all observers
     var obsrv = this.listOfObservers;
     for(var id in obsrv) {
         try {
@@ -94,132 +162,6 @@ FM.MlHost.prototype.run = function(dmObj) {
             this.log(e,FM.logLevels.error,'MlHost.run');
         }
     }
-}
-
-
-FM.MlHost.prototype._checkMasterReload = function() {
-    var id = this.getAttr("data-fmml-object-id",'');
-    var className = this.getAttr("data-fmml-object-class",'');
-    
-    if(this.getAttr('data-fmml-use-global-args') == 'true'){
-        var args = FM.getArgs();
-        if(id == '') id = FM.getAttr(args,'id','');
-        if(className == '') className = FM.getAttr(args,'cls','');        
-    }
-    
-    //FM.resolveAttrValue = function(options,attrName,def,context)
-    if(this.masterHost) {
-        id = FM.resolveAttrValue(null,"-",id,{
-            A: this.masterHost.getApp(),
-            H: this.masterHost, 
-            D: this.masterHostDm
-        });
-        className = FM.resolveAttrValue(null,"-",className,{
-            A: this.masterHost.getApp(),
-            H: this.masterHost, 
-            D: this.masterHostDm
-        });
-    } else {
-        id = FM.resolveAttrValue(null,"-",id,{
-            A: this.getApp(),
-            H: this, 
-            D: this.getDmObject()
-        });
-        className = FM.resolveAttrValue(null,"-",className,{
-            A: this.getApp(),
-            H: this, 
-            D: this.getDmObject()
-        });
-    }
-
-    if(id == this.clsParams.id && className == this.clsParams.className) return;
-    
-    this.clsParams = {
-        id: id,
-        className: className
-    }
-    if(id != '') {
-        var fnName = 'get' + className;
-        if(id != '' && className != '' && FM.isset(this.app[fnName])) {
-            var me = this;
-            
-            this.app[fnName](id,function(isok,oObj) {
-                if(isok) {
-                    me.setDmObject(oObj);
-                    me.setProperty('dmObjectCreated','true');
-                }
-                else {
-                    me.setDmObject(null);
-                }
-            });
-        }
-    } else {
-        if(className != '') {
-            var attrs = {};
-            this.forEachAttr(function(n,v) {
-                if(FM.startsWith(n,'data-fmml-object-attr-')) {
-                    attrs[n.substr(22)] = v;
-                }
-                return true;
-            });
-            var oObj = FM.DmObject.newObject(this.getApp(),className, attrs);
-            this.setProperty('dmObjectCreated','true');
-            this.setDmObject(oObj);
-        }
-    }
-}
-
-FM.MlHost.prototype.dispose = function() {
-    if(this.masterHost) {
-        this.masterHost.removeListener(this);
-        if(this.masterHostDm) this.masterHostDm.removeListener(this);
-    }
-    
-    this.app.removeListener(this);
-    if(this.node) this.node.fmmlHost = null;
-    var obsrv = this.listOfObservers;
-    for(var id in obsrv) {
-        try {
-            obsrv[id].dispose();
-            
-        } catch(e) {
-            this.log(e,FM.logLevels.error,'MlHost.dispose');
-        }
-    }
-    this.listOfObservers = [];
-    this.setDmObject();
-    this.executed = false;
-    
-    this._super("dispose");
-    return true;
-}
-
-FM.MlHost.prototype.setNode = function(n) {
-    this.node = FM.isset(n) && n ? n : null;
-}
-
-FM.MlHost.prototype.getNode = function() {
-    return this.node;
-}
-
-
-FM.MlHost.prototype.setDmObject = function(o) {
-    this._super('setDmObject',o,true);
-
-    this.updateAllObservers();    
-    this.fireEvent("onSetDmObject",this.dmObject);
-}
-
-
-FM.MlHost.prototype.getLinkedHost = function() {
-    var lhost = this.getAttr('data-fmml-linked-host','');
-    if(lhost != '') {
-        var node = document.getElementById(lhost);
-        if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-            return node.fmmlHost;
-        }
-    }
-    return null;
 }
 
 FM.MlHost.prototype.addObserver = function(o) {
@@ -301,6 +243,45 @@ FM.MlHost.prototype.sendEventToObservers = function(sender,ev,data) {
     return fnd;
 }
 
+FM.MlHost.prototype.dispose = function() {
+    if(this.masterHost) {
+        this.masterHost.removeListener(this);
+    }    
+    this.app.removeListener(this);
+    if(this.node) this.node.fmmlHost = null;
+    var obsrv = this.listOfObservers;
+    for(var id in obsrv) {
+        try {
+            obsrv[id].dispose();
+            
+        } catch(e) {
+            this.log(e,FM.logLevels.error,'MlHost.dispose');
+        }
+    }
+    this.listOfObservers = [];
+    this.setDmObject();
+    this.executed = false;
+    
+    this._super("dispose");
+    return true;
+}
+
+FM.MlHost.prototype.setNode = function(n) {
+    this.node = FM.isset(n) && n ? n : null;
+}
+
+FM.MlHost.prototype.getNode = function() {
+    return this.node;
+}
+
+
+FM.MlHost.prototype.setDmObject = function(o) {
+    this._super('setDmObject',o,true);
+
+    this.updateAllObservers();    
+    this.fireEvent("onSetDmObject",this.dmObject);
+}
+
 FM.MlHost.prototype._getErrorHost = function() {
     var errnode = document.getElementById(this.getAttr('data-fmml-error-host',''));
     return (
@@ -348,22 +329,44 @@ FM.MlHost.prototype.setLastError = function(oErr) {
     return oErr;
 }
 
-// events
-FM.MlHost.prototype.onChange = function(sender,obj) {
-    if(sender == this.masterHostDm) {
-        this._checkMasterReload();
-    } else if(sender == this.getDmObject()) {
-        this.updateAllObservers();
-    }
-    
-    var hostToRun =  this.getAttr('data-fmml-run-on-update','');
-    if(hostToRun != '') {
-        var node = document.getElementById(hostToRun);
+// ?
+FM.MlHost.prototype._getHostByIdInAttr = function(attr) {
+    var lhost = this.getAttr(attr,'');
+    if(lhost != '') {
+        var node = document.getElementById(lhost);
         if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-            node.fmmlHost.run(this.getDmObject());
+            return node.fmmlHost;
         }
     }
+    return null;
+}
 
+// host with attrs for fetch or creation of new obj
+FM.MlHost.prototype.getLinkedHost = function() {
+    return this._getHostByIdInAttr('data-fmml-linked-host','');
+}
+
+// host with dmobj to use
+FM.MlHost.prototype.getMasterHost = function() {
+    return this._getHostByIdInAttr('data-fmml-master-host','');
+}
+
+
+
+// events
+FM.MlHost.prototype.onChange = function(sender,obj) {
+    if(sender == this.getDmObject()) {
+        this.updateAllObservers();
+    
+        var hostToRun =  this.getAttr('data-fmml-run-on-update','');
+        if(hostToRun != '') {
+            var node = document.getElementById(hostToRun);
+            if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
+                node.fmmlHost.run(this.getDmObject());
+            }
+        }
+    }
+    
     // kraj
     return true;
 }
@@ -372,10 +375,7 @@ FM.MlHost.prototype.onChange = function(sender,obj) {
 
 FM.MlHost.prototype.onSetDmObject = function(sender,obj) {
     if(sender == this.masterHost) {
-        if(this.masterHostDm) this.masterHostDm.removeListener(this);
-        this.masterHostDm = obj;
-        if(this.masterHostDm) this.masterHostDm.addListener(this);
-        this._checkMasterReload();
+        this.setDmObject(obj);
     }
     
     return true;
@@ -429,6 +429,129 @@ FM.MlHost.prototype.onEvent = function(sender,ev,data,calledlist) {
     }
     
     return cl;
+}
+
+// host dmobject functions 
+FM.MlHost.prototype._selectDmObject = function(dmObj) {
+    this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
+    
+    // conf
+    var objRef = this.getAttr("data-fmml-object-ref",'');            
+    var mhostid = this.getAttr('data-fmml-master-host','');
+    var id = this.getAttr("data-fmml-object-id",'');
+    var className = this.getAttr("data-fmml-object-class",'');
+    var dmconfName = this.getAttr('data-fmml-list','');
+    
+    // fill attrs from node attr and linked host
+    var dmAttrs = {};
+    this.forEachAttr(function(n,v) {
+        if(FM.startsWith(n,'data-fmml-object-attr-')) {
+            dmAttrs[n.substr(22)] = v;
+        }
+        return true;
+    });
+    var lhost = this.getLinkedHost();
+    if(lhost) {
+        var lhostObj = lhost.getDmObject();
+        lhostObj.forEachAttr(function(pname,value) {
+            dmAttrs[pname] = value;
+            return true;
+        });        
+    }        
+    
+    // == object is sent (not null, same sc name as data-fmml-object-class or data-fmml-object-class is not defined) ==
+    // disposing depends of data-fmml-object-destroy-on-dispose (def false)
+    if(FM.isset(dmObj) && dmObj && dmObj.getSubClassName && (className == '' || dmObj.getSubClassName() == className)){
+        this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'false'));
+        this.setDmObject(dmObj);
+        return;
+    } 
+        
+    // == check ref param (data-fmml-object-ref, start with @) =================
+    // disposing depends of data-fmml-object-destroy-on-dispose (def true)
+    else if(objRef != '' && FM.startsWith(objRef,'@')) {
+        this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
+        dmObj = FM.resolveAttrValue(null,"-",objRef,{
+            A: this.getApp(),
+            H: this
+        });
+        this.setDmObject(dmObj ? dmObj : null);
+        return;
+    } 
+    
+    // == master host (true - first parent host, or dom node id with host) =====
+    // disposing depends of data-fmml-object-destroy-on-dispose (def false)
+    if(mhostid != '') {
+        if(mhostid == 'true') {
+            this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
+        } else {            
+            this.masterHost = this.getMasterHost();
+        }
+        
+        // if found, add listener & get dmobject
+        if(this.masterHost) {
+            this.masterHost.addListener(this);
+            dmObj = this.masterHost.getDmObject();
+            this.setDmObject(dmObj ? dmObj : null);
+            this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'false'));
+            return;
+        }      
+    }
+
+    // == get object by class & id =============================================
+    
+    // resolve class name & id
+    id = id == 'true' ? id :        
+        FM.resolveAttrValue(null,"-",id,{        
+        A: this.getApp(),
+        H: this, 
+        D: this.getDmObject()
+    });
+    
+    className = FM.resolveAttrValue(null,"-",className,{
+        A: this.getApp(),
+        H: this, 
+        D: this.getDmObject()
+    });
+    
+    // if class is defined  and id is not empty (real id or true) call getter  
+    // in host or in app
+    // if id == 'true' send obj with attrs to fn or id if it is not
+    if(className != '' && id != '') {
+        this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
+        
+        // call args                
+        var fnName= 'get' + className;
+        var args = id == 'true' ? dmAttrs : id;
+        var me = this;        
+        var cbfn = function(isok,oObj) {
+            if(isok) {
+                me.setDmObject(oObj);
+            }
+            else {
+                me.setDmObject(null);
+            }
+        };
+
+        // check for and call get function (first in host, then in app, generic fn in app on end)    
+        if(FM.isset(this[fnName])) {
+            this[fnName](args ,cbfn);
+        } else if(this.getApp() && FM.isset(this.getApp()[fnName])) {
+            this.getApp()[fnName](id,cbfn);
+        } else if(this.getApp() && dmconfName != '') {
+            this.getApp().getCustomObject(
+                dmconfName,
+                id == 'true' ? dmAttrs : {id: id},
+                cbfn
+            );
+        }
+        return;
+    }
+
+    // create dmobject from defined attributes (def)
+    var oObj = FM.DmObject.newObject(this.getApp(),className == '' ? 'Object' : className, dmAttrs);
+    this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
+    this.setDmObject(oObj);    
 }
 
 // static
@@ -559,7 +682,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                 // ako je observer
                 if(jqobj.attr('data-fmml-observer')) { 
                     try {
-                        obs = FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
+                        var obs = FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
                         if(obs) {
                             if(obs.getHost()) {
                                 obs.getHost().addObserver(obs);
@@ -610,7 +733,7 @@ FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
                         FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
                     }                  
                 }
-                // end
+            // end
             }            
         }
         

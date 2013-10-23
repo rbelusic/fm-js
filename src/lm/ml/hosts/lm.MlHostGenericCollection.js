@@ -265,9 +265,8 @@ FM.MlHostGenericCollection.prototype._createList = function(oObj) {
     if(!oObj) {        
         var lhost = this.getLinkedHost();
         if(lhost) {
-            var node = document.getElementById(lhost);
-            if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-                oObj = node.fmmlHost.getDmObject();
+            if( lhost) {
+                oObj = lhost.getDmObject();
             }         
         }
     }

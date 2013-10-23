@@ -92,6 +92,52 @@ FM.AppObject.prototype.setLastError = function(oErr) {
     return oErr;
 }
 
+FM.AppObject.prototype.getCustomOblect = function(listId,attrs,cbfn) {
+    id = FM.isset(id) && id && FM.isString(id) ? id : '';
+    attrs  = FM.isset(attrs) && attrs && FM.isObject(attrs) ? attrs : {};
+    var me = this;
+    
+    var dmlist = this.dmListFactory(attrs,listId,true);
+    
+    var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};
+    
+    // create listener 
+    var lstnr = {
+        onListEnd: function(sender,data) {
+            // show some info in console
+            me.log("End of dmList request.",FM.logLevels.info,'FM.AppObject.getCustomOblect.onListEnd');
+            // get first object from list
+            var oData = null;
+            FM.forEach(data.Added,function(id, obj) {
+                oData = obj;
+                return false; // exit from loop
+            });
+            
+            sender.dispose(); // dispose dmlist
+            
+            // return data
+            if(oData) {
+                callbackFn(true,oData);
+            } else {
+                me.log("No data returned.",FM.logLevels.warn,'FM.AppObject.getCustomOblect.onListEnd');
+                callbackFn(false,null);
+            }
+            return true;
+        },
+        onListError: function(sender,data) {
+            sender.dispose();
+            me.log("Error fetching data." + FM.serialize(data && data.getAttr ?data.getAttr() : {}),FM.logLevels.error, 'FM.AppObject.getCustomOblect.onListEnd');
+            callbackFn(false,null);
+            return true;
+        }
+    };
+    // add listener to dmlist and wait for onListEnd or onListError event
+    dmlist.addListener(lstnr);
+    
+    // fetch data from server
+    dmlist.getData();
+}
+
 
 FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
     
