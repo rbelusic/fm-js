@@ -1,32 +1,94 @@
 /**
- * 
- * Basic ML observer class. 
- *   
- * <table>
- * <th>List of ML node attributes</th>
- * <tr><td>data-fmml-attr-name</td><td>name of attribute</td></tr>
- * <tr><td>data-fmml-attr-default-value</td><td>default value of attribute</td></tr>
- * <tr><td>data-fmml-attr-type</td><td>type of attribute (string, number, date)</td></tr>
- * <tr><td>data-fmml-attr-decimals</td><td>round value to number of decimals</td></tr>
- * <tr><td>data-fmml-date-is-utc</td><td>set true if dates is in UTC</td></tr>
- * <tr><td>data-fmml-date-display-as</td><td>display dates in provided format (date, datetime, time, ago, local)</td></tr>
- * <tr><td>data-fmml-nuber-display-decimals</td><td>display value rounded to number of decimals</td></tr>
- * <tr><td>data-fmml-validation-rules</td><td>validation rules for observer</td></tr>
- * <tr><td>data-fmml-validation-message</td><td>validation error message</td></tr>
- * <tr><td>data-fmml-force-validation</td><td>force validation on value change if value is empty too</td></tr>
- * <tr><td>data-fmml-run-on-update</td><td>node id of host to run on update</td></tr>
- * </table>
- * 
- * <table>
- * <th>List of ML CSS classes</th>
- * <tr><td>fmmlInvalidValue</td><td>attribute value is invalid</td></tr>
- * </table>
- * 
- * @class FM.MlObserver
- * @extends FM.LmObject
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
- */
+* Generic ML MlObserver class.  
+* 
+* <br />List of DOM attributes (check inherited attributes too):
+* <table class="fm-mlattrs">
+*  <thead>
+*   <tr>
+*    <th>Name</th><th>description</th><th>Default</th>
+*   </tr>
+*  </thead>
+*  <tbody>
+*   <tr>
+*    <td>data-fmml-attr-name</td>
+*    <td>Host DM.Object attribute to observe.</td>
+*    <td>-</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-attr-type</td>
+*    <td>Host DM.Object attribute type.</td>
+*    <td>[string], number, date</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-attr-decimals</td>
+*    <td>Number of decimals to display. Applies only if attribute type is <i>number</i>.</td>
+*    <td></td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-date-format</td>
+*    <td>Date format of attribute value. Applies only if attribute type is <i>date</i>.</td>
+*    <td></td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-date-is-utc</td>
+*    <td>Attribute value representing date is UTC. Applies only if attribute type is <i>date</i>.</td>
+*    <td>[true], false</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-attr-default-value</td>
+*    <td>Default attribute value.</td>
+*    <td>-</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-date-display-as</td>
+*    <td>Display date in given format. Applies only if attribute type is <i>date</i>.</td>
+*    <td></td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-error-host</td>
+*    <td>DOM node id of error host</td>
+*    <td>-</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-validation-rules</td>
+*    <td>
+*      Observer validation rules separated by semicolon.
+*    </td>
+*    <td>-</td>
+*   </tr>  
+*   <tr>
+*    <td>data-fmml-validation-message</td>
+*    <td>
+*      Error message if validation fails.
+*    </td>
+*    <td>Invalid value.</td>
+*   </tr>
+*   <tr>
+*   <tr>
+*    <td>data-fmml-force-validation</td>
+*    <td>
+*      Validate observer even if attribute value is empty.
+*    </td>
+*    <td>[id],true</td>
+*   </tr>
+*   <tr>
+*    <td>data-fmml-run-on-update</td>
+*    <td>
+*      DOM node id of the host to run on attribute update. 
+*      Current host DM object is sent as argument.
+*    </td>
+*    <td>-</td>
+*   </tr>
+*  </tbody>
+* </table>
+*  
+* @class FM.MlObserver
+* @memberOf FM
+* @extends FM.LmObject
+* @param {FM.AppObject} app application object.
+* @param {object} [attrs] DOM node attributes.
+* @param {DOMnode} node DOM node. 
+*/
 FM.MlObserver = FM.defineClass('MlObserver', FM.LmObject);
 
 // methods
@@ -337,7 +399,7 @@ FM.MlObserver.prototype._formatValue = function(value) {
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
     var dateFormat = this.getAttr('data-fmml-date-format', 
-        this.getApp().getAttr('fm_templates_date_format',undefined))
+        this.getApp().getAttr('fm_date_format',undefined))
     ;
 
 // dates
@@ -369,16 +431,10 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
     var dateFormat = this.getAttr(
         'data-fmml-date-display-as', 
-        this.getApp().getAttr('fm_templates_date_display_as',undefined)
+        this.getApp().getAttr('fm_date_display_as',undefined)
     );
-
-    var decplaces = parseInt(
-        this.getAttr(
-        'data-fmml-nuber-display-decimals',
-        this.getAttr('data-fmml-attr-decimals', '-1')
-        )
-        );
-    // var attrtemplate = this.getAttr('data-fmml-attr-template', '');
+    var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
+    
 
 // dates
     if (attrtype == "date") {
