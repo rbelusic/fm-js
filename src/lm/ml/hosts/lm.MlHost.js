@@ -1,5 +1,5 @@
 /**
-* Generic ML Host class.  
+* Generic ML Host class.
 * 
 * <br />List of DOM attributes (check inherited attributes too):
 * <table class="fm-mlattrs">
@@ -118,7 +118,6 @@
 * @param {object} [attrs] DOM node attributes.
 * @param {DOMnode} node DOM node. 
 */
-
 
 FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
 
