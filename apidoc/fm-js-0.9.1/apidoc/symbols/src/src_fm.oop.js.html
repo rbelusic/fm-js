@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Source - src/fm.oop.js</title>
+	<meta name="generator" content="JsDoc Toolkit" />
+
+	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/bootstrap.min.css" type="text/css" />
+        <link media="all" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../../css/prettify.css" type="text/css" />
+	<link media="print" rel="stylesheet" href="../../css/print.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="../../js/prettify.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body><div class="container-fluid">
+<!-- ============================== header ================================= -->
+	<!-- begin static/header.html -->
+        <nav class="header navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="http://rbelusic.github.io/fm-js/index.html">
+                        Fm-js&nbsp;<span style="font-size: 12px">API documentation</span>
+                    </a>
+                    <div class="nav-collapse navbar-responsive-collapse collapse">
+                        <ul id="class-file-selector" class="nav">
+                            <li class="active"><a href="../../index.html">Class Index</a></li>
+                            <li><a href="../../files.html">File Index</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../../symbols/FM.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">FM</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.AppObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">AppObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericError.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericError</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmGenericValue.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmGenericValue</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.DmTranslation.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DmTranslation</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.LmObject.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">LmObject</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlDateEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlDateEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlEdit.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlEdit</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlExtension.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlExtension</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHost.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHost</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostGenericCollection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostGenericCollection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlHostQueryParams.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlHostQueryParams</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlListOfValues.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlListOfValues</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserver</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserver.validationRules.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">validationRules</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverDisplay.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverDisplay</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverEvent.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverEvent</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListIndex.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListIndex</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListOrder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListOrder</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListSelection.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListSelection</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlObserverListState.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlObserverListState</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.MlTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">MlTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.Object.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Object</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.PageInfo.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">PageInfo</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstDmList.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstDmList</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.TstGeneric.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">TstGeneric</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtAjax.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtAjax</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtRegistry.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtRegistry</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTemplate.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTemplate</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimer.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimer</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTimerJob.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTimerJob</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.UtTranslations.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">UtTranslations</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.dateFormat.masks.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">masks</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevelNames.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevelNames</span></span></a></li>
+		
+			<li><a href="../../symbols/FM.logLevels.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">logLevels</span></span></a></li>
+		
+			<li></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+
+		<div id="content" class="span9">
+<!-- ============================== source code ============================ -->
+
+			<pre id="source-code" class="prettyprint linenums">/**
+ * @fileOverview This file has functions related to OOP.
+ * @review isipka
+ */
+
+/**
+ * @ignore
+ * 
+ */
+FM._findClassWithMethod = function(o, m) {
+    while (
+        FM.isset(o) &amp;&amp; o &amp;&amp;
+        (FM.getAttr(o, 'constructor.prototype.' + m, null) == FM.getAttr(o, '_parent.constructor.prototype.' + m, null))
+        ) {
+        o = o._parent;
+    }
+    return FM.isset(o) &amp;&amp; o ? o : null;
+
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM._super_stack = function(me, method, on) {
+    var mStack = FM.getAttr(me, '_parent_call_stack', []);
+
+    if (on) {
+        // only class with same method can call super
+        var startcls = FM._findClassWithMethod(
+            mStack.length == 0 || mStack[mStack.length - 1].m != method ?
+            me :
+            mStack[mStack.length - 1].oext,
+            method
+            );
+
+
+        mStack[mStack.length] = {
+            o: startcls,
+            m: method,
+            oext: FM._findClassWithMethod(startcls._parent, method)
+        };
+        me._parent_call_stack = mStack;
+        return mStack;
+
+        // new stack
+        if (mStack.length == 0 || mStack[mStack.length - 1].m != method) {
+            mStack[mStack.length] = {
+                o: me, //FM._findClassWithMethod(me._parent,method), 
+                m: method
+            };
+
+        } else { // old stack
+            mStack[mStack.length] = {
+                o: mStack[mStack.length - 1].o, //FM._findClassWithMethod(mStack[mStack.length-1].o._parent,method), 
+                m: method
+            }
+        }
+    } else {
+        mStack = Array.prototype.slice.call(mStack, 0, mStack.length - 1);
+    }
+
+    me._parent_call_stack = mStack;
+    return mStack;
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM._super = function() {
+    var me = arguments[0]
+    var callArgs = arguments[1];
+    var method = callArgs[0];
+
+    var mStack = FM._super_stack(me, method, true);
+    try {
+        // nadji klasu od koje polazis
+        var fnThis = mStack &amp;&amp; mStack.length &gt; 0 &amp;&amp; mStack[mStack.length - 1].oext ?
+            FM._findClassWithMethod(mStack[mStack.length - 1].oext, method) :
+            null
+            ;
+
+        //if(fnThis) var retc = fnThis[method].apply(me, Array.prototype.slice.call(callArgs, 1));
+        var retc = fnThis ?
+            fnThis[method].apply(me, Array.prototype.slice.call(callArgs, 1))
+            : undefined;
+
+        // makni stack
+        FM._super_stack(me, method, false);
+
+        return retc;
+    } catch (e) {
+        // makni stack
+        FM._super_stack(me, method, false);
+        return undefined;
+    }
+
+
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM.loadScript = function(url, cbfn) {
+    $.getScript(url, function() {
+        if (FM.isFunction(cbfn)) {
+            cbfn();
+        }
+    });
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM.extend = function(oDest, oSrc, isclass) {
+    isclass = FM.isset(isclass) &amp;&amp; isclass;
+    oDest = oDest ? oDest : {};
+    oSrc = oSrc ? oSrc : {};
+
+    for (var property in oSrc) {
+        oDest[property] = oSrc[property];
+    }
+
+    if (FM.isset(isclass) &amp;&amp; isclass == true) {
+        oDest._super = function() {
+            return FM._super(this, arguments);
+        }
+    }
+
+    return oDest;
+}
+
+/**
+ * Create new FM class.
+ * 
+ * @param {string} name Name of new class.
+ * @param {FM.Object} [ext=null] FM class to extend.
+ * @returns {function}
+ */
+FM.defineClass = function(name, ext) {
+    name = FM.isset(name) &amp;&amp; FM.isString(name) &amp;&amp; name != '' ? name : 'Undefined';
+    ext = FM.isset(ext) &amp;&amp; FM.isFunction(ext) ? ext : null;
+    var cls = function() {
+        if (this._init)
+            this._init.apply(this, arguments);
+    };
+
+    FM.extendClass(cls, ext);
+    cls.className = name;
+
+    return cls;
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM.extendClass = function(oDest, oSrc) {
+    if (oSrc) {
+        for (var property in oSrc.prototype) {
+            oDest.prototype[property] = oSrc.prototype[property];
+        }
+        oDest.prototype._parent = oSrc.prototype;
+    } else {
+        oDest.prototype._parent = null;
+    }
+
+    oDest.prototype._super = function() {
+        return FM._super(this, arguments);
+    }
+
+    return oDest;
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM.stringPtrToObject = function(objptr, lm, app) {
+    var akeys = objptr.split(".");
+    if (akeys.length &lt; 1)
+        return null;
+
+    var parent = akeys[0] == 'APP' ? app : (
+        akeys[0] == 'LM' ? lm : window
+        );
+    var startIndex = parent == window ? 0 : 1;
+
+    for (var i = startIndex; i &lt; akeys.length; i++) {
+        if (!FM.isset(parent[akeys[i]]))
+            return null;
+        parent = parent[akeys[i]];
+    }
+
+    return parent;
+}
+
+/**
+ * @ignore
+ * 
+ */
+FM.cloneObject = function(obj) {
+    if (!FM.isset(obj) || !FM.isObject(obj))
+        return obj;
+    return FM.extend({}, obj);
+}
+</pre>
+		</div>
+	</div>
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Wed Oct 23 2013 13:10:41 GMT+0000 (UTC)</p>
+	</footer>
+</div>
+<script type="text/javascript">
+	prettyPrint();
+	var i = 1;
+	$('#source-code li').each(function() {
+		$(this).attr({ id: 'line' + (i++) });
+	});
+</script>
+</body>
+</html>
