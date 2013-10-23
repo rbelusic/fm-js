@@ -28,10 +28,12 @@ echo "Release filename: $REL_FILE_NAME"
 echo "Preparing release ..."
 cd tmp
 cp -r $BCWD/build $REL_FNAME
-rm ../releases/$REL_FNAME.zip
+rm -f ../releases/$REL_FNAME.zip
 zip -r ../releases/$REL_FNAME.zip $REL_FNAME
 cd ..
 rm -rf tmp
+rm -rf apidoc/{$REL_FNAME,fm-js-latest-unstable}
+
 cp -r $BCWD/build/apidoc apidoc/$REL_FNAME
 cp -r $BCWD/build/apidoc apidoc/fm-js-latest-unstable
 
