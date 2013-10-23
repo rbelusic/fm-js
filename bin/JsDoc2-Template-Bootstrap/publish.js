@@ -159,7 +159,8 @@ function publish(symbolSet) {
 	var jsPaths = [
       'jquery-1.7.2.min.js',
       'accordion.js',
-			'google-code-prettify/prettify.js'
+                'bootstrap/js/bootstrap.min.js',
+                'google-code-prettify/prettify.js'
 		];
 	var numOfJsPaths = jsPaths.length;
 	var jsPath;
@@ -173,6 +174,7 @@ function publish(symbolSet) {
 	var cssPaths = [
 			'common.css',
 			'bootstrap/css/bootstrap.min.css',
+			'bootstrap/css/bootstrap-responsive.min.css',
 			'google-code-prettify/prettify.css',
 			'print.css'
 		];
