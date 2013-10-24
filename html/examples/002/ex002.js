@@ -48,7 +48,7 @@ FM.DmObject.addSubClassType('FacebookPage',fmdemo.DmFacebookPage);
 
 // == create dm list ==========================================
 // DmList is list containing multiple DmObjects
-FM.DmList.addConfiguration('getFacebookPage', {  
+FM.DmList.addConfiguration('getFacebookPageList', {  
     url: 'https://graph.facebook.com/[:id]',
     method: 'GET',
     contentType: 'application/x-www-form-urlencoded',
@@ -66,7 +66,7 @@ fmdemo.AppFmDemo.prototype.getFacebookPage = function(id,cbfn) {
     var dmlist = this.dmListFactory({
             id: id
         },
-        'getFacebookPage',
+        'getFacebookPageList',
         true
     );
     var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};

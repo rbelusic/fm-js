@@ -157,7 +157,13 @@ FM.resolveAttrName = function(options, attrName, def, context) {
     // eval ?
     if (FM.isString(attrName) && FM.startsWith(attrName, '@')) {
         v = attrName.substring(FM.startsWith(attrName, '@@') ? 2 : 1);
+        
         context._fn = function() {
+            var estr = "";
+            for(var cprop in context) {
+                estr += "; var " + cprop + "= this." + cprop;
+            }
+            eval(estr);
             return eval(v);
         }
         try {

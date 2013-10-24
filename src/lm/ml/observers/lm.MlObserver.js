@@ -1,94 +1,97 @@
 /**
-* Generic ML MlObserver class.  
-* 
-*  
-* @class FM.MlObserver
-* @memberOf FM
-* @extends FM.LmObject
-* @param {FM.AppObject} app application object.
-* @param {object} [attrs] DOM node attributes.
-* @param {DOMnode} node DOM node. 
-* List of DOM attributes (check inherited attributes too):
-* <table class="fm-mlattrs">
-*  <thead>
-*   <tr>
-*    <th>Name</th><th>description</th><th>Default</th>
-*   </tr>
-*  </thead>
-*  <tbody>
-*   <tr>
-*    <td>data-fmml-attr-name</td>
-*    <td>Host DM.Object attribute to observe.</td>
-*    <td>-</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-attr-type</td>
-*    <td>Host DM.Object attribute type.</td>
-*    <td>[string], number, date</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-attr-decimals</td>
-*    <td>Number of decimals to display. Applies only if attribute type is <i>number</i>.</td>
-*    <td></td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-date-format</td>
-*    <td>Date format of attribute value. Applies only if attribute type is <i>date</i>.</td>
-*    <td></td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-date-is-utc</td>
-*    <td>Attribute value representing date is UTC. Applies only if attribute type is <i>date</i>.</td>
-*    <td>[true], false</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-attr-default-value</td>
-*    <td>Default attribute value.</td>
-*    <td>-</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-date-display-as</td>
-*    <td>Display date in given format. Applies only if attribute type is <i>date</i>.</td>
-*    <td></td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-error-host</td>
-*    <td>DOM node id of error host</td>
-*    <td>-</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-validation-rules</td>
-*    <td>
-*      Observer validation rules separated by semicolon.
-*    </td>
-*    <td>-</td>
-*   </tr>  
-*   <tr>
-*    <td>data-fmml-validation-message</td>
-*    <td>
-*      Error message if validation fails.
-*    </td>
-*    <td>Invalid value.</td>
-*   </tr>
-*   <tr>
-*   <tr>
-*    <td>data-fmml-force-validation</td>
-*    <td>
-*      Validate observer even if attribute value is empty.
-*    </td>
-*    <td>[id],true</td>
-*   </tr>
-*   <tr>
-*    <td>data-fmml-run-on-update</td>
-*    <td>
-*      DOM node id of the host to run on attribute update. 
-*      Current host DM object is sent as argument.
-*    </td>
-*    <td>-</td>
-*   </tr>
-*  </tbody>
-* </table>
-*/
+ * Generic ML MlObserver class.  
+ * 
+ *  
+ * @class FM.MlObserver
+ * @memberOf FM
+ * @extends FM.LmObject
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] DOM node attributes.
+ * @param {DOMnode} node DOM node. 
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-attr-name</td>
+ *    <td>Host DM.Object attribute to observe.</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-type</td>
+ *    <td>Host DM.Object attribute type.</td>
+ *    <td>[string], number, date</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-decimals</td>
+ *    <td>Number of decimals to display. Applies only if attribute type is <i>number</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-format</td>
+ *    <td>Date format of attribute value. Applies only if attribute type is <i>date</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-is-utc</td>
+ *    <td>Attribute value representing date is UTC. Applies only if attribute type is <i>date</i>.</td>
+ *    <td>[true], false</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-default-value</td>
+ *    <td>Default attribute value.</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-display-as</td>
+ *    <td>Display date in given format. Applies only if attribute type is <i>date</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-error-host</td>
+ *    <td>DOM node id of error host</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-validation-rules</td>
+ *    <td>
+ *      Observer validation rules. Using FM macros (if rules starts with @) or JavaScript eval.
+ *      Macro validation rules are separated by semicolon.
+ *      Eval method must return <i>true</i> to consider observer value valid. Expression is evaluated
+ *      in FM context: this.A (application), this.H (host), this.O (observer), this.D (DM object)
+ *    </td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-validation-message</td>
+ *    <td>
+ *      Error message if validation fails.
+ *    </td>
+ *    <td>Invalid value.</td>
+ *   </tr>
+ *   <tr>
+ *   <tr>
+ *    <td>data-fmml-force-validation</td>
+ *    <td>
+ *      Validate observer even if attribute value is empty.
+ *    </td>
+ *    <td>[id],true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-update</td>
+ *    <td>
+ *      DOM node id of the host to run on attribute update. 
+ *      Current host DM object is sent as argument.
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ */
 FM.MlObserver = FM.defineClass('MlObserver', FM.LmObject);
 
 // methods
@@ -98,7 +101,7 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     this.log(attrs, FM.logLevels.debug, 'MlObserver._init');
 
-    this.node = node;    
+    this.node = node;
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -109,10 +112,10 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     // find error host
     this.errorObject = this.getAttr('data-fmml-error-host', '') != '' ?
-        new FM.DmGenericError({
-        id: '',
-        text: ''
-    }) : null;
+            new FM.DmGenericError({
+                id: '',
+                text: ''
+            }) : null;
 
     this.log("New observer created.", FM.logLevels.debug, 'MlObserver._init');
 }
@@ -179,9 +182,9 @@ FM.MlObserver.prototype.dispose = function() {
 FM.MlObserver.prototype._getErrorHost = function() {
     var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
     return (
-        errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
-        errnode.fmmlHost : null
-        );
+            errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
+            errnode.fmmlHost : null
+            );
 }
 
 FM.MlObserver.prototype.getLastError = function() {
@@ -226,13 +229,25 @@ FM.MlObserver.prototype.isValid = function(force) {
     var value = this.getValue();
 
     if (rules != '') {
-        force = FM.isset(force) ? force : 
-            (
-                this.getAttr('data-fmml-force-validation','false') == 'true' ? 
-                true : false
-            );
-        
+        force = FM.isset(force) ? force :
+                (
+                        this.getAttr('data-fmml-force-validation', 'false') == 'true' ?
+                        true : false
+                        );
+
         if (force || value != "") {
+            // eval
+            if (FM.startsWith(rules, "@")) {
+                var value = FM.resolveAttrName({}, rules, false, {
+                    A: this.getApp(),
+                    H: this.getHost(),
+                    O: this,
+                    D: this.getDmObject()
+                });
+                return (value == true);
+            }
+
+            // predefined (old way)
             var allRules = rules != null && rules != '' ? rules.split(";") : [];
 
             for (var i = 0; i < allRules.length; i++) {
@@ -275,9 +290,9 @@ FM.MlObserver.prototype.isValid = function(force) {
     }
 
     this.log(
-        response ? "Observer is valid" : "Validation failed: " + ruleOperator,
-        FM.logLevels.debug, 'MlObserver.isValid'
-        );
+            response ? "Observer is valid" : "Validation failed: " + ruleOperator,
+            FM.logLevels.debug, 'MlObserver.isValid'
+            );
     return response; //no rules
 }
 
@@ -398,14 +413,14 @@ FM.MlObserver.prototype._formatValue = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
-    var dateFormat = this.getAttr('data-fmml-date-format', 
-        this.getApp().getAttr('fm_date_format',undefined))
-    ;
+    var dateFormat = this.getAttr('data-fmml-date-format',
+            this.getApp().getAttr('fm_date_format', undefined))
+            ;
 
 // dates
     if (attrtype == "date") {
         var dateObj = null;
-        if(FM.isObject(value) && FM.isset(value.getTime)) {
+        if (FM.isObject(value) && FM.isset(value.getTime)) {
             dateObj = value;
         } else if (FM.isDateString(value)) {
             dateObj = FM.parseDateString(value, dateIsUtc);
@@ -414,7 +429,7 @@ FM.MlObserver.prototype._formatValue = function(value) {
         }
 
         if (dateObj) {
-            value = FM.dateToString(dateObj, dateIsUtc,dateFormat);
+            value = FM.dateToString(dateObj, dateIsUtc, dateFormat);
         }
     } else if (attrtype == "number") {
         value = parseFloat(0.0 + value);
@@ -430,11 +445,11 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
     var dateFormat = this.getAttr(
-        'data-fmml-date-display-as', 
-        this.getApp().getAttr('fm_date_display_as',undefined)
-    );
+            'data-fmml-date-display-as',
+            this.getApp().getAttr('fm_date_display_as', undefined)
+            );
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
-    
+
 
 // dates
     if (attrtype == "date") {
@@ -468,7 +483,7 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
 FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.setNodeValue');
     force = FM.isset(force) && force == true ? true : false;
-    
+
     // get value
     var nfvalue = this.getValue();
 
@@ -495,18 +510,18 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     }
 
     // def render
-    var doSelection =false;
+    var doSelection = false;
     try {
         doSelection = this.node.selectionStart ? true : false;
-    } catch(e){
-        
+    } catch (e) {
+
     }
-    var selStart = 0,selEnd = 0;
+    var selStart = 0, selEnd = 0;
     if (doSelection) {
         selStart = this.node.selectionStart;
         selEnd = this.node.selectionEnd;
     }
-    
+
     if (this.node.nodeName == 'INPUT' || this.node.nodeName == 'TEXTAREA') {
         if ($(this.node).is(':checkbox')) {
             if (value && value != '' && value.toLowerCase() != 'false') {
@@ -520,9 +535,9 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
             $(this.node).val(value);
         }
     } else if (this.node.nodeName == 'IMG') {
-        $(this.node).attr("src",value);
+        $(this.node).attr("src", value);
     } else if (this.node.nodeName == 'A') {
-        $(this.node).attr("href",value);
+        $(this.node).attr("href", value);
     } else if (FM.isset(this.node.value)) {
         $(this.node).val(value);
     } else {
