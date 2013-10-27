@@ -1,3 +1,4 @@
+/** @fileoverview http://social.msdn.microsoft.com/Forums/en-US/9944e069-7af7-4854-8773-9b4269d49df2/why-registry-pattern-is-antipattern-and-what-is-alternative-for-it*/
 /**
 * Registry class. 
 * 
