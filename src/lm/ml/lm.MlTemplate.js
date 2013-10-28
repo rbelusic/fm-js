@@ -1,15 +1,54 @@
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 /**
-* ML template class. 
+* Generic ML template class. 
 * 
 * @class FM.MlTemplate
 * @memberOf FM
 * @extends FM.LmObject
-* @param {FM.AppObject} app application object
-* @param {object} [attrs] DOM node attributes
-* @param {DOMnode} node DOM node
-* 
-* 
-*/    
+* @param {FM.AppObject} app Application object.
+* @param {object} [attrs] DOM node attributes.
+* @param {node} node DOM node.
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-template-type</td>
+ *    <td>Template type (only "route" is currently supported)</td>
+ *    <td>[...], route</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-template</td>
+ *    <td>Template name</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-template-replace</td>
+ *    <td>
+ *      Replace DOM node instead of his content.
+ *    </td>
+ *    <td>[false], true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-init</td>
+ *    <td>
+ *      Run template after creation.
+ *    </td>
+ *    <td>[true], false</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ */
 FM.MlTemplate = FM.defineClass('MlTemplate',FM.LmObject);
 
 // methods
@@ -26,16 +65,34 @@ FM.MlTemplate.prototype._init = function(app,attrs,node) {
 }
 
 
+/**
+ * Dispose template.
+ * 
+ * @public
+ * @function 
+ */
 FM.MlTemplate.prototype.dispose = function() {
     FM.MlHost.disposeChildNodes(this.getNode());
     this._super("dispose");
 }
 
+
+/**
+ * Returns template DOM node.
+ * 
+ * @public
+ * @function
+ * @returns {node}
+ */
 FM.MlTemplate.prototype.getNode = function() {
     return this.node;
 }
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlTemplate.prototype._applyTemplate = function() {
     var me = this;
 
@@ -89,6 +146,13 @@ FM.MlTemplate.prototype._applyTemplate = function() {
     }
 }
 
+/**
+ * Run template.
+ * 
+ * @public
+ * @function
+ * @param {FM.DmObject} [dmObj] Template DM object.
+ */
 FM.MlTemplate.prototype.run = function(dmObj) {    
     this._super("run"); 
     this.setDmObject(dmObj);
@@ -97,13 +161,34 @@ FM.MlTemplate.prototype.run = function(dmObj) {
 
 }
 
-
+/**
+ * Fired when change on hash of window.location object attributes occurs.
+ * If template type is <i>route</i> template will be applyed again.
+ *  
+ * @public
+ * @event
+ * @param {FM.AppObject} sender This event is sent from application.
+ * @param {string} hash New location hash.
+ */
 FM.MlTemplate.prototype.onUrlHashChange = function(sender,hash) {
     if(sender == this.getApp() && this.getAttr('data-fmml-template-type') == 'route') {
         this._applyTemplate();
     }
 }
 
+/**
+* Returns new instance of template.
+* 
+* @static
+* @public
+* @function    
+* @param {FM.AppObject} app Current application.
+* @param {object} attrs Template attributes.
+* @param {node} attrs Template node.
+* @param {FM.DmObject} [oObj=null] DM object to run template with.
+* 
+* @return {FM.MlTemplate} New template instance.
+*/   
 FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
     var obj = new FM.MlTemplate(app,attrs,node);
     if(obj && obj.getAttr('data-fmml-run-on-init','true') != 'false') {
