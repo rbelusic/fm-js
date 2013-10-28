@@ -235,6 +235,7 @@ FM.DmObject.getConfiguration = function(app,sctype) {
 
 /**
 * Returns new instance of chosen <b>sctype</b> subclass type.
+* 
 * @static
 * @public
 * @function    

@@ -1,3 +1,10 @@
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 /**
  * Generic ML MlObserver class.  
  * 
@@ -120,6 +127,12 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
     this.log("New observer created.", FM.logLevels.debug, 'MlObserver._init');
 }
 
+/**
+ * Run observer.
+ * 
+ * @public
+ * @function
+ */
 FM.MlObserver.prototype.run = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.run');
 
@@ -141,6 +154,12 @@ FM.MlObserver.prototype.run = function() {
 }
 
 
+/**
+ * Dispose observer.
+ * 
+ * @public
+ * @function 
+ */
 FM.MlObserver.prototype.dispose = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.dispose');
 
@@ -179,29 +198,40 @@ FM.MlObserver.prototype.dispose = function() {
 }
 
 
-FM.MlObserver.prototype._getErrorHost = function() {
-    var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
-    return (
-            errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
-            errnode.fmmlHost : null
-            );
-}
-
+/**
+ * Returns last eror. 
+ * 
+ * @returns {FM.DmGenericError} 
+ */
 FM.MlObserver.prototype.getLastError = function() {
     var errhost = this._getErrorHost();
     return errhost ? errhost.getDmObject() : null;
 }
 
+/**
+ * Set last eror. 
+ * 
+ * @param {FM.DmGenericError|string} oErr Error to set. 
+ * 
+ * @return {FM.DmGenericError} 
+ */
 FM.MlObserver.prototype.setLastError = function(oErr) {
     var errhost = this._getErrorHost();
     if (!errhost) {
-        return oErr;
+        return this.getHost() ? this.getHost().setLastError(oErr) :
+            (this.getApp() ? this.getApp().setLastError(oErr) : oErr)
+        ;
     }
+    oErr = FM.isset(oErr) && oErr ? oErr : "";
 
-    if (!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = new FM.DmGenericError();
+    if (!FM.isObject(oErr)) {
+        if (FM.isString(oErr)) {
+            oErr = new FM.DmGenericError({"messageId": "GE", "text": oErr});
+        } else {
+            oErr = new FM.DmGenericError();
+        }
     }
-
+    
     if (!errhost.isExecuted()) {
         errhost.run(oErr);
     } else {
@@ -221,6 +251,14 @@ FM.MlObserver.prototype.setLastError = function(oErr) {
     return oErr;
 }
 
+/**
+ * Check if observer is valid.
+ *  
+ * @pulbic
+ * @function
+ * @param {boolean} [force=false] Validate even if value is null or empty string.
+ * @returns {boolean}
+ */
 FM.MlObserver.prototype.isValid = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.isValid');
 
@@ -296,8 +334,13 @@ FM.MlObserver.prototype.isValid = function(force) {
     return response; //no rules
 }
 
-FM.MlObserver.prototype.lastUpdate;
-
+/**
+ * Called by host to signal change of data model,
+ *
+ * @public
+ * @function 
+ *
+ */
 FM.MlObserver.prototype.update = function() {
     if (!this.isExecuted()) {
         return false;
@@ -354,6 +397,13 @@ FM.MlObserver.prototype.update = function() {
     return retc;
 }
 
+/**
+ * Set observer current value.
+ * 
+ * @public
+ * @function
+ * @param {...} value New value.
+ */
 FM.MlObserver.prototype.setValue = function(value) {
     if (!this.isExecuted()) {
         return false;
@@ -381,6 +431,13 @@ FM.MlObserver.prototype.setValue = function(value) {
     return true;
 }
 
+/**
+ * Returns observer current value.
+ * 
+ * @public
+ * @function
+ * @returns {...}
+ */
 FM.MlObserver.prototype.getValue = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.getValue');
 
@@ -409,6 +466,23 @@ FM.MlObserver.prototype.getValue = function() {
     return value;
 }
 
+/**
+ * 
+ * @ignore
+ */
+FM.MlObserver.prototype._getErrorHost = function() {
+    var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
+    return (
+            errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
+            errnode.fmmlHost : null
+            );
+}
+
+
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._formatValue = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
@@ -441,6 +515,10 @@ FM.MlObserver.prototype._formatValue = function(value) {
     return value;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
@@ -480,6 +558,11 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
     return value;
 }
 
+/**
+ * Render observer value in DOM node using current renderer.
+ * 
+ * @param {type} force Render event of value is not changed.
+ */
 FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.setNodeValue');
     force = FM.isset(force) && force == true ? true : false;
@@ -553,6 +636,13 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log("Done.", FM.logLevels.debug, 'MlObserver.setNodeValue');
 }
 
+/**
+ * Add extension.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to add. Usualy there is no need to call this function manualy.
+ */
 FM.MlObserver.prototype.addExtension = function(extObj) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.addExtension');
     this.log("Adding extension:", FM.logLevels.debug, 'MlObserver.addExtension');
@@ -571,6 +661,13 @@ FM.MlObserver.prototype.addExtension = function(extObj) {
     return true;
 }
 
+/**
+ * Remove extension.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to remove. Usualy there is no need to call this function manualy.
+ */
 FM.MlObserver.prototype.removeExtension = function(extObj) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.removeExtension');
     this.log("Removing extension:", FM.logLevels.debug, 'MlObserver.removeExtension');
@@ -590,20 +687,48 @@ FM.MlObserver.prototype.removeExtension = function(extObj) {
     return false;
 }
 
+/**
+ * Run extension. Usualy there is no need to call this function manualy.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to run.
+ */
 FM.MlObserver.prototype.runExtension = function(extObj) {
     if (FM.isset(extObj.run)) {
         extObj.run(this);
     }
 }
 
+/**
+ * Returns observer DOM node.
+ * 
+ * @public
+ * @function
+ * @returns {node}
+ */
 FM.MlObserver.prototype.getNode = function() {
     return this.node;
 }
 
+/**
+ * Returns current observer DM object.
+ * 
+ * @public
+ * @function
+ * @returns {FM.DmObject}
+ */
 FM.MlObserver.prototype.getDmObject = function() {
     return(this.getHost() ? this.getHost().getDmObject(this.node) : null);
 }
 
+/**
+ * Returns host this observer belongs to.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlHost}
+ */
 FM.MlObserver.prototype.getHost = function() {
     if (this.host)
         return(this.host);
@@ -611,6 +736,10 @@ FM.MlObserver.prototype.getHost = function() {
     return(this.host);
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype.onHostEvent = function(sender, ev, evdata) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.onHostEvent');
     this.log("Event:" + ev, FM.logLevels.debug, 'MlObserver.onHostEvent');
@@ -649,7 +778,10 @@ FM.MlObserver.prototype.onHostEvent = function(sender, ev, evdata) {
     return fnd;
 }
 
-
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype.resolveAttrValue = function(val, defv) {
     val = FM.resolveAttrValue(this.options, val, defv, {
         A: this.getApp(),
@@ -662,12 +794,21 @@ FM.MlObserver.prototype.resolveAttrValue = function(val, defv) {
 }
 
 
-// renderer 
-
+/**
+ * Returns current renderer.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlExtension}
+ */
 FM.MlObserver.prototype.getCurrentRenderer = function() {
     return this.currentRenderer;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._checkCurrentRenderer = function() {
     for (var i = this.extensions.length - 1; i > -1; i--) {
         var ext = this.extensions[i];
@@ -680,6 +821,14 @@ FM.MlObserver.prototype._checkCurrentRenderer = function() {
     return this.currentRenderer;
 }
 
+/**
+ * Add extension to list of available renderers. 
+ * Last registered extension is active renderer.
+ 
+ * @public 
+ * @function
+ * @param {FM.MlExtension} renderer Renderer to add.
+ */
 FM.MlObserver.prototype.addRenderer = function(r) {
     if (!r)
         return;
@@ -695,6 +844,13 @@ FM.MlObserver.prototype.addRenderer = function(r) {
     }
 }
 
+/**
+ * Remove extension from list of available renderers.
+ 
+ * @public 
+ * @function
+ * @param {FM.MlExtension} renderer Renderer to remove.
+ */
 FM.MlObserver.prototype.removeRenderer = function(r) {
     if (!r)
         return;
@@ -712,20 +868,42 @@ FM.MlObserver.prototype.removeRenderer = function(r) {
     }
 }
 
-// -- static --
 
-// pronadji u dom tree na dolje node koji ima fmmlDmObject - to je tvoj dm
-// vrati null ako ne nadjes
+/**
+ * Search for first child node with FM.MlHost instance.
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {node} node DOM node to start searching from.
+ * @returns {FM.MlHost|null}
+ */
 FM.MlObserver.findHost = function(node) {
     return FM.findNodeWithAttr(node, "fmmlHost");
 }
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.observerTypes = {
     GLOBAL: {}
 };
 
 
+/**
+ * Register application observer type.
+ *  
+ * @public
+ * @static
+ * @function
+ * @param {string} type name.
+ * @param {FM.MlHost} fn Observer class function.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ * 
+ * @returns {boolean}
+ */
 FM.MlObserver.addObserver = function(type, fn, appCls) {
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
     if (!FM.isset(fn) || !FM.isFunction(fn))
@@ -741,12 +919,14 @@ FM.MlObserver.addObserver = function(type, fn, appCls) {
 }
 
 /**
- * Returns MlObserver <b>config</b> class function for <b>config</b> subclass type
+ * Returns MlObserver <b>config</b> class function for <b>config</b> subclass type.
+ * 
+ * @public
  * @static
  * @function    
- * @param {object} app Application
- * @param {String} name Configuration name
- * @return {object} observer configuration or null if not found
+ * @param {FM.AppObject} app Current application.
+ * @param {String} type Observer subclass type.
+ * @return {FM.MlObserver} Class function. 
  */
 FM.MlObserver.getConfiguration = function(app, name) {
     var list = FM.MlObserver.observerTypes;
@@ -775,6 +955,19 @@ FM.MlObserver.getConfiguration = function(app, name) {
     return obj;
 }
 
+/**
+ * Returns new instance of chosen <b>sctype</b> observer type.
+ 
+ * @static
+ * @public
+ * @function    
+ * @param {FM.AppObject} app Current application.
+ * @param {object} attrs Observer attributes.
+ * @param {node} attrs Observer node.
+ * @param {String} type Observer subclass type.
+ * 
+ * @return {FM.MlObserver} New observer instance.
+ */
 FM.MlObserver.newObserver = function(app, attrs, node, type) {
     var clsFn = FM.MlObserver.getConfiguration(app, type);
     return clsFn ? new clsFn(app, attrs, node) : null;
@@ -783,11 +976,26 @@ FM.MlObserver.newObserver = function(app, attrs, node, type) {
 FM.MlObserver.addObserver("Observer", FM.MlObserver, 'GLOBAL');
 
 /**
+ * Validation rules.
  * 
  * @namespace
  */
 FM.MlObserver.validationRules = {
+    /**
+     * Global validation rules. Available to all applications.
+     * 
+     * @namespace
+     */
     GLOBAL: {
+        /**
+         * Equal validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         equal: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -810,6 +1018,15 @@ FM.MlObserver.validationRules = {
 
             return true;
         },
+        /**
+         * Greather then validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         gt: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -832,6 +1049,15 @@ FM.MlObserver.validationRules = {
 
             return false;
         },
+        /**
+         * Less then rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         lt: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -854,6 +1080,15 @@ FM.MlObserver.validationRules = {
 
             return false;
         },
+        /**
+         * Empty validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         empty: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (value == null || value == '') {
@@ -861,6 +1096,15 @@ FM.MlObserver.validationRules = {
             }
             return false;
         },
+        /**
+         * validEmail validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         validEmail: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (value == null || value == '') {
@@ -873,6 +1117,15 @@ FM.MlObserver.validationRules = {
     }
 }
 
+/**
+ * Returns requested validation rule function.
+ * 
+ * @public
+ * @static
+ * @param {type} app Current application.
+ * @param {type} name Validation rule name.
+ * @returns {function} 
+ */
 FM.MlObserver.getValidationRule = function(app, name) {
     var list = FM.MlObserver.validationRules;
 
@@ -900,6 +1153,17 @@ FM.MlObserver.getValidationRule = function(app, name) {
     return obj;
 }
 
+/**
+ * Register new validation rule.
+ * 
+ * @public
+ * @static
+ * @param {string} name Validation rule name.
+ * @param {function} fn Validation rule function. 
+ * Function receives two arguments (observer instance and array of rule parameters)
+ *  and returns <i>true</i> or <i>false</i>.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ */
 FM.MlObserver.addValidationRule = function(name, fn, appCls) {
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
     if (!FM.isset(name) || !name || name == '')

@@ -9,3 +9,17 @@ body {
 	width: 100%;
 	margin: 0;
 }
+
+
+table.fm-mlattrs td:first-child {
+    white-space: nowrap; 
+    font-weight: bolder;
+}
+
+table.fm-mlattrs th {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;    
+    text-align: left !important;
+    white-space: nowrap  !important; 
+    font-weight: bolder  !important;
+}

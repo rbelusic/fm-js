@@ -181,8 +181,9 @@ FM.Object.prototype.removeAllListeners = function() {
  */
 FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
-    if (!this.isEnabled())
+    if (!this.isEnabled() || ev == "onEvent") {
         return false;
+    }
 
     if (FM.isset(this[ev])) {
         this[ev](sender, data);
