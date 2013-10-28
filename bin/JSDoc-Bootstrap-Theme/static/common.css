@@ -321,6 +321,10 @@ body {
 }
 
 
+table.fm-mlattrs {
+    width: 100%;
+}
+
 table.fm-mlattrs tbody tr td:first-child {
     white-space: nowrap !important; 
     font-weight: bolder !important;
