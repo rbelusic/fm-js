@@ -14,7 +14,7 @@
  * @extends FM.LmObject
  * @param {FM.AppObject} app application object.
  * @param {object} [attrs] DOM node attributes.
- * @param {DOMnode} node DOM node. 
+ * @param {node} node DOM node. 
  * List of DOM attributes (check inherited attributes too):
  * <table class="fm-mlattrs">
  *  <thead>
@@ -561,7 +561,7 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
 /**
  * Render observer value in DOM node using current renderer.
  * 
- * @param {type} force Render event of value is not changed.
+ * @param {boolean} force Render event of value is not changed.
  */
 FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.setNodeValue');
