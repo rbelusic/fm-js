@@ -75,14 +75,15 @@ FM.MlTemplate.prototype._applyTemplate = function() {
             if(isok) {
                 me.lastTemplateName = tname;
                 var tmplnode = $(templ);
-                if(me.getAttr('data-fmml-template-replace','') == "true") {
+                var replaced = me.getAttr('data-fmml-template-replace','') == "true";
+                if(replaced) {
                     $(me.getNode()).replaceWith(tmplnode);
                     me.node = tmplnode;
                     me.node.fmmlTemplate = me;
                 } else {
                     $(me.getNode()).html(templ);
                 }
-                FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj);
+                FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj,!replaced);
             }
         });
     }

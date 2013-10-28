@@ -234,7 +234,7 @@ FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj,node,attrs) 
         }
     }
     if(lastNode) {
-        $(lastNode).after(node[0]);
+        $(lastNode).after(node);
     } else {
         $(this.listItemsContainer).prepend(node);
     }
