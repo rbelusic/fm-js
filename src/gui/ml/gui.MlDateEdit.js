@@ -3,15 +3,15 @@
  * 
  * @class FM.MlDateEdit
  * @extends FM.MlExtension
+ * @param {FM.AppObject} app Current application.
  * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
- * @requires http://api.jqueryui.com/datepicker/
+ * @requires <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a>
  * @description You can use other plugins instead jquery ui by replacing initWidget() method
  */
 FM.MlDateEdit = FM.defineClass('MlDateEdit', FM.MlEdit);
 
-FM.MlDateEdit.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlDateEdit.prototype._init = function(app,attrs) {
+    this._super("_init", app, attrs);
     this.objectSubClass = "DateEdit";
     this.editWidgetDate =  null;
 }
@@ -20,7 +20,7 @@ FM.MlDateEdit.prototype._init = function(attrs, node) {
 FM.MlDateEdit.prototype.initWidget = function() {
     this._super("initWidget");
     this.editWidgetDate = $("<input style='display:none;'></input>")[0];
-    $(this.editWidget? this.editWidget : this.node).after(this.editWidgetDate);
+    $(this.editWidget? this.editWidget : this.getNode()).after(this.editWidgetDate);
     var me = this;
         
     $(this.editWidgetDate).val(this.getObserver().getValue());
@@ -29,8 +29,9 @@ FM.MlDateEdit.prototype.initWidget = function() {
         dateFormat: "yy-mm-dd",
          showOn: "both",
         onSelect: function(dateText, oDp) {
+            var obs = me.getObserver();
             if (obs) {
-                me.getObserver().setValue(dateText);
+                obs.setValue(dateText);
             }
             return true;
         }

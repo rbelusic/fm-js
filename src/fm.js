@@ -40,6 +40,32 @@ FM.generateNewID = function() {
 }
 
 /**
+ * 
+ * @ignore
+ */
+FM._uuidData = {
+    count: 0,
+    msec: 0,
+    nsec: 0
+};
+
+FM.generateUUID = function() {
+    var msec = new Date().getTime();
+    var clockseq = Math.floor(Math.random() * 1000000) & 0x3fff;
+    
+    // simulate finer time resolution with cont
+    FM._uuidData.count +=1;
+    var nsec = FM._uuidData.count;
+    
+    // Time since last uuid creation (in msecs)
+    var dt = (msec - FM._uuidData.msec) + (nsec - FM._uuidData.nsec)/10000;
+    if (dt < 0) {
+      clockseq = clockseq + 1;
+    }    
+    return '_' +  + "_" + Math.floor(Math.random() * 1000000);
+}
+
+/**
  * For each element in <i>ar</i> 
  * call function <i>doFn(id,elm)</i> 
  * until end of list or <i>false</i> is returned.

@@ -1002,7 +1002,7 @@ FM.MlHost.initChildNodes = function(app, checknode, oObj, childsOnly) {
  *  
  * @static
  * @function
- * @param {node/string} checknode Node or node id to start from.
+ * @param {node|string} checknode Node or node id to start from.
  * @param {boolean} [childsOnly=true] Process only child nodes.
  */
 FM.MlHost.disposeChildNodes = function(checknode, childsOnly) {

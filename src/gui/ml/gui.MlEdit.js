@@ -3,14 +3,14 @@
  * 
  * @class FM.MlEdit
  * @extends FM.MlExtension
+ * @param {FM.AppObject} app Current application.
  * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
  */
 FM.MlEdit = FM.defineClass('MlEdit', FM.MlExtension);
 
 // methods
-FM.MlEdit.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlEdit.prototype._init = function(app,attrs) {
+    this._super("_init", app, attrs);
     this.objectSubClass = "Edit";
     this.triggerEvent = this.getAttr('data-fmml-update-condition', 'blur') +
         ".fmMlEdit"
@@ -31,7 +31,7 @@ FM.MlEdit.prototype.dispose = function(obs) {
         this.getObserver().removeRenderer(this);
     }
 
-    this._super("dispose");
+    this._super("dispose",obs);
 }
 
 // methods
@@ -56,7 +56,7 @@ FM.MlEdit.prototype._setNodeValue = function(node, value) {
             } else {
                 $(node).removeAttr('checked');
             }
-        } else if ($(this.node).is(':radio')) {
+        } else if ($(node).is(':radio')) {
             $("input:radio[name ='" + $(node).attr("name") + "']").val([value]);
         } else {
             $(node).val(value);
@@ -175,7 +175,7 @@ FM.MlEdit.prototype.render = function(value) {
     if (this.editWidget) {
         this._setNodeValue(this.editWidget, value);
     }
-    this._setNodeValue(this.node, value);
+    this._setNodeValue(this.getNode(), value);
 }
 
 FM.MlEdit.prototype.enableRenderer = function() {

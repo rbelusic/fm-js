@@ -108,7 +108,7 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     this.log(attrs, FM.logLevels.debug, 'MlObserver._init');
 
-    this.node = node;
+    this.node = node ? node : null;
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -963,7 +963,7 @@ FM.MlObserver.getConfiguration = function(app, name) {
  * @function    
  * @param {FM.AppObject} app Current application.
  * @param {object} attrs Observer attributes.
- * @param {node} attrs Observer node.
+ * @param {node} node Observer node.
  * @param {String} type Observer subclass type.
  * 
  * @return {FM.MlObserver} New observer instance.
@@ -976,7 +976,7 @@ FM.MlObserver.newObserver = function(app, attrs, node, type) {
 FM.MlObserver.addObserver("Observer", FM.MlObserver, 'GLOBAL');
 
 /**
- * Validation rules.
+ * Validation rules. 
  * 
  * @namespace
  */

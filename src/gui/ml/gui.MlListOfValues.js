@@ -20,8 +20,8 @@
 FM.MlListOfValues = FM.defineClass('MlListOfValues', FM.MlEdit);
 
 // methods
-FM.MlListOfValues.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlListOfValues.prototype._init = function(app,attrs) {
+    this._super("_init", app,attrs);
     this.objectSubClass = "ListOfValues";
 
     // LOV
@@ -381,10 +381,6 @@ FM.MlListOfValues.prototype.initWidget = function() {
             });
         }
     }
-}
-
-FM.MlListOfValues.prototype.dispose = function(obs) {
-    this._super("dispose");
 }
 
 FM.MlListOfValues.prototype.update = function(obs) {
