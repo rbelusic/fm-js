@@ -12,7 +12,7 @@ fm-js is a modern light-weight HTML5 full web application framework.
  - [node.js](http://howtonode.org/how-to-install-nodejs)
  - [grunt](http://gruntjs.com/)
  - [bower](http://bower.io/)
- - java with [valid JAVA_HOME environment variable set](http://www3.ntu.edu.sg/home/ehchua/programming/howto/Environment_Variables.html) (required for jsdoc-toolkit to build documentation)
+ - java with [valid JAVA_HOME environment variable set](http://www3.ntu.edu.sg/home/ehchua/programming/howto/Environment_Variables.html) (required for jsdoc-toolkit to build documentation) (needed for apidoc generation only)
 
 If you already have node.js installed, its version must be >= 0.4 (run `node --version` to verify).
 
