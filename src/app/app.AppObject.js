@@ -1,10 +1,18 @@
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
 /**
-* Basic application class. 
+* Generic application class. 
 * 
 * @class FM.AppObject
 * @extends FM.LmObject
 * @memberOf FM
-* @param {Object} [opt] Options (application attributes).
+* @param {object} [opt={}] Options (application attributes).
 */
     
 FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
@@ -21,6 +29,12 @@ FM.AppObject.prototype._init = function(opt) {
     this.appRegistry = null;
 }
 
+/**
+ * Run application.
+ * 
+ * @public
+ * @function
+ */
 FM.AppObject.prototype.run = function() {
     // err
     this.lastError = FM.DmObject.newObject(this,'GenericError', {});
@@ -36,38 +50,83 @@ FM.AppObject.prototype.run = function() {
         
 }
 
+
+/**
+ * Dispose application.
+ * 
+ * @public
+ * @function
+ */
 FM.AppObject.prototype.dispose = function() {    
     $(window).unbind('hashchange.'+this.getID());
     this._super("dispose");    
 }
 
 
-FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
+/**
+ * FM.DmList factory function. Function sets list property <i>appFactory.createdAt</i>
+ * to current Unix timestamp with microseconds.
+ * 
+ * @public
+ * @function
+ * @param {object} [dmData={}] List attributes.
+ * @param {object|string} dmConfig List configuration object, 
+ *  list configuration name or string evaluating to configuration object.
+ * @param {boolean} [addlstnr=true] Add application as DM list listener.
+ *  
+ */
+
+FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr) {
     var lst = new FM.DmList(dmData,dmConfig,this);
     if(lst) {
         if(!FM.isset(addlstnr) || addlstnr != false) lst.addListener(this);
+        lst.setProperty('appFactory', {createdAt: FM.l_timestamp()});
     }
-    lst.setProperty('appFactory', {createdAt: new Date().getTime()});
-    lst.setProperty('appFactory.updateChangedObjects',updChObj == true ? "true" : "false");
     return(lst);
 }
 
+/**
+ * Dispose DM list.
+ *
+ * @public
+ * @function 
+ * @param {FM.DmList} lst
+ */
 FM.AppObject.prototype.dmListDispose = function(lst) {
     lst.dispose();
     return true;
 }
 
+/**
+ * Process data bindings instructions in part of DOM. Usualy called after insertion od new elements
+ * in DOM.
+ * 
+ * @public
+ * @function
+ * @param {node} [node] DOM node to start from. If ommitted processing will start from 
+ *  document body.
+ * 
+ */
 FM.AppObject.prototype.mlInit = function(node) {
     return FM.MlHost.initChildNodes(this, node);
 }
 
-// create error object from string or return same object
+/**
+ * Create 'GenericError' DM object from string. 
+ * Empty string indicates that there is no error.
+ * 
+ * @public
+ * @function
+ * @param {string|FM.DmGenericError} [oErr=''] Error message or 
+ *  FM.DmGenericError class instance.
+ * @returns {FM.DmGenericError}
+ */
 FM.AppObject.prototype.getErrorObject = function(oErr) {
     oErr = FM.isset(oErr) && oErr ? oErr : '';
     
     if(FM.isString(oErr)) {
         oErr = FM.DmObject.newObject(this,'GenericError', {
-            messageId: '9999',
+            messageId: oErr == '' ? '0' : '9999',
             text: oErr
         });
     }
@@ -75,25 +134,49 @@ FM.AppObject.prototype.getErrorObject = function(oErr) {
     return oErr;
 }
 
+/**
+ * Returns application error object.
+ * 
+ * @returns {FM.DmGenericError}
+ */
 FM.AppObject.prototype.getLastError = function() {
     return this.lastError;
 }
 
+/**
+ * Set application error.
+ * 
+ * @param {string|FM.DmGenericError} [oErr=''] Error message or 
+ *  FM.DmGenericError class instance.
+ */
 FM.AppObject.prototype.setLastError = function(oErr) {
-    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = FM.DmObject.newObject(this,'GenericError', {});
+    oErr = this.getErrorObject(oErr);
+    if(!oErr) {
+        return;
     }
+    
     var me = this;
     this.lastError.forEachAttr(function(attr,value) {
         me.lastError.setAttr(attr,oErr.getAttr(attr,''));
         return true;
     });
     this.lastError.setChanged(true,true); // send event
-    return oErr;
+    return;
 }
 
-FM.AppObject.prototype.getCustomOblect = function(listId,attrs,cbfn) {
-    id = FM.isset(id) && id && FM.isString(id) ? id : '';
+/**
+ * Creates DM list, executes FM.DmList.getData  method 
+ * and returns first object in reponse.
+ * 
+ * @public
+ * @function 
+ * @param {string} listId DM list configuration name.
+ * @param {object} [attrs={}] DM list fetch arguments.
+ * @param {function} cbfn Callback function in form
+ * <i>function(isok,oResponse) {}</i>. 
+ */
+FM.AppObject.prototype.getCustomObject = function(listId,attrs,cbfn) {
+    listId = FM.isset(listId) && id && FM.isString(listId) ? listId : '';
     attrs  = FM.isset(attrs) && attrs && FM.isObject(attrs) ? attrs : {};
     var me = this;
     
@@ -105,7 +188,7 @@ FM.AppObject.prototype.getCustomOblect = function(listId,attrs,cbfn) {
     var lstnr = {
         onListEnd: function(sender,data) {
             // show some info in console
-            me.log("End of dmList request.",FM.logLevels.info,'FM.AppObject.getCustomOblect.onListEnd');
+            me.log("End of dmList request.",FM.logLevels.info,'FM.AppObject.getCustomObject.onListEnd');
             // get first object from list
             var oData = null;
             FM.forEach(data.Added,function(id, obj) {
@@ -119,14 +202,14 @@ FM.AppObject.prototype.getCustomOblect = function(listId,attrs,cbfn) {
             if(oData) {
                 callbackFn(true,oData);
             } else {
-                me.log("No data returned.",FM.logLevels.warn,'FM.AppObject.getCustomOblect.onListEnd');
+                me.log("No data returned.",FM.logLevels.warn,'FM.AppObject.getCustomObject.onListEnd');
                 callbackFn(false,null);
             }
             return true;
         },
         onListError: function(sender,data) {
             sender.dispose();
-            me.log("Error fetching data." + FM.serialize(data && data.getAttr ?data.getAttr() : {}),FM.logLevels.error, 'FM.AppObject.getCustomOblect.onListEnd');
+            me.log("Error fetching data." + FM.serialize(data && data.getAttr ?data.getAttr() : {}),FM.logLevels.error, 'FM.AppObject.getCustomObject.onListEnd');
             callbackFn(false,null);
             return true;
         }
@@ -138,7 +221,18 @@ FM.AppObject.prototype.getCustomOblect = function(listId,attrs,cbfn) {
     dmlist.getData();
 }
 
-
+/**
+ * Submits form defined on sender node. Form action will be overwrited 
+ * (and evaluated before if necessary) with
+ * <i>data-fmml-form-action</i> node attribute value if one is present.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlHost|FM.MlObserver|FM.MlExtension} sender Class instance with <i>getNode</i> 
+ * method. 
+ * @param {...} oObj Data to send back to callback function as second parameter.
+ * @param {function} [callbackFn] Callback function.
+ */
 FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
     
     callbackFn = FM.isset(callbackFn) && callbackFn && FM.isFunction(callbackFn) ? callbackFn : function() {};
@@ -157,13 +251,24 @@ FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
             form.action = action;
         }
         form.submit();
+        callbackFn(true,oObj);
     } else {
-        callbackFn(false,null);
-        return;        
+        callbackFn(false,oObj);
     }
 }
 
-
+/**
+ * Send HTML form request event.
+ * 
+ * @public
+ * @event
+ * 
+ * @param {FM.MlHost|FM.MlObserver|FM.MlExtension} sender Class instance with <i>getNode</i> 
+ * method. 
+ * @param {object} [evdata] Event data: 
+ * @param {...} [evdata.object] Data to send back to callback function as second parameter.
+ * @param {function} [evdata.callback] Callback function.
+ */
 FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     this.submitForm(
         sender,
@@ -172,9 +277,50 @@ FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     );
 }
 
+/**
+ * Returns application itself.
+ * 
+ * @returns {FM.AppObject}
+ * 
+ */
+FM.AppObject.prototype.getApp = function() {
+    return this;
+}
+
+/**
+ * Returns registry root key for this subclass,
+ * Format of key is [/[app subclass|APP]
+ * 
+ * @public
+ * @function
+
+ * @returns {String} 
+ */
+FM.AppObject.prototype.getRegistryRoot = function() {
+    return  "/" + (this.app ? this.app.getSubClassName() : "APP");    
+}
+
 // static
+/**
+ * 
+ * @ignore
+ */
 FM.AppObject.applicationInstances = {};
 
+/**
+ * Start new application instance. Note that only one instance of 
+ * application class can exists in one page.
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {object} [args={}] Application configuration and options.
+ * @param {string} [args.appClass='FM.AppObject'] Application class.
+ * @param {object} [args.options={}] Options (application attributes).
+ * @param {object|FM.Object} [evHandler] Optional event handler.
+ * 
+ * @returns {FM.AppObject}
+ */
 FM.AppObject.startApp = function(args,evHandler) {
     args = FM.isset(args) && args ? args :{};
     var appClsName = FM.getAttr(args,'appClass','FM.AppObject');
@@ -201,6 +347,14 @@ FM.AppObject.startApp = function(args,evHandler) {
     return(app);
 }
 
+/**
+ * Stop application instance. 
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {FM.AppObject} app Application to dispose.
+ */
 FM.AppObject.stopApp = function(app) {
     if(app) {
         FM.forEach(FM.AppObject.applicationInstances, function(i,v) {

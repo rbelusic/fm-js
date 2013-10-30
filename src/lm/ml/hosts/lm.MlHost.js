@@ -749,19 +749,19 @@ FM.MlHost.getConfiguration = function(app, name) {
 
 
 /**
-* Returns new instance of chosen <b>sctype</b> host type.
-* 
-* @static
-* @public
-* @function    
-* @param {FM.AppObject} app Current application.
-* @param {object} attrs Host attributes.
-* @param {node} attrs Host node.
-* @param {String} type Host subclass type.
-* @param {FM.DmObject} [oObj=null] DM object to run host with.
-* 
-* @return {FM.MlHost} New host instance.
-*/   
+ * Returns new instance of chosen <b>sctype</b> host type.
+ * 
+ * @static
+ * @public
+ * @function    
+ * @param {FM.AppObject} app Current application.
+ * @param {object} attrs Host attributes.
+ * @param {node} attrs Host node.
+ * @param {String} type Host subclass type.
+ * @param {FM.DmObject} [oObj=null] DM object to run host with.
+ * 
+ * @return {FM.MlHost} New host instance.
+ */
 FM.MlHost.newHost = function(app, attrs, node, type, oObj) {
     var clsFn = FM.MlHost.getConfiguration(app, type);
     var obj = clsFn ? new clsFn(app, attrs, node) : null;

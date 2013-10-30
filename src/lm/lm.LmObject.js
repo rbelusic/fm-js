@@ -127,7 +127,7 @@ FM.LmObject.prototype.setDmObject = function(o,addListener) {
 
 /**
  * Returns registry root key for this subclass,
- * Format of key is[/[app subclass|APP]/sClass/[my subclass]
+ * Format of key is [/[app subclass|APP]/sClass/[my subclass]
  * 
  * @public
  * @function
