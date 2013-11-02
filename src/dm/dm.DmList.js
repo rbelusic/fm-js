@@ -1,32 +1,55 @@
-// -- DM list class ------------------------------------------------------------
-/**
- * DM list holds DM.Objects. 
- * <pre>
- * Config: {
- *  data:
- *  isstatic: true/false
- *  responseClass: somedmobject
- *  getFetchArguments: function({dmList: this, getMore: getMore}),
- *  isErrorResponse: function({dmList: this, utAjax: oAjax, response: response})
- *  errorParser: function({dmList: this, utAjax: oAjax, response: response})
- *  responseParser: function({dmList: this, response: respCol[respId], raw: response})
- *  dataProperty: ''
- *  listType: single/collection/none
- *  validResponseCodes:
- *  url:
- *  pageAttribute,pageSizeAttribute
- *  fromRowAttribute,numRowsAttribute
- * }
- * this.getProperty('config',{})
- * </pre>
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+/** 
+ * DM list holds FM.DmObject's.
  * 
  * @class FM.DmList
  * @extends FM.DmObject
  * @memberOf FM
  * @param {object} attrs List of attribute names and values.
- * @param {object|string} [config] configuration. 
- *  Object or literal presentation of object.
- * 
+ * @param {object|string} config List configuration object, 
+ *  list configuration name or string evaluating to configuration object.
+ *  
+ * @param {string} [config.listname] Name of list configration. Automaticaly set by
+ *  FM.DmList.addConfiguration.
+ * @param {boolean} [config.isstatic=false] Static lists newer requests data.
+ * @param {boolean} [config.cache=false] Cached lists only once requests data.
+ * @param {array} [config.data] Predefined data for static list type 
+ * @param {string} [config.url] URL to fetch data from.
+ * @param {string} [config.method] HTTP method for AJAX call.
+ * @param {string} [config.contentType='application/x-www-form-urlencoded'] HTTP content type for AJAX call.
+ * @param {object} [config.headers] HTTP headers to send with AJAX call.
+ * @param {string} [config.responseFormat='TEXT'] TEXT or JSON.
+ * @param {object} [config.params={}] object containing list of AJAX call arguments (that mus't be valid list attributes).
+ *  The value of property dasn't metter. 
+ * @param {object} [config.auth] Object containing username and password properties.
+ * @param {string} [config.responseClass='Object'] Class name to expect in response.
+ * @param {function|string} [config.getFetchArguments] Function (or string evaluating to function) 
+ *  returning object with fetch arguments and accepting object 
+ *  {dmList: <list>, getMore: true|false} as argument.
+ * @param {function|string} [config.isErrorResponse] Function (or string evaluating to function) 
+ *  for checking responsefor errors (returns true or false)
+ *  and accepting object {dmList: <list>, utAjax: oAjax, response: response} as argument.
+ * @param {function|string} [config.errorParser] Function (or string evaluating to function) 
+ *  responsible for parsing response to some error class instance (GenericError usualy) 
+ *  and accepting object {dmList: <list>, utAjax: oAjax, response: response} as argument.
+ * @param {function|string} [config.responseParser] Function (or string evaluating to function) 
+ *  responsible for parsing part of response to DM object.
+ *  and accepting object {dmList: <list>, response: <response>, raw: <complete response>} as argument.
+ * @param {string} [config.listType='collection'] Determines if AJAX call return single, collection or none of objects.
+ * @param {string} [config.dataProperty] AJAX response JSON data property containing requested objects.
+ * @param {string} [config.validResponseCodes] List of valid HTTP responses separated by comas.
+ * @param {string} [config.pageAttribute] FM.DmList attribute acting as fetch argument for requested page number.
+ * @param {string} [config.pageSizeAttribute] FM.DmList attribute acting as fetch argument for page size.
+ * @param {string} [config.fromRowAttribute] FM.DmList attribute acting as fetch argument for first row to fetch.
+ * @param {string} [config.numRowsAttribute] FM.DmList attribute acting as fetch argument for response size.
+ *  
+ * @param {FM.AppObject} app application object.
  */
 FM.DmList = FM.defineClass('DmList', FM.DmObject);
 
@@ -66,11 +89,10 @@ FM.DmList.prototype._init = function(attrs, config, app) {
 }
 
 /**
- * Returns application instance.
+ * Returns object application instance.
  * 
- * @public     
- * @function 
- * @returns {string} 
+ * @returns {FM.AppObject}
+ * 
  */
 FM.DmList.prototype.getApp = function() {
     return this.app;
@@ -166,23 +188,23 @@ FM.DmList.prototype.getDataArgs = function(getMore) {
             }
             return true;
         });
-        
+
         // paging
-        if(getMore) {
-            var fromPageAttr = this.getProperty('config.pageAttribute','');
-            if(fromPageAttr != '') {
-                args[fromPageAttr] = parseInt(this.getAttr(fromPageAttr,'0'))+1;
-                var pageSizeAttr = this.getProperty('config.pageSizeAttribute','');
-                if(pageSizeAttr != '') {
-                    args[pageSizeAttr] = parseInt(this.getAttr(pageSizeAttr,'20'));
+        if (getMore) {
+            var fromPageAttr = this.getProperty('config.pageAttribute', '');
+            if (fromPageAttr != '') {
+                args[fromPageAttr] = parseInt(this.getAttr(fromPageAttr, '0')) + 1;
+                var pageSizeAttr = this.getProperty('config.pageSizeAttribute', '');
+                if (pageSizeAttr != '') {
+                    args[pageSizeAttr] = parseInt(this.getAttr(pageSizeAttr, '20'));
                 }
             } else {
-                var fromRowAttr = this.getProperty('config.fromRowAttribute','');
-                if(fromRowAttr != '') {
+                var fromRowAttr = this.getProperty('config.fromRowAttribute', '');
+                if (fromRowAttr != '') {
                     args[fromRowAttr] = this.getListSize();
-                    var numRowsAttr = this.getProperty('config.numRowsAttribute','');
-                    if(numRowsAttr != '') {
-                        args[numRowsAttr] = parseInt(this.getAttr(numRowsAttr,'20'));
+                    var numRowsAttr = this.getProperty('config.numRowsAttribute', '');
+                    if (numRowsAttr != '') {
+                        args[numRowsAttr] = parseInt(this.getAttr(numRowsAttr, '20'));
                     }
                 }
             }
@@ -205,7 +227,12 @@ FM.DmList.prototype.getDataArgs = function(getMore) {
 
 
 /**
- * @ignore
+ * Fired on start of AJAX call.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {object} oArgs Ajax call arguments
  */
 FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
     this.log("Starting fetch ...", FM.logLevels.info, 'onAjaxStateStart');
@@ -213,7 +240,12 @@ FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
 }
 
 /**
- * @ignore
+ * Fired after successfull AJAX call.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {object} response Ajax call response.
  */
 FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
     this.log("Fetch completed.", FM.logLevels.info, 'onAjaxStateEnd');
@@ -246,7 +278,12 @@ FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
 }
 
 /**
- * @ignore
+ * Fired on AJAX call error.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {string} errTxt Error description.
  */
 FM.DmList.prototype.onAjaxStateError = function(oAjax, errTxt) {
     var errObj = new FM.DmGenericError({
@@ -295,8 +332,8 @@ FM.DmList.prototype._checkResponseStatus = function(oAjax) {
 
 /**
  * Get data from server.
- * <i>onListStart</i> and <i>onListEnd</i> or <i>onListError</i> will be fired
- *  on start and completition of AJAX call.
+ * <i>FM.DmList.onListStart</i> and <i>FM.DmList.onListEnd</i> or <i>FM.DmList.onListError</i> 
+ * events will be fired on start and completition of AJAX call.
  *  
  * @public
  * @function    
@@ -337,7 +374,7 @@ FM.DmList.prototype.getData = function(getMore) {
     if (args) {
         this._ajaxCall(args);
     }
-    
+
     // end
     return true;
 }
@@ -352,7 +389,7 @@ FM.DmList.prototype.getData = function(getMore) {
  * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
  * @param {string} [groupName=null]. 
  */
-FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
+FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupName) {
     var addlst = [];
 
     // ako je lista objekata a ne objekt
@@ -363,7 +400,7 @@ FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
             addlst.push(inmember);
     }
 
-    return this.refreshList({Added: addlst, Updated: [], Removed: []}, false, groupid, false, callevent);
+    return this.refreshList({Added: addlst, Updated: [], Removed: []}, false, groupName, false, callevent);
 
     // kraj
     return true;
@@ -374,12 +411,12 @@ FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
  * 
  * @public
  * @function    
- * @param {string|object} id Id of DmObject to remove 
+ * @param {string|object} id Id of FM.DmObject to remove 
  *  or object with list od DmObjects to remove.
  * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
  * @param {string} [groupName=null]. 
  */
-FM.DmList.prototype.removeFromList = function(id, callevent, groupid) {
+FM.DmList.prototype.removeFromList = function(id, callevent, groupName) {
     var rmlist = {};
     var oOldObj;
 
@@ -554,11 +591,11 @@ FM.DmList.prototype.set = function(member, id, idattr) {
         var onlyExisting = member;
         var olist = id;
         idattr = FM.isset(idattr) && idattr != null ? idattr : null;
-        
+
         for (var k in olist) {
             var obj = olist[k];
             if (FM.isObject(obj) && FM.isset(obj.getDataID)) {
-                var did = idattr ? obj.getAttr(idattr,'') : obj.getDataID();
+                var did = idattr ? obj.getAttr(idattr, '') : obj.getDataID();
                 var oldObj = this.get(did);
                 if (!onlyExisting || oldObj == null) {
                     this.set(obj, did);
@@ -567,7 +604,7 @@ FM.DmList.prototype.set = function(member, id, idattr) {
         }
     } else {
         id = FM.isset(id) && id ? id : member.getDataID();
-        
+
         if (!FM.isset(this.objectsList[id.toString()])) {
             this.listIndex.push(id.toString());
         }
@@ -604,7 +641,7 @@ FM.DmList.prototype.getList = function() {
  * @param {boolean} [all=false] Return all objects (or only first that match criteria).
  * @param {object} [orderList] List index.
  *  
- * @returns {FM.DmObject|FM.DmObject{}}
+ * @returns {FM.DmObject|{}}
  */
 FM.DmList.prototype.findByAttr = function(aname, value, all, orderList) {
     var getall = (FM.isset(all) ? all : false);
@@ -659,7 +696,7 @@ FM.DmList.prototype.findElementIndex = function(attrname, attrval) {
  * @returns {number} 
  */
 FM.DmList.prototype.getListSize = function(filterFn) {
-    return FM.DmList.getListSize(this,filterFn);
+    return FM.DmList.getListSize(this, filterFn);
 }
 
 /**
@@ -692,7 +729,8 @@ FM.DmList.prototype.forEachListElement = function(doFn, returnIndex) {
 }
 
 /**
- * Create list filter
+ * Create list filter.
+ * 
  * @public
  * @function    
  * @param {function} callbackFn Callback for creating list
@@ -719,7 +757,8 @@ FM.DmList.prototype.createListFilter = function(callbackFn, startFilter) {
 
 
 /**
- * Create list index
+ * Create list index.
+ * 
  * @public
  * @function    
  * @param {string} attr Attribute name 
@@ -763,26 +802,17 @@ FM.DmList.prototype.createListIndex = function(attr, attrtype, asc, filterTable)
 
 
 /**
- * Return soprt options from list congig
- * @public
- * @function    
- * @return {array} sortOptions
- */
-FM.DmList.prototype.getSortOptions = function() {
-    this.getProperty('config.sortOptions', {});
-}
-
-/**
- * Add  objects from fetch response to list. Fires <i>onListEnd</i> event.
+ * Add  objects from AJAX call response to list. Fires <i>onListEnd</i> event.
+ * 
  * @public
  * @function
- * @param {object} response Fetch response
+ * @param {object} response AJAX response
  * @param {boolean} onlyExisting Replace only existing object 
- * @param {string} groupid ID od objects group
+ * @param {string} [groupName] Name od objects group
  * @param {boolean} protectDirty Don't change dirty objects
  */
 
-FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupid, protectDirty) {
+FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupName, protectDirty) {
     response =
         FM.isset(response) && response ?
         response : null
@@ -855,27 +885,28 @@ FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupid
     }
 
     return this.refreshList(
-        {Added: added, Updated: updated, Removed: removed}, onlyExisting, groupid, protectDirty
+        {Added: added, Updated: updated, Removed: removed}, onlyExisting, groupName, protectDirty
         );
 }
 
 
 /**
  * Add objects to list. Fires <i>onListEnd</i> event.
+ * 
  * @public
  * @function
  * @param {object} response List of updated, deleted and inserted objects (onListEnd format)
  * @param {boolean} onlyExisting Replace only existing object 
- * @param {string} groupid ID od objects group
+ * @param {string} groupName Name of objects group
  * @param {boolean} protectDirty Ignore changed objects
  * @param {boolean} callEvents Call events  (default is true)
  */
-FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, protectDirty, callEvents) {
+FM.DmList.prototype.refreshList = function(response, onlyExisting, groupName, protectDirty, callEvents) {
     var id, oValue, oOldValue;
 
     // def params
     onlyExisting = FM.isset(onlyExisting) && onlyExisting == true ? true : false;
-    groupid = FM.isset(groupid) && groupid ? groupid : null;
+    groupName = FM.isset(groupName) && groupName ? groupName : null;
     protectDirty = FM.isset(protectDirty) && protectDirty == true ? true : false;
     response =
         FM.isset(response) && response ?
@@ -896,10 +927,10 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
         for (id = 0; id < response.Removed.length; id++) {
             oValue = response.Removed[id];
             oOldValue = this.get(oValue.getDataID());
-            if (groupid) {
+            if (groupName) {
                 // makni grupu
-                if (oOldValue.isInGroup(groupid)) {
-                    oOldValue.removeGroup(groupid);
+                if (oOldValue.isInGroup(groupName)) {
+                    oOldValue.removeGroup(groupName);
                 }
                 // micemo ga samo ako je broj grupa 0
                 if (oOldValue.getGroupsCount() < 1) {
@@ -922,10 +953,10 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
 
     // dodani
     if (FM.isset(response) && FM.isset(response.Added)) {
-        this._refreshAdd(response.Added, retList, onlyExisting, groupid, protectDirty);
+        this._refreshAdd(response.Added, retList, onlyExisting, groupName, protectDirty);
     }
     if (FM.isset(response) && FM.isset(response.Updated)) {
-        this._refreshAdd(response.Updated, retList, onlyExisting, groupid, protectDirty);
+        this._refreshAdd(response.Updated, retList, onlyExisting, groupName, protectDirty);
     }
 
 
@@ -952,32 +983,34 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
  * Return the List configuration name
  * @public
  * @function    
- * @return {string} listname
+ * @return {string} list name
  */
 FM.DmList.prototype.getListConfigName = function() {
     return this.getProperty('config.listname', '');
 }
 
 /**
- * Return if the List is Static (cacheable)
+ * Return if the List is static (cacheable).
+ * 
  * @public
  * @function    
- * @return {boolean} isliststatic
+ * @return {boolean} 
  */
 FM.DmList.prototype.isStaticList = function() {
     return this.getProperty('config.isstatic', false) == true ? true : false;
 }
 
 /**
- * Return the static list
+ * Return the static list data.
+ * 
  * @public
  * @function    
- * @return { {} } list
+ * @return {object} 
  */
 FM.DmList.prototype.getStaticList = function() {
     var listconfig = FM.DmList.getConfiguration(this.getApp(), this.getListConfigName());
 
-    if(listconfig) {
+    if (listconfig) {
         if (!FM.isset(listconfig.staticlist) || !FM.isObject(listconfig.staticlist)) {
             listconfig.staticlist = {};
         }
@@ -988,6 +1021,10 @@ FM.DmList.prototype.getStaticList = function() {
 }
 
 // -- private ------------------------------------------------------------------
+/**
+ * 
+ * @ignore
+ */
 FM.DmList.prototype._resFn = function(value, args) {
     var is = value;
     if (FM.isString(is && is != 'JSON')) { // hack
@@ -1007,10 +1044,8 @@ FM.DmList.prototype._resFn = function(value, args) {
 }
 
 /**
- * Start ajax call. 
- * @private
- * @function    
- * @param {object} args Fetch arguments
+ * 
+ * @ignore
  */
 FM.DmList.prototype._ajaxCall = function(args) {
     var fnargs = {dmList: this, arguments: args};
@@ -1025,22 +1060,22 @@ FM.DmList.prototype._ajaxCall = function(args) {
     for (var hname in hdrs) {
         hdrs[hname] = FM.applyTemplate(
             args, hdrs[hname], false, true
-        ).replace(/\s*\[\:.*?\]\s*/g, "");
+            ).replace(/\s*\[\:.*?\]\s*/g, "");
     }
-    
+
     var url = FM.applyTemplate(
         args,
         this._resFn(
-            this.getProperty('config.url', ''),
-            fnargs
+        this.getProperty('config.url', ''),
+        fnargs
         ),
         false, false
-    ).replace(/\s*\[\:.*?\]\s*/g, "");
+        ).replace(/\s*\[\:.*?\]\s*/g, "");
 
 
     var authArgs = this._resFn(
         this.getProperty('config.auth', {}), fnargs
-    );
+        );
 
     // ajax config
     var utAjax = new FM.UtAjax({
@@ -1067,6 +1102,10 @@ FM.DmList.prototype._ajaxCall = function(args) {
     return true;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList.prototype._refreshAdd = function(list, retList, onlyExisting, groupid, protectDirty) {
     var id, oValue, oOldValue;
 
@@ -1104,7 +1143,8 @@ FM.DmList.configurations = {
 };
 
 /**
- * Add new DmList configuration
+ * Add new FM.DmList configuration.
+ * 
  * @static
  * @function    
  * @param {String} name Name of configuration
@@ -1215,7 +1255,8 @@ FM.DmList.forEachListElement = function(list, doFn, returnIndex, orderList) {
 }
 
 /**
- * Get collection size
+ * Get collection size.
+ * 
  * @static
  * @function    
  * @param {object} list Collection
@@ -1238,6 +1279,10 @@ FM.DmList.getListSize = function(list, filterFn) {
     return n;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._errorParserDef = function(options) {
     var errObj = null;
     var oAjax = FM.getAttr(options, 'utAjax', null);
@@ -1259,6 +1304,10 @@ FM.DmList._errorParserDef = function(options) {
     return errObj;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._isErrorResponseDef = function(options) {
     var oList = FM.getAttr(options, 'dmList');
     var oAjax = FM.getAttr(options, 'utAjax', null);
@@ -1266,7 +1315,10 @@ FM.DmList._isErrorResponseDef = function(options) {
 }
 
 
-
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._parseResponseDef = function(options) {
     var oList = FM.getAttr(options, 'dmList');
     var oData = FM.getAttr(options, 'response', {});
