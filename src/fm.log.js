@@ -231,8 +231,8 @@ FM.log = function(oObj, msg, level, callerinfo) {
 
     // formiraj header    
     console.log(
-        (FM.isset(callerinfo) ? callerinfo : "Unknown") +
-        " [" + FM.getLogTypeName(level) + "]:" +
+        "[" + FM.getLogTypeName(level) + "]:" +
+        (FM.isset(callerinfo) ? callerinfo : "Unknown") + " " +  
         (msg && !FM.isString(msg) ? '' : msg)
         );
 

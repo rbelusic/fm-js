@@ -549,8 +549,9 @@ FM.DmList.prototype.get = function(key, aname) {
     }
 
     // drito u listu pod dataid-u
-    if (FM.isset(this.objectsList[key.toString()])) {
-        return this.objectsList[key.toString()];
+    key = key.toString();
+    if (key && key != '' && FM.isset(this.objectsList[key])) {
+        return this.objectsList[key];
     }
 
     // nije nadjen

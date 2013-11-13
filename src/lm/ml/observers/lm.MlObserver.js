@@ -448,6 +448,11 @@ FM.MlObserver.prototype.getValue = function() {
 
 
     // conf
+    if(!this.isAttr('data-fmml-attr-name') && !this.isAttr('data-fmml-attr-default-value')) {
+        this.log("Attribute name is not defined, returning undefined.", FM.logLevels.warn, 'MlObserver.getValue');
+        return undefined;
+    }
+    
     var attrname = this.getAttr('data-fmml-attr-name', '');
     var defval = this.resolveAttrValue('data-fmml-attr-default-value', '');
     var dmobj = this.getDmObject();
@@ -569,7 +574,11 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
 
     // get value
     var nfvalue = this.getValue();
-
+    if(!FM.isset(nfvalue)) {
+        this.log("Undefined value, aborting.", FM.logLevels.warn, 'MlObserver.setNodeValue');
+        return;
+    }
+    
     // formating
     this.log("Formating value [" + nfvalue + "]...", FM.logLevels.debug, 'MlObserver.setNodeValue');
     var value = this._formatValueForRendering(nfvalue);

@@ -138,79 +138,102 @@ FM.MlHostGenericCollection.prototype.setDmObject = function(o) {
     }
 }
 
-// SELECTION
+// SELECTION (use data-fmml-list-id)
 FM.MlHostGenericCollection.prototype.clearSelection = function(sendevent) {
     this.selectedItems = {};
-    $(this.listItemsContainer).find(".fmmlSelected").removeClass("fmmlSelected");
-    if (FM.isset(sendevent) && sendevent)
-        this.updateAllObservers();
+    var nodes = $(this.listItemsContainer).find(
+        "[data-fmml-list-id='" + this.getID() + "']"
+    ).filter(".fmmlSelected");
+    
+    if(nodes.length > 0) {
+        nodes.removeClass("fmmlSelected");
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+    }
 }
 
-FM.MlHostGenericCollection.prototype.addToSelection = function(o, node, sendevent) {
-    if (this.maxSelected == 0) {
+FM.MlHostGenericCollection.prototype.addToSelection = function(o, sendevent) {
+    if (this.maxSelected == 0) { 
+        return;        
+    } 
+    
+    if (FM.isArray(o)) {
+        for (var i = 0; i < o.length; i++) {
+            this.addToSelection(o[i],node,false);
+        }
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
         return;
-    } else if (this.maxSelected == 1) {
+    }
+        
+    if (this.maxSelected == 1) {
         this.clearSelection(false);
     } else if (this.maxSelected != -1) {
-        var cnt = 0;
-        FM.forEach(this.selectedItems, function(id, obj) {
-            if (obj == true)
-                cnt++;
-            return true;
-        });
-        if (cnt >= this.maxSelected)
+         if (this.getSelectionSize() >= this.maxSelected)
             return;
     }
 
-    if (FM.isArray(o)) {
-        for (var i = 0; i < o.length; i++) {
-            this.selectedItems[o[i].getDataID()] = true;
-        }
-    } else {
-        var oid = FM.isset(o) && o ?
-                (FM.isString(o) ? o : o.getDataID()) :
-                ''
-                ;
-        this.selectedItems[oid] = true;
-    }
-    if (FM.isset(node) && node)
+    var oid = FM.isset(o) && o ?
+        (FM.isString(o) ? o : o.getDataID()) :
+        ''
+    ;
+    this.selectedItems[oid] = true;
+
+        
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
         $(node).addClass("fmmlSelected");
-    if (FM.isset(sendevent) && sendevent)
+    }
+    if (FM.isset(sendevent) && sendevent) {
         this.updateAllObservers();
+    }
 }
 
-FM.MlHostGenericCollection.prototype.removeFromSelection = function(o, node, sendevent) {
+FM.MlHostGenericCollection.prototype.removeFromSelection = function(o, sendevent) {
     if (FM.isArray(o)) {
         for (var i = 0; i < o.length; i++) {
-            if (FM.isset(o[i]) && o[i] && FM.isset(this.selectedItems[o[i].getDataID()])) {
-                this.selectedItems[o[i].getDataID()] = false;
-            }
+            this.removeFromSelection(o[i],node,false);
         }
-    } else {
-        var oid = FM.isset(o) && o ?
-                (FM.isString(o) ? o : o.getDataID()) :
-                ''
-                ;
-        if (FM.isset(this.selectedItems[oid]))
-            this.selectedItems[oid] = false;
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+        return;
     }
 
-    if (FM.isset(node) && node)
+    var oid = FM.isset(o) && o ?
+        (FM.isString(o) ? o : o.getDataID()) :
+        ''
+    ;
+    if (FM.isset(this.selectedItems[oid])) {
+        delete this.selectedItems[oid];
+    }
+    
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
         $(node).removeClass("fmmlSelected");
-    if (FM.isset(sendevent) && sendevent)
+    }
+    
+    if (FM.isset(sendevent) && sendevent) {
         this.updateAllObservers();
+    }
 }
 
 FM.MlHostGenericCollection.prototype.isSelected = function(o) {
     var id = FM.isset(o) && o ?
             (FM.isString(o) ? o : o.getDataID()) :
             '';
-    return(id != '' && FM.isset(this.selectedItems[id]) && this.selectedItems[id]);
+    return(id != '' && FM.isset(this.selectedItems[id]));
 }
 
 FM.MlHostGenericCollection.prototype.getSelectionSize = function() {
     var cnt = 0;
-    FM.forEach(this.selectedItems, function(id) {
+    FM.forEach(this.selectedItems, function() {
         cnt++;
         return true;
     });
@@ -225,24 +248,48 @@ FM.MlHostGenericCollection.prototype.getSelection = function() {
     if (lst) {
         FM.forEach(this.selectedItems, function(id) {
             var o = lst.get(id);
-            if (o)
+            if (o) {
                 sel.push(o);
+            }
             return true;
         });
     }
     return sel;
 }
 
-FM.MlHostGenericCollection.prototype.onClearSelection = function(oSender, evdata) {
+FM.MlHostGenericCollection.prototype.onClearSelection = function() {
+    this.clearSelection(true);
+}
+
+
+FM.MlHostGenericCollection.prototype.onSelected = function(oSender, evdata) {
     var evObj = FM.getAttr(evdata, 'object', null);
-    var evCb = FM.getAttr(evdata, 'callback', function() {
-    });
 
-    if (evObj)
-        this.clearSelection(true);
+    if (oSender && evObj) {
+        this.addToSelection(evObj, this._getNodeListNode(oSender.getNode()), true);
+    }
+}
 
-    // kraj
-    return true;
+FM.MlHostGenericCollection.prototype.onDeselected = function(oSender, evdata) {
+    var evObj = FM.getAttr(evdata, 'object', null);
+
+    if (oSender && evObj) {
+        this.removeFromSelection(evObj, this._getNodeListNode(oSender.getNode()), true);
+    }
+}
+
+
+FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender, evdata) {
+    var evObj = FM.getAttr(evdata, 'object', null);
+    var itmObj = this._getSelectionEventItem(oSender,FM.getAttr(evdata, 'object', null));
+    if(!itmObj) {
+        return;
+    }
+    if (!this.isSelected(itmObj)) {
+        this.addToSelection(itmObj, true)
+    } else {
+        this.removeFromSelection(itmObj, true);
+    }
 }
 
 // PAGING
@@ -459,17 +506,6 @@ FM.MlHostGenericCollection.prototype.onChangeListLayout = function(sender, evdat
     this._refreshItems();
 }
 
-FM.MlHostGenericCollection.prototype.getSelectedCount = function() {
-    var cnt = 0;
-    FM.forEach(this.selectedItems, function(id, obj) {
-        if (obj == true)
-            cnt++;
-        return true;
-    });
-
-    // kraj
-    return cnt;
-}
 
 FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
     var dmList = this.getDmObject();
@@ -489,53 +525,6 @@ FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
     return itemscnt;
 }
 
-FM.MlHostGenericCollection.prototype.onSelected = function(oSender, evdata) {
-    var evObj = FM.getAttr(evdata, 'object', null);
-    var evCb = FM.getAttr(evdata, 'callback', function() {
-    });
-    if (evObj)
-        this.addToSelection(evObj, this._getNodeListNode(oSender.getNode()), true);
-
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onDeselected = function(oSender, evdata) {
-    var evObj = FM.getAttr(evdata, 'object', null);
-    var evCb = FM.getAttr(evdata, 'callback', function() {
-    });
-
-    if (evObj)
-        this.removeFromSelection(evObj, this._getNodeListNode(oSender.getNode()), true);
-
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender, evdata) {
-    var evObj = FM.getAttr(evdata, 'object', null);
-    var evCb = FM.getAttr(evdata, 'callback', function() {
-    });
-    var id = '';
-    if (oSender && evObj) {
-        var inode = this._getNodeListNode(oSender.getNode());
-
-        if (inode && FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-            id = $(inode).attr('data-fmml-item-data-id');
-        }
-        if (id != '') {
-            if (!this.isSelected(id)) {
-                this.addToSelection(id, inode, true)
-            } else {
-                this.removeFromSelection(id, inode, true);
-            }
-        }
-    }
-
-    // kraj
-    return true;
-}
-
 // private
 FM.MlHostGenericCollection.prototype._findNodeWithClass = function(parent, cls, def) {
     var node = $(parent).find("." + cls);
@@ -548,22 +537,32 @@ FM.MlHostGenericCollection.prototype._clearItems = function() {
 }
 
 FM.MlHostGenericCollection.prototype._nodeApplyTemplate = function(node, attrs) {
-    FM.forEach(node.attributes, function(i, attr) {
-        if (attr.specified == true) {
-            var val = FM.applyTemplate(attrs, attr.value, false, false);
-            if (val != attr.value) {
-                attr.value = val;
+    if(FM.isset(node.attributes)) {
+        FM.forEach(node.attributes, function(i, attr) {
+            if (attr.specified == true) {
+                var val = FM.applyTemplate(attrs, attr.value, false, false);
+                if (val != attr.value) {
+                    attr.value = val;
+                }
             }
-        }
-        return true;
-    });
+            return true;
+        });
 
+        var me = this;
+        $(node).children().each(function() {
+            me._nodeApplyTemplate(this,attrs);
+            return true;
+        });
+    }
+    return node;
 }
 
 FM.MlHostGenericCollection.prototype._refreshItems = function() {
+    this.log("Refresh listi items ...", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
     this._clearItems();
     var dmList = this.getDmObject();
     if (!dmList) {
+        this.log("DmList not found.", FM.logLevels.warn, 'MlHostGenericCollection._refreshItems');
         return false;
     }
     var me = this;
@@ -639,47 +638,51 @@ FM.MlHostGenericCollection.prototype._refreshItems = function() {
 
     // send event
     this.sendEventToObservers(this, 'onListRefreshCompleted');
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
 }
 
 FM.MlHostGenericCollection.prototype._createItmNode = function(oObj, attrs, templ) {
     var iNode;
     var curitm = parseInt(FM.getAttr(attrs, 'listIndex', '0'));
-
+    this.log("Creating " + curitm + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
     // create node for data (from template)
     var itm = $(templ);
     if (!itm) {
+        this.log("Invalid item template.", FM.logLevels.error, 'MlHostGenericCollection._createItmNode');
         return;
     }
 
     // if inner node is defined append itm as child of inner node
     if (this.listItemsInner) {
         iNode = $(this.listItemsInner).clone();
-        if (FM.isArray(iNode) && iNode.length > 0) {
+        if (iNode && iNode.length) {
             iNode = iNode[0];
         }
-        $(iNode).append(itm);
-        itm = iNode;
+        itm = $(iNode).append(itm);
     }
 
     // if wrapper is defined
     if (this.listItemsWrapper) {
         var iNode = $(this.listItemsWrapper).clone();
-        if (FM.isArray(iNode) && iNode.length > 0) {
+        if (iNode && iNode.length) {
             iNode = iNode[0];
         }        
-        $(iNode).append(itm);
-        itm = iNode;
+        itm = $(iNode).append(itm);
     }
-    this._nodeApplyTemplate(itm, attrs);
+    itm = itm[0];
+    itm = this._nodeApplyTemplate(itm, attrs);
 
     $(itm).attr('data-fmml-list-index', curitm);
+    $(itm).attr('data-fmml-list-id', this.getID());
     $(itm).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
-    $(itm).attr('data-fmml-item-data-id', oObj ? oObj.getDataID() : 'unknown');
-
+    $(itm).attr('data-fmml-item-data-id', oObj && oObj.getDataID ? oObj.getDataID() : 'unknown');
+    this.log("" + curitm + ". created. Appending node to dom", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
     this._appendItmNode(oObj, itm, curitm);
 }
 
 FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj, node, index) {
+    this.log("Appending " + index + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    this.log(node, FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
     var lastNode = null;
     var lastNodeIndex = -1;
     for (var i = index - 1; i >= 0 && lastNodeIndex == -1; i--) {
@@ -698,7 +701,9 @@ FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj, node, index
     // ML init
     //if (oObj) {
     FM.MlHost.initChildNodes(this.getApp(), node, oObj, this.listItemsWrapper != null);
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
     //}
+    
 }
 
 FM.MlHostGenericCollection.prototype._filterItemFromDisplay = function(oObj) {
@@ -729,6 +734,18 @@ FM.MlHostGenericCollection.prototype._getNodeListNode = function(node) {
     return rnode;
 }
 
+FM.MlHostGenericCollection.prototype._getSelectionEventItem = function(oSender, evobj) {
+    var lst = this.getDmObject();
+    if(!lst) {
+        return null;
+    }
+    
+    if(evobj.getSubClassName() == 'GenericValue') {
+        return lst.get(evobj.getAttr('value'));
+    }
+    
+    lst.get(evobj.getDataID());
+}
 
 FM.MlHostGenericCollection.DEF_LIST_SIZE = 5;
 
