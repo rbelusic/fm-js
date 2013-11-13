@@ -1,0 +1,39 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>        
+        <script src="../../../js/fm-js-all.js"></script> 
+
+        <link rel="stylesheet" href="../common/ex-common.css" />
+        <script src="../common/ex-common.js"></script> 
+        <script src="ex-gchost.js"></script>             
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <h2>Show various ways to run FM.MlHostGenericCollection.</h2>
+        <p>[example description]</p>
+
+        <hr>
+        <h4>Create new DmObject with ml attributes,</h4>
+        <div data-fmml-host="GenericCollection" 
+             data-fmml-list="staticListExample"
+             >
+            <div class="fmmlListItems">
+                <div class="fmmlListItemsTemplate"
+                     data-fmml-host="Host"
+                     >
+                    id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+                    name: <span data-fmml-observer="Observer" data-fmml-attr-name="name"></span></br>
+                    description: <span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

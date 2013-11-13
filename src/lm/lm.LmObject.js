@@ -22,7 +22,7 @@ FM.LmObject.prototype._init = function(app,opt) {
     this.setApp(app);
     this.setDmObject();
 
-    this._super("_init",opt);
+    this._super("_init",opt); // all attributes are alowed
     this.objectSubClass = "Object";
 }
 

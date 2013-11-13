@@ -85,6 +85,7 @@ FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr) {
     return(lst);
 }
 
+
 /**
  * Dispose DM list.
  *
@@ -165,24 +166,33 @@ FM.AppObject.prototype.setLastError = function(oErr) {
 }
 
 /**
- * Creates DM list, executes FM.DmList.getData  method 
- * and returns first object in reponse.
+ * Creates DM list, executes list getData() method 
+ * and returns first object in reponse if returnList is not equal true.
+ * Return list itself if returnList is true.
  * 
  * @public
  * @function 
  * @param {string} listId DM list configuration name.
+ * @param {boolean} returnList Return list instead first object.
  * @param {object} [attrs={}] DM list fetch arguments.
  * @param {function} cbfn Callback function in form
  * <i>function(isok,oResponse) {}</i>. 
  */
-FM.AppObject.prototype.getCustomObject = function(listId,attrs,cbfn) {
-    listId = FM.isset(listId) && id && FM.isString(listId) ? listId : '';
+FM.AppObject.prototype.getCustomObject = function(listId,returnList,attrs,cbfn) {
+    listId = FM.isset(listId) && listId && FM.isString(listId) ? listId : '';
     attrs  = FM.isset(attrs) && attrs && FM.isObject(attrs) ? attrs : {};
     var me = this;
     
     var dmlist = this.dmListFactory(attrs,listId,true);
     
     var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};
+
+    // if returnList == true return list
+    if(returnList == true) {
+        me.log("Returning created dmList.",FM.logLevels.info,'FM.AppObject.getCustomObject');
+        callbackFn(true,dmlist);
+        return;
+    }
     
     // create listener 
     var lstnr = {
