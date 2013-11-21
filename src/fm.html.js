@@ -16,6 +16,7 @@ FM.nodeToHtml = function(node) {
 }
 
 /**
+ * BAd method name (returning attribute vačue instead node)
  * @ignore
  * 
  */

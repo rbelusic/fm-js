@@ -350,7 +350,10 @@ FM.MlObserver.prototype.update = function() {
     var dmObj = this.getDmObject();
     var dtstmp = dmObj ? dmObj.getProperty('timestamp', '0') : '0';
 
-    if (dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')) {
+    if (
+        dmObj && dmObj.isAttr(this.getAttr('data-fmml-attr-name','')) && 
+        dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')
+    ) {
         this.log("Aborting, processed updateTimestamp.", FM.logLevels.debug, 'MlObserver.update');
         return false;
     }
@@ -393,7 +396,7 @@ FM.MlObserver.prototype.update = function() {
         retc = true;
     }
 
-    this.log("Done.", FM.logLevels.warn, 'MlObserver.update');
+    this.log("Done.", FM.logLevels.debug, 'MlObserver.update');
     return retc;
 }
 

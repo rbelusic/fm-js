@@ -2,7 +2,7 @@
  * dont't forget to include common/ex-common.js first
  * 
  */
-// == create static dm list from date format definitions =======================
+// == create static dm list from date format definitions
 FM.DmList.addConfiguration('dateFormats', {
     responseObject: FM.DmObject,
     data: (function(){

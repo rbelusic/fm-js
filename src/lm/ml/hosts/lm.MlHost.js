@@ -164,6 +164,8 @@ FM.MlHost.prototype._init = function(app, attrs, node) {
     this._super("_init", app, attrs);
     this.objectSubClass = "Host";
 
+    this.log(attrs, FM.logLevels.debug, 'MlHost._init');
+    
     this.setNode(node);
     this.masterHost = null;
 
@@ -174,6 +176,8 @@ FM.MlHost.prototype._init = function(app, attrs, node) {
     this.node.fmmlHost = this;
     this.getApp().addListener(this);
     this.addListener(this.getApp());
+    
+    this.log("New host created.", FM.logLevels.debug, 'MlHost._init');
 }
 
 /**
@@ -184,15 +188,20 @@ FM.MlHost.prototype._init = function(app, attrs, node) {
  * @param {FM.DmObject} [dmObj] Host DM object.
  */
 FM.MlHost.prototype.run = function(dmObj) {
+    this.log(this.getNode(), FM.logLevels.debug, 'MlHost.run');
+    
     this._super("run"); // without dmobject, we will chose him later
     if (this.getAttr('data-fmml-run-maximized', 'false') == 'true') {
+        this.log("Set host fullscreen mode.", FM.logLevels.debug, 'MlHost.run');
         this.onMaximize();
     }
 
     // determine host dmobject
+    this.log("Select DM object ...", FM.logLevels.debug, 'MlHost.run');
     this._selectDmObject(dmObj);
 
     // run all observers
+    this.log("Starting all observers ...", FM.logLevels.debug, 'MlHost.run');
     var obsrv = this.listOfObservers;
     for (var id in obsrv) {
         try {
@@ -201,6 +210,9 @@ FM.MlHost.prototype.run = function(dmObj) {
             this.log(e, FM.logLevels.error, 'MlHost.run');
         }
     }
+    
+    this.log("New host started.", FM.logLevels.debug, 'MlHost.run');
+    return true;
 }
 
 /**
@@ -211,11 +223,13 @@ FM.MlHost.prototype.run = function(dmObj) {
  * @returns {Boolean}
  */
 FM.MlHost.prototype.addObserver = function(o) {
-    if (!FM.isset(o) || !o || !FM.isset(o.getID))
+    if (!FM.isset(o) || !o || !FM.isset(o.getID)) {
         return false;
+    }
     this.listOfObservers[o.getID()] = o;
-    if (this.executed)
+    if (this.executed) {
         o.run();
+    }
     this.updateObserver(o);
     return true;
 }
@@ -237,12 +251,12 @@ FM.MlHost.prototype.removeObserver = function(o) {
         return false;
 
     for (var id in this.listOfObservers) {
-        if (objId != id)
+        if (objId != id) {
             nlist[id] = this.listOfObservers[id];
+        }
     }
 
     this.listOfObservers = nlist;
-
     return true;
 }
 
@@ -294,8 +308,9 @@ FM.MlHost.prototype.updateAllObservers = function() {
  */
 FM.MlHost.prototype.verifyAllObservers = function(force) {
     for (var id in this.listOfObservers) {
-        if (!this.verifyObserver(this.listOfObservers[id], force))
+        if (!this.verifyObserver(this.listOfObservers[id], force)) {
             return false;
+        }
     }
     return true;
 }
@@ -326,7 +341,6 @@ FM.MlHost.prototype.sendEventToObservers = function(sender, ev, data) {
         var o = this.listOfObservers[id];
         if (o.executed) {
             fnd = o.onHostEvent(sender, ev, data);
-            //this.updateObserver(o);
         }
     }
 
