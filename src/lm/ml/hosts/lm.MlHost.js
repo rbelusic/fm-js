@@ -155,6 +155,10 @@
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+        &lt;div data-fmml-host="Host"&gt;...&lt;/div&gt;
  */
 
 FM.MlHost = FM.defineClass('MlHost', FM.LmObject);
@@ -514,7 +518,6 @@ FM.MlHost.prototype.getMasterHost = function() {
  * @event
  * @public
  * @param {FM.Object} sender Source of event.
- * @param {FM.Object} obj Changed DM object (usualy same as sender)
  */
 FM.MlHost.prototype.onChange = function(sender, obj) {
     if (sender == this.getDmObject()) {

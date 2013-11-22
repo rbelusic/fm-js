@@ -98,6 +98,15 @@
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+        &lt;div data-fmml-host="Host"&gt;
+            &lt;span 
+                data-fmml-observer=&quot;Observer&quot; 
+                data-fmml-attr-name=&quot;value&quot;
+            &gt;&lt;/span&gt;
+        &lt;/div&gt;
  */
 FM.MlObserver = FM.defineClass('MlObserver', FM.LmObject);
 

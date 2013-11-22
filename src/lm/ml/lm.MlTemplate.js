@@ -48,6 +48,17 @@
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template (using rote template) --&gt;
+    &lt;a href=&quot;#route1&quot;&gt;First template&lt;/a&gt;
+    &lt;a href=&quot;#route2&quot;&gt;Second template&lt;/a&gt;
+    &lt;p
+        data-fmml-template=&quot;local.[:hash].html&quot;
+        data-fmml-template-type=&quot;route&quot;
+        data-fmml-template-attr-hash=&quot;@FM.getArgs(&#39;_page.hash&#39;,&#39;route1&#39;)&quot;
+     &gt;
+     &lt;/p&gt;
  */
 FM.MlTemplate = FM.defineClass('MlTemplate',FM.LmObject);
 
