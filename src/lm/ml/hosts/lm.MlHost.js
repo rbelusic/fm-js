@@ -158,7 +158,7 @@
  * 
  * @example 
     &lt;!-- example of HTML template --&gt;
-        &lt;div data-fmml-host="Host"&gt;...&lt;/div&gt;
+    &lt;div data-fmml-host="Host"&gt;...&lt;/div&gt;
  */
 
 FM.MlHost = FM.defineClass('MlHost', FM.LmObject);
