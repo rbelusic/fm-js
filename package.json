@@ -1,9 +1,12 @@
 {
   "name": "fm-js",
-  "version": "0.0.0",
+  "version": "0.9.5",
   "description": "fm-js is a simple and flexible HTML5 webapp framework based on observer pattern",
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "yeti test/test.html"
+  },
+  "engines": {
+    "node": ">0.4.12"
   },
   "keywords": [
     "javascript",
@@ -47,6 +50,8 @@
     "jsdoc-toolkit": "~0.0.2",
     "grunt-exec": "~0.4.2",
     "grunt-contrib-compress": "~0.4.0",
-    "grunt-gitinfo": "~0.1.1"
+    "grunt-gitinfo": "~0.1.1",
+    "yui": "~3.13.0",
+    "yeti": "~0.2.24"
   }
 }
