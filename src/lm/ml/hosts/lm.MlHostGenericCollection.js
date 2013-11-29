@@ -1,14 +1,124 @@
 /**
- * ML generic collection host class. 
+ * Generic collection host. 
  * 
  * @class FM.MlHostGenericCollection
  * @memberOf FM
  * @extends FM.MlHost
- * @param {FM.AppObject} app application object
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
- * 
- * data-fmml-list-max-items, 'data-fmml-list-items-template-base,
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] DOM node attributes.
+ * @param {DOMnode} node DOM node. 
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-list-max-items</td>
+ *    <td>Maximum number of items to display on page</td>
+ *    <td>200</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-layout</td>
+ *    <td>Items layout. Layout can be used as <i>itemsLayout</i> 
+ *    bind variable for <i>data-fmml-list-items-template-base</i></td>
+ *    <td>icon</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-template-base</td>
+ *    <td>
+ *      Template name for list items. Availilable bind variables are item attributes, 
+ *      <i>objectClass</i> (items class name),
+ *      <i>data_id</i> (items data id value),
+ *      <i>listIndex</i> (current list index),
+ *      <i>itemsLayout</i> (value of <i>data-fmml-list-items-layout</i>
+ *      DOM attribute).
+ *    </td>
+ *    <td>"ui.layouts.dm.[:objectClass].[:itemsLayout].html"</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-template-empty</td>
+ *    <td>
+ *      Template for populating empty rows.
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list</td>
+ *    <td>
+ *      Name of DM list configuration used to populate collection. 
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-attr-[name]</td>
+ *    <td>
+ *      DM List attributes.
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-fetch-on-run</td>
+ *    <td>
+ *      Get data from list on host run. 
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-class</td>
+ *    <td>
+ *      Restrict host DM object to one with given class. 
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-id</td>
+ *    <td>
+ *      if set to <i>true</i>, call fetch function with object containing all
+ *      attributes defined with <i>data-fmml-object-attr-[attr]</i>, otherwise
+ *      fetch DM object with given data ID and <i>data-fmml-object-class</i> class. 
+ *      Function with name 'get[<i>data-fmml-object-class</i>] if one exists in host or application.      
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list</td>
+ *    <td>
+ *      DM object is first object in response returned from named DM list.
+ *      <i>data-fmml-object-id</i> is sent as argument, or object with
+ *      all <i>data-fmml-object-attr-&lt;attr name&gt;</i>atributes defined.      
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-attr-[attr]</td>
+ *    <td>
+ *      Define value of <i>attr<i> DM object attribute. If host can't obtain DM object
+ *      from other sources, new one with defined attributes will be created.
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-init</td>
+ *    <td>
+ *      Run host after creation.
+ *    </td>
+ *    <td>[true], false</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-host-event-[event]</td>
+ *    <td>
+ *      Evaluate content of attribute on <i>event</i> event.
+ *    </td>
+ *    <td>@...</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ */
+
+/* data-fmml-list-max-items, 'data-fmml-list-items-template-base,
  * data-fmml-list-items-template-empty, data-fmml-list-items-layout,
  * data-fmml-list, data-fmml-list-attr-*,data-fmml-list-fetch-on-run,
  * data-fmml-list-refresh-on-change,data-fmml-fromrow-attr-name,

@@ -1,3 +1,11 @@
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
 /**
 * Text translation DM class.
 * 
@@ -5,6 +13,8 @@
 * @extends FM.DmObject
 * @memberOf FM
 * @param {object} attrs list of attribute name and values
+* @param {string} attrs.text Original text.
+* @param {string} attrs.translation Text translation.
 */    
 
 FM.DmTranslation = FM.defineClass('DmTranslation',FM.DmObject);
@@ -17,7 +27,14 @@ FM.DmTranslation.prototype._init = function(attrs) {
     });
     this.objectSubClass = "Translation";
 }
-        
+
+/**
+ * Returns data ID of data model (<i>text</i> attribute value). 
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
 FM.DmTranslation.prototype.getDataID = function() {
     return this.getAttr("text",'');
 }

@@ -1,5 +1,5 @@
 /**
-* HTTP request query parameters host class. 
+* Current page query parameters host class. 
 * 
 * @class FM.MlHostQueryParams
 * @memberOf FM
