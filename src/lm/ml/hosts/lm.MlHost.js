@@ -3,6 +3,36 @@
  * 
  * @review isipka
  * 
+ * ovo je flow za kreiranje dmobjekta:
+ * host:
+1. param dmobj (ako je data-fmml-object-class ok ili '') [false]
+	return 
+
+2. data-fmml-object-ref = funkcija koja ce vratiti dmobjekt [true]
+	return
+
+3. data-fmml-master-host (dmobjekt master hosta) [false]
+	return
+
+4. attributi (data-fmml-object-attr-*) 
+5. dodaj attribute iz dmobjekta linked hosta (data-fmml-linked-host)
+6. id = id != '' ? id : true
+  
+7. data-fmml-list != '' && data-fmml-object-id != ''
+    7a. data-fmml-object-class == 'List' - vraca listu
+    7b. data-fmml-object-class != 'List' - vraca prvi nafetchan obj iz listu
+	getCustomObject(...
+            data-fmml-object-id|attrs if id=true
+            ...
+            )
+	return
+
+8. data-fmml-object-class != '' && data-fmml-object-id != ''
+	host|app.get[data-fmml-object-class](data-fmml-object-id|attrs if id=true);
+	true;
+
+9. kreiraj objekt iz atributa
+
  * -----------------------------------------------------------------------------
  */
 
@@ -78,7 +108,7 @@
  *   <tr>
  *    <td>data-fmml-object-class</td>
  *    <td>
- *      Restrict host DM object to one with given class. 
+ *      Restrict host DM object to one with given class.
  *    </td>
  *    <td></td>
  *   </tr>
@@ -125,6 +155,10 @@
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host="Host"&gt;...&lt;/div&gt;
  */
 
 FM.MlHost = FM.defineClass('MlHost', FM.LmObject);
@@ -134,20 +168,20 @@ FM.MlHost.prototype._init = function(app, attrs, node) {
     this._super("_init", app, attrs);
     this.objectSubClass = "Host";
 
+    this.log(attrs, FM.logLevels.debug, 'MlHost._init');
+    
     this.setNode(node);
     this.masterHost = null;
 
     this.listOfObservers = {};
 
-    this.clsParams = {
-        id: '',
-        className: ''
-    }
 
     // two way binding
     this.node.fmmlHost = this;
     this.getApp().addListener(this);
     this.addListener(this.getApp());
+    
+    this.log("New host created.", FM.logLevels.debug, 'MlHost._init');
 }
 
 /**
@@ -158,16 +192,20 @@ FM.MlHost.prototype._init = function(app, attrs, node) {
  * @param {FM.DmObject} [dmObj] Host DM object.
  */
 FM.MlHost.prototype.run = function(dmObj) {
-    this._super("run");
-
+    this.log(this.getNode(), FM.logLevels.debug, 'MlHost.run');
+    
+    this._super("run"); // without dmobject, we will chose him later
     if (this.getAttr('data-fmml-run-maximized', 'false') == 'true') {
+        this.log("Set host fullscreen mode.", FM.logLevels.debug, 'MlHost.run');
         this.onMaximize();
     }
 
     // determine host dmobject
+    this.log("Select DM object ...", FM.logLevels.debug, 'MlHost.run');
     this._selectDmObject(dmObj);
 
     // run all observers
+    this.log("Starting all observers ...", FM.logLevels.debug, 'MlHost.run');
     var obsrv = this.listOfObservers;
     for (var id in obsrv) {
         try {
@@ -176,6 +214,9 @@ FM.MlHost.prototype.run = function(dmObj) {
             this.log(e, FM.logLevels.error, 'MlHost.run');
         }
     }
+    
+    this.log("New host started.", FM.logLevels.debug, 'MlHost.run');
+    return true;
 }
 
 /**
@@ -186,11 +227,13 @@ FM.MlHost.prototype.run = function(dmObj) {
  * @returns {Boolean}
  */
 FM.MlHost.prototype.addObserver = function(o) {
-    if (!FM.isset(o) || !o || !FM.isset(o.getID))
+    if (!FM.isset(o) || !o || !FM.isset(o.getID)) {
         return false;
+    }
     this.listOfObservers[o.getID()] = o;
-    if (this.executed)
+    if (this.executed) {
         o.run();
+    }
     this.updateObserver(o);
     return true;
 }
@@ -212,12 +255,12 @@ FM.MlHost.prototype.removeObserver = function(o) {
         return false;
 
     for (var id in this.listOfObservers) {
-        if (objId != id)
+        if (objId != id) {
             nlist[id] = this.listOfObservers[id];
+        }
     }
 
     this.listOfObservers = nlist;
-
     return true;
 }
 
@@ -269,8 +312,9 @@ FM.MlHost.prototype.updateAllObservers = function() {
  */
 FM.MlHost.prototype.verifyAllObservers = function(force) {
     for (var id in this.listOfObservers) {
-        if (!this.verifyObserver(this.listOfObservers[id], force))
+        if (!this.verifyObserver(this.listOfObservers[id], force)) {
             return false;
+        }
     }
     return true;
 }
@@ -301,7 +345,6 @@ FM.MlHost.prototype.sendEventToObservers = function(sender, ev, data) {
         var o = this.listOfObservers[id];
         if (o.executed) {
             fnd = o.onHostEvent(sender, ev, data);
-            //this.updateObserver(o);
         }
     }
 
@@ -475,7 +518,6 @@ FM.MlHost.prototype.getMasterHost = function() {
  * @event
  * @public
  * @param {FM.Object} sender Source of event.
- * @param {FM.Object} obj Changed DM object (usualy same as sender)
  */
 FM.MlHost.prototype.onChange = function(sender, obj) {
     if (sender == this.getDmObject()) {
@@ -591,27 +633,27 @@ FM.MlHost.prototype._selectDmObject = function(dmObj) {
     var id = this.getAttr("data-fmml-object-id", '');
     var className = this.getAttr("data-fmml-object-class", '');
     var dmconfName = this.getAttr('data-fmml-list', '');
-
-    // fill attrs from node attr and linked host
-    var dmAttrs = {};
-    this.forEachAttr(function(n, v) {
-        if (FM.startsWith(n, 'data-fmml-object-attr-')) {
-            dmAttrs[n.substr(22)] = v;
-        }
-        return true;
-    });
-    var lhost = this.getLinkedHost();
-    if (lhost) {
-        var lhostObj = lhost.getDmObject();
-        lhostObj.forEachAttr(function(pname, value) {
-            dmAttrs[pname] = value;
-            return true;
+    
+    // resolve class name & id
+    id = id == 'true' ? id :
+        FM.resolveAttrValue(null, "-", id, {
+            A: this.getApp(),
+            H: this,
+            D: null
         });
-    }
 
+    className = FM.resolveAttrValue(null, "-", className, {
+        A: this.getApp(),
+        H: this,
+        D: null
+    });
+    
     // == object is sent (not null, same sc name as data-fmml-object-class or data-fmml-object-class is not defined) ==
     // disposing depends of data-fmml-object-destroy-on-dispose (def false)
-    if (FM.isset(dmObj) && dmObj && dmObj.getSubClassName && (className == '' || dmObj.getSubClassName() == className)) {
+    if (
+        FM.isset(dmObj) && dmObj &&
+        dmObj.getSubClassName && (className == '' || dmObj.getSubClassName() == className)
+    ) {
         this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'false'));
         this.setDmObject(dmObj);
         return;
@@ -619,19 +661,23 @@ FM.MlHost.prototype._selectDmObject = function(dmObj) {
 
     // == check ref param (data-fmml-object-ref, start with @) =================
     // disposing depends of data-fmml-object-destroy-on-dispose (def true)
-    else if (objRef != '' && FM.startsWith(objRef, '@')) {
-        this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
-        dmObj = FM.resolveAttrValue(null, "-", objRef, {
-            A: this.getApp(),
-            H: this
-        });
-        this.setDmObject(dmObj ? dmObj : null);
+    if (objRef != '') {
+        dmObj = null;
+        if(FM.startsWith(objRef, '@')) {
+            this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
+            dmObj = FM.resolveAttrValue(null, "-", objRef, {
+                A: this.getApp(),
+                H: this
+            });
+        }
+        this.setDmObject(dmObj);
         return;
     }
 
     // == master host (true - first parent host, or dom node id with host) =====
     // disposing depends of data-fmml-object-destroy-on-dispose (def false)
     if (mhostid != '') {
+        dmObj = null;
         if (mhostid == 'true') {
             this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
         } else {
@@ -641,29 +687,57 @@ FM.MlHost.prototype._selectDmObject = function(dmObj) {
         // if found, add listener & get dmobject
         if (this.masterHost) {
             this.masterHost.addListener(this);
-            dmObj = this.masterHost.getDmObject();
-            this.setDmObject(dmObj ? dmObj : null);
-            this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'false'));
-            return;
+            dmObj = this.masterHost.getDmObject();            
+            this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'false'));            
         }
+        this.setDmObject(dmObj);
+        return;
     }
 
-    // == get object by class & id =============================================
-
-    // resolve class name & id
-    id = id == 'true' ? id :
-            FM.resolveAttrValue(null, "-", id, {
-                A: this.getApp(),
-                H: this,
-                D: this.getDmObject()
-            });
-
-    className = FM.resolveAttrValue(null, "-", className, {
-        A: this.getApp(),
-        H: this,
-        D: this.getDmObject()
+    // fill attrs from node attr and linked host
+    var dmAttrs = {};
+    this.forEachAttr(function(n, v) {
+        if (FM.startsWith(n, 'data-fmml-object-attr-')) {
+            dmAttrs[n.substr(22)] = v;
+        }
+        return true;
     });
-
+    
+    var lhost = this.getLinkedHost();
+    if (lhost && lhost.getDmObject()) {
+        var lhostObj = lhost.getDmObject();
+        lhostObj.forEachAttr(function(pname, value) {
+            dmAttrs[pname] = value;
+            return true;
+        });
+    }
+    
+    // remote fetch, cb fn
+    var me = this;
+    var cbfn = function(isok, oObj) {
+        if (isok) {
+            me.setDmObject(oObj);
+        }
+        else {
+            me.setDmObject(null);
+        }
+    };
+    
+    
+    // == get object by list =============================================
+    if (this.getApp() && dmconfName != '' && id != '') {
+        this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));        
+        this.getApp().getCustomObject(
+            dmconfName,
+            className == 'List',
+            id == 'true' ? dmAttrs : {id: id},
+            cbfn
+        );
+        return;
+    }
+    
+    
+    // == get object by class & id =============================================
     // if class is defined  and id is not empty (real id or true) call getter  
     // in host or in app
     // if id == 'true' send obj with attrs to fn or id if it is not
@@ -672,29 +746,14 @@ FM.MlHost.prototype._selectDmObject = function(dmObj) {
 
         // call args                
         var fnName = 'get' + className;
-        var args = id == 'true' ? dmAttrs : id;
-        var me = this;
-        var cbfn = function(isok, oObj) {
-            if (isok) {
-                me.setDmObject(oObj);
-            }
-            else {
-                me.setDmObject(null);
-            }
-        };
+        var args = id == 'true' ? dmAttrs : id;        
 
         // check for and call get function (first in host, then in app, generic fn in app on end)    
         if (FM.isset(this[fnName])) {
             this[fnName](args, cbfn);
         } else if (this.getApp() && FM.isset(this.getApp()[fnName])) {
             this.getApp()[fnName](id, cbfn);
-        } else if (this.getApp() && dmconfName != '') {
-            this.getApp().getCustomObject(
-                    dmconfName,
-                    id == 'true' ? dmAttrs : {id: id},
-            cbfn
-                    );
-        }
+        } 
         return;
     }
 

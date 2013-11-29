@@ -1,6 +1,29 @@
 /**
- * Generic collection host. 
+ * Generic collection ML Host class. Use it to display list of items.
  * 
+ * <ul>
+ * <li>All list items will be inserted in node with <i>fmmlListItems</i> CSS class.
+ * If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemWrapper</i> CSS class all
+ * items will be wrapped inside this node before insertion.
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemInner</i> CSS class all
+ * items will be wrapped inside this node before insertion in (posibly) <i>fmmlListItemWrapper</i>
+ * and <i>fmmlListItems</i> node.
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemsTemplate</i> CSS class it 
+ * will be used as list items template. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListEmptyTemplate</i> CSS class it 
+ * will be used as placeholder for empty rows. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListEmpty</i> CSS class it 
+ * will be used as <i>fmmlListItems</i> node content when items list is empty. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListWaiting</i> CSS class it 
+ * will be used as <i>fmmlListItems</i> node content during AJAX calls. 
+ * </li>
+ * <ul>
+ *  
  * @class FM.MlHostGenericCollection
  * @memberOf FM
  * @extends FM.MlHost
@@ -17,820 +40,1168 @@
  *  <tbody>
  *   <tr>
  *    <td>data-fmml-list-max-items</td>
- *    <td>Maximum number of items to display on page</td>
- *    <td>200</td>
+ *    <td>Maximum number of list items to disply at once.</td>
+ *    <td>FM.MlHostGenericCollection.DEF_LIST_SIZE</td>
  *   </tr>
  *   <tr>
- *    <td>data-fmml-list-items-layout</td>
- *    <td>Items layout. Layout can be used as <i>itemsLayout</i> 
- *    bind variable for <i>data-fmml-list-items-template-base</i></td>
- *    <td>icon</td>
+ *    <td>data-fmml-list-selection-size</td>
+ *    <td>Maximum number of selectable items.</td>
+ *    <td>[any],0,1,,,n</td>
  *   </tr>
  *   <tr>
  *    <td>data-fmml-list-items-template-base</td>
  *    <td>
- *      Template name for list items. Availilable bind variables are item attributes, 
- *      <i>objectClass</i> (items class name),
- *      <i>data_id</i> (items data id value),
- *      <i>listIndex</i> (current list index),
- *      <i>itemsLayout</i> (value of <i>data-fmml-list-items-layout</i>
- *      DOM attribute).
+ *      Items template (used if node with <i>listItemsTemplate</i> class is not defined).
  *    </td>
- *    <td>"ui.layouts.dm.[:objectClass].[:itemsLayout].html"</td>
+ *    <td>ui.layouts.dm.[:objectClass].[:itemsLayout].html</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-layout</td>
+ *    <td>
+ *      Items layout. Use it for template name selection in template name (see <i>data-fmml-list-items-template-base</i>),      
+ *    </td>
+ *    <td>icon</td>
  *   </tr>
  *   <tr>
  *    <td>data-fmml-list-items-template-empty</td>
  *    <td>
- *      Template for populating empty rows.
- *    </td>
- *    <td>-</td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-list</td>
- *    <td>
- *      Name of DM list configuration used to populate collection. 
- *    </td>
- *    <td>-</td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-list-attr-[name]</td>
- *    <td>
- *      DM List attributes.
+ *      Empty list placeholder template (used if node with <i>listEmptyTemplate</i> class is not defined)).
  *    </td>
  *    <td>-</td>
  *   </tr>
  *   <tr>
  *    <td>data-fmml-list-fetch-on-run</td>
  *    <td>
- *      Get data from list on host run. 
+ *      Get list data on host run.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-get-more-at-end</td>
+ *    <td>
+ *      Get more data if end of list is reached on <i>onNext</i> and <i>onNextPage</i> events processiog. 
+ *    </td>
+ *    <td>false</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-refresh-on-change</td>
+ *    <td>
+ *      Refresh list data on <i>onChange</i> event.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-clear-selection-on-change</td>
+ *    <td>
+ *      Clear sellection on <i>onChange</i> event.
  *    </td>
  *    <td>true</td>
  *   </tr>
  *   <tr>
  *    <td>data-fmml-object-class</td>
  *    <td>
- *      Restrict host DM object to one with given class. 
+ *      Restrict host DM object to one with given class. This value is olways <i>List</i> for this host type.
  *    </td>
- *    <td></td>
+ *    <td>List</td>
  *   </tr>
  *   <tr>
  *    <td>data-fmml-object-id</td>
  *    <td>
- *      if set to <i>true</i>, call fetch function with object containing all
- *      attributes defined with <i>data-fmml-object-attr-[attr]</i>, otherwise
- *      fetch DM object with given data ID and <i>data-fmml-object-class</i> class. 
- *      Function with name 'get[<i>data-fmml-object-class</i>] if one exists in host or application.      
+ *      This value is allways <i>true</i> for this host type: call fetch function with object containing all
+ *      attributes defined with <i>data-fmml-object-attr-[attr]</i>. 
+ *      See <i>data-fmml-list</i> attribute to learn how to define FM.DmList configuration.
  *    </td>
- *    <td></td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-list</td>
- *    <td>
- *      DM object is first object in response returned from named DM list.
- *      <i>data-fmml-object-id</i> is sent as argument, or object with
- *      all <i>data-fmml-object-attr-&lt;attr name&gt;</i>atributes defined.      
- *    </td>
- *    <td></td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-object-attr-[attr]</td>
- *    <td>
- *      Define value of <i>attr<i> DM object attribute. If host can't obtain DM object
- *      from other sources, new one with defined attributes will be created.
- *    </td>
- *    <td></td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-run-on-init</td>
- *    <td>
- *      Run host after creation.
- *    </td>
- *    <td>[true], false</td>
- *   </tr>
- *   <tr>
- *    <td>data-fmml-host-event-[event]</td>
- *    <td>
- *      Evaluate content of attribute on <i>event</i> event.
- *    </td>
- *    <td>@...</td>
+ *    <td>true</td>
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host=&quot;GenericCollection&quot; data-fmml-list=&quot;list_configuration_name&quot;&gt;
+        &lt;div class=&quot;fmmlListItems&quot;&gt;
+            &lt;div class=&quot;fmmlListItemWrapper&quot; data-fmml-observer=&quot;Event&quot; data-fmml-event-type=&quot;onAlterSelectionState&quot; data-fmml-event-data=&quot;[:data_id]&quot;&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;fmmlListItemsTemplate&quot; data-fmml-host=&quot;Host&quot;&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr1&quot;&gt;&lt;/span&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr2&quot;&gt;&lt;/span&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr3&quot;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
  */
 
-/* data-fmml-list-max-items, 'data-fmml-list-items-template-base,
- * data-fmml-list-items-template-empty, data-fmml-list-items-layout,
- * data-fmml-list, data-fmml-list-attr-*,data-fmml-list-fetch-on-run,
- * data-fmml-list-refresh-on-change,data-fmml-fromrow-attr-name,
- * data-fmml-list-attr-resource-parser, data-fmml-list-waiting-fs,
- * data-fmml-list-get-more-at-end
- *  
- */
-FM.MlHostGenericCollection = FM.defineClass('MlHostGenericCollection',FM.MlHost);
+FM.MlHostGenericCollection = FM.defineClass('MlHostGenericCollection', FM.MlHost);
 
-FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {            
-    this._super("_init",app,attrs,node);
-    this.objectSubClass ="GenericCollection";
+
+FM.MlHostGenericCollection.prototype._init = function(app, attrs, node) {
+    this._super("_init", app, attrs, node);
+    this.objectSubClass = "GenericCollection";
+
+    // important, app.getCustomObject()!
+    this.setAttr('data-fmml-object-class', 'List');
+    this.setAttr('data-fmml-object-id', 'true');
+
+    // pagging
+    this.listOffset = 0;
+
+    // maximum number of items display
+    this.maxItms = FM.MlHostGenericCollection.DEF_LIST_SIZE;
+    try {
+        this.maxItms = parseInt(
+                this.getAttr(
+                        'data-fmml-list-max-items',
+                        FM.MlHostGenericCollection.DEF_LIST_SIZE
+                        )
+                );
+    } catch (e) {
+        // log error
+    }
+    this.maxItms = this.maxItms && this.maxItms > 0 ?
+            this.maxItms :
+            FM.MlHostGenericCollection.DEF_LIST_SIZE
+            ;
 
     // selection
     this.selectedItems = {};
-    this.maxSelected = -1;
-    this.listOffset = 0;
 
-    this.listItemsTemplate = null;
-    this.listEmptyTemplate = null;
-
-    // find items container
-    this.listItemsContainer = this.node;
-    var itmCont = $(this.node).find(".fmmlListItems");
-    if(FM.isset(itmCont) && itmCont && FM.isset(itmCont[0])) {
-        this.listItemsContainer = itmCont[0];
-        var itmTempl = $(this.listItemsContainer).find(".fmmlListItemsTemplate");
-        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
-            this.listItemsTemplate = FM.nodeToHtml(itmTempl[0]);
-        }
-        itmTempl = $(this.listItemsContainer).find(".fmmlListEmptyTemplate");
-        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
-            this.listEmptyTemplate = FM.nodeToHtml(itmTempl[0]);
-        }
+    // maximum number of items to select
+    try {
+        this.maxSelected = parseInt(
+                this.getAttr('data-fmml-list-selection-size', '0') == 'any' ?
+                -1 : this.getAttr('data-fmml-list-selection-size', '0')
+                );
+    } catch (e) {
+        // log error
+        this.maxSelected = 0;
+        this.log(e, FM.logLevels.error, 'MlHostGenericCollection._init');
     }
 
-    // find list empty ode
-    this.listEmpty = null;
-    var itmWrp = $(this.listItemsContainer).find(".fmmlListEmpty");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listEmpty = itmWrp[0];
-    }
 
-    // find list waiting ode
-    this.listWaiting = null;
-    var itmWrp = $(this.listItemsContainer).find(".fmmlListWaiting");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listWaiting = itmWrp[0];
-    }
+    // items layout (use it for template name selection in template)
+    this.itemsLayout = this.getAttr('data-fmml-list-items-layout', 'icon');
 
-    // find items wrapper
-    this.listItemsWrapper = null; //$("<div></div>");
-    itmWrp = $(this.listItemsContainer).find(".fmmlListItemWrapper");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listItemsWrapper = itmWrp[0];
-    }
+    // items template (used if listItemsTemplate node is not defined)
+    this.itemsTemplateBase = this.getAttr(
+            'data-fmml-list-items-template-base',
+            "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
+            );
 
-    // fmmlListItemInner
-    this.listItemsInner = null;
-    itmWrp = $(this.listItemsWrapper).find(".fmmlListItemInner");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listItemsInner = itmWrp[0];
-    }
-    $(this.listItemsWrapper).html("");
+    // empty item template (used if listEmptyTemplate is not defined)
+    this.itemsTemplateEmptyBase = this.getAttr('data-fmml-list-items-template-empty', '');
+
+    // find items container if exists, otherwise this.node is container
+    this.listItemsContainer = this._findNodeWithClass(this.node, 'fmmlListItems', this.node);
+
+    // find items template node if exists
+    var itmTempl = this._findNodeWithClass(this.listItemsContainer, 'fmmlListItemsTemplate', null);
+    this.listItemsTemplate = itmTempl ? FM.nodeToHtml(itmTempl) : null;
+
+    // find items empty template node if exists
+    var itmTempl = this._findNodeWithClass(this.listItemsContainer, 'fmmlListEmptyTemplate', null);
+    this.listEmptyTemplate = itmTempl ? FM.nodeToHtml(itmTempl) : null;
+
+    // find list empty node if exists
+    this.listEmpty = this._findNodeWithClass(this.listItemsContainer, 'fmmlListEmpty', null);
+
+    // find list waiting node if exists
+    this.listWaiting = this._findNodeWithClass(this.listItemsContainer, 'fmmlListWaiting', null);
+
+    // find items wrapper. if fond all items will be wrapped inside before adding to container
+    this.listItemsWrapper = this._findNodeWithClass(this.listItemsContainer, 'fmmlListItemWrapper', null);
+
+    // fmmlListItemInner (if found inside this.listItemsWrapper)
+    this.listItemsInner = this.listItemsWrapper ?
+            this._findNodeWithClass(this.listItemsWrapper, 'fmmlListItemInner', null) :
+            null
+            ;
 
     // clear
     this._clearItems();
-}    
-
-FM.MlHostGenericCollection.prototype._clearItems = function() {
-    FM.MlHost.disposeChildNodes(this.listItemsContainer);
-    $(this.listItemsContainer).html("");
 }
 
-FM.MlHostGenericCollection.prototype._nodeApplyTemplate = function(node,attrs) {
-    FM.forEach(node.attributes, function(i,attr) {
-        if (attr.specified == true) {
-            var val = FM.applyTemplate(attrs, attr.value, false, false);
-            if(val != attr.value) {
-                attr.value = val;
-            }
-        }
-        return true;
-    });
-    
-}
-
-FM.MlHostGenericCollection.prototype._refreshItems = function() {
-    this._clearItems();
-    var dmList = this.getDmObject();
-    if(!dmList) return false;
-    var me = this;    
-    var curitm = -1;
-    var itmcnt = 0;
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    maxitms = FM.isset(maxitms) ? maxitms : 200;
-    dmList.forEachListElement(function(i,oObj) {                
-        var layout = me.getRegistryValue(
-            "/itemsLayout",
-            me.getAttr('data-fmml-list-items-layout','icon')
-            );
-        
-        var attrs = {
-            itemsLayout: layout
-        };
-        if (me._filterItemFromDisplay(oObj) == true) {
-            curitm++;
-            if(curitm < me.listOffset) return true;
-        
-            oObj.forEachAttr(function(pname,value) {
-                attrs[pname] = value;
-                return true;
-            });
-            attrs["objectClass"] = oObj.getSubClassName();
-            attrs["data_id"] = oObj.getDataID();
-            attrs["listIndex"] = curitm+1;
-            
-            itmcnt++;
-            if(me.listItemsTemplate) {
-                me._createItmNode(oObj,attrs,me.listItemsTemplate);
-            } else {
-                var tname = me.getAttr(
-                    'data-fmml-list-items-template-base',
-                    "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
-                    );
-                tname = FM.applyTemplate(attrs,tname,false,true);
-                FM.UtTemplate.getTemplate(me.getApp(),attrs,tname,function(isok,templ) {            
-                    if(isok) {                
-                        me._createItmNode(oObj,attrs,templ);
-                    }
-                });
-            }
-        }
-    
-        return maxitms > itmcnt;
-    });
-
-    var emptyTempl = this.getAttr('data-fmml-list-items-template-empty','');
-    if(maxitms > itmcnt && (emptyTempl != '' || this.listEmptyTemplate)) {
-        curitm++;
-        if(this.listEmptyTemplate) {
-            while(maxitms > itmcnt) {
-                curitm++;
-                itmcnt++;
-                var attrs = {
-                    itemsLayout: 'unknown',
-                    objectClass: 'unknown',
-                    data_id: 'unknown',
-                    listIndex: curitm
-                };
-                this._createItmNode(null,attrs,this.listEmptyTemplate);                                        
-            }            
-        } else {        
-            FM.UtTemplate.getTemplate(this.getApp(),{},emptyTempl,function(isok,templ) {                    
-                if(isok) {
-                    while(maxitms > itmcnt) {
-                        curitm++;
-                        itmcnt++;
-                        var attrs = {
-                            itemsLayout: 'unknown',
-                            objectClass: 'unknown',
-                            data_id: 'unknown',
-                            listIndex: curitm
-                        };
-                        me._createItmNode(null,attrs,templ);                                        
-                    }
-                }
-            });
-        }
-    }
-    
-    // empty list
-    if(itmcnt == 0 && emptyTempl == '') this.setListEmpty();
-    
-    // send event
-    this.sendEventToObservers(this,'onListRefreshCompleted');
-}
-
-FM.MlHostGenericCollection.prototype._createItmNode = function(oObj,attrs,templ) {
-    var curitm = parseInt(FM.getAttr(attrs,'listIndex','0'));
-    
-    var itm = $(templ);
-    if(itm) {
-        if(this.listItemsInner) {
-            var iNode = $(this.listItemsInner).clone();
-            if(FM.isset(iNode) && iNode && FM.isset(iNode[0])) {
-                iNode = iNode[0];
-            }
-            this._nodeApplyTemplate(iNode,attrs);
-            $(iNode).append(itm);
-            itm = iNode;
-        }
-
-        if(this.listItemsWrapper) {
-            var newNode = $(this.listItemsWrapper).clone();
-            if(FM.isset(newNode) && newNode && FM.isset(newNode[0])) {
-                newNode = newNode[0];
-            }
-            this._nodeApplyTemplate(newNode,attrs);
-            $(newNode).append(itm);
-        } else {
-            newNode = itm;
-        }
-
-
-        $(newNode).attr('data-fmml-list-index',curitm);   
-        $(newNode).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
-        $(newNode).attr('data-fmml-item-data-id',oObj ? oObj.getDataID() : 'unknown');
-        
-        this._appendItmNode(oObj,newNode,attrs);                        
-    }
-}
-
-FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj,node,attrs) {
-    var index = attrs["listIndex"];
-    var lastNode = null;
-    var lastNodeIndex = -1;
-    for(var i = index-1; i >=0 && lastNodeIndex == -1; i--) {
-        lastNode = $("[data-fmml-list-index='" + i + "']");
-        lastNode = lastNode.length ? lastNode[0]: null;
-        if(lastNode) {
-            lastNodeIndex = i;
-        }
-    }
-    if(lastNode) {
-        $(lastNode).after(node);
-    } else {
-        $(this.listItemsContainer).prepend(node);
-    }
-    if(oObj) {
-        FM.MlHost.initChildNodes(this.getApp(),node,oObj,this.listItemsWrapper != null);
-    }
-}
-
-FM.MlHostGenericCollection.prototype._filterItemFromDisplay = function(oObj) {
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype._createList = function(oObj) {
-    var dmconfName = this.getAttr('data-fmml-list','');
-    var listOpt = {};
-    var pref = 'data-fmml-list-attr-';
-    var prefLen = pref.length;
-    
-    this.forEachAttr(function(pname,value) {
-        if(FM.startsWith(pname,pref)) {
-            listOpt[pname.substring(prefLen)] = value;
-        }                    
-        return true;
-    });
-    
-    // input param
-    oObj = FM.isset(oObj) && oObj ? oObj : null;
-    if(!oObj) {        
-        var lhost = this.getLinkedHost();
-        if(lhost) {
-            if( lhost) {
-                oObj = lhost.getDmObject();
-            }         
-        }
-    }
-    
-    if(FM.isset(oObj) && oObj && FM.isset(oObj.forEachAttr)) { // fm obect
-        oObj.forEachAttr(function(pname,value) {
-            listOpt[pname] = value;
-            return true;
-        });
-        listOpt["objectClass"] = oObj.getSubClassName();
-    } else if(FM.isArray(oObj) || FM.isObject(oObj)) { // array
-        FM.forEach(oObj, function(pname,value) {
-            listOpt[pname] = value;
-            return true;
-        });        
-    }
-    
-    dmconfName = FM.resolveAttrValue(null,"-",dmconfName,{
-        A: this.getApp(),
-        H: this
-    });
-    var dmList = FM.isObject(dmconfName) && dmconfName ? 
-        dmconfName :
-        new FM.DmList(listOpt,dmconfName,this.getApp())
-    ;
-    
-    return dmList;
-}
-
+/**
+ * Run host.
+ * 
+ * @public
+ * @function
+ * @param {FM.DmObject} [dmObj] Host DM object.
+ */
 FM.MlHostGenericCollection.prototype.run = function(oObj) {
-    this._super("run");
     this.clearSelection(false);
     this.history = [];
-    
-    // get data
-    
-    var dmlist = FM.isset(oObj) && oObj && oObj.getClassName && oObj.getClassName() == 'DmList' ?
-    oObj :  this._createList(oObj)
-    ;
-              
-    this.setDmObject(dmlist);  
-    
-    if(this.getAttr('data-fmml-list-fetch-on-run','true') != 'false') {
-        this.history.push(dmlist.getAttr());
-        dmlist.getData();
+
+    this._super("run", oObj); // list will be created
+}
+
+/**
+ * Dispose host.
+ * 
+ * @public
+ * @function 
+ */
+FM.MlHostGenericCollection.prototype.dispose = function() {
+    this.maxSelected = 0;
+    this.selectedItems = {};
+    this._clearItems();
+    this._super("dispose");
+}
+
+/**
+ * Set host DM object.
+ * 
+ * @public
+ * @function 
+ * @param {FM.DmObject} o New host DM object. <i>onSetDmObject</i> event will be fired. 
+ */
+FM.MlHostGenericCollection.prototype.setDmObject = function(o) {
+    o = o && o.getData ? o : null;
+
+    this._super('setDmObject', o);
+    if (o && this.getAttr('data-fmml-list-fetch-on-run', 'true') != 'false') {
+        this.history.push(o.getAttr());
+        o.getData();
     } else {
         this._refreshItems();
     }
 }
 
-FM.MlHostGenericCollection.prototype.dispose = function() {
-    this.maxSelected = 0;
-    this.selectedItems = {};
-    this._clearItems();    
-    this._super("dispose");
+/**
+ * Get number of items to display.
+ * 
+ * @public
+ * @function 
+ * @returns  {number}
+ * 
+ */
+FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
+    var dmList = this.getDmObject();
+    if (!dmList)
+        return 0;
+
+    var itemscnt = 0;
+    var me = this;
+
+    dmList.forEachListElement(function(i, oObj) {
+        if (me._filterItemFromDisplay(oObj) == true) {
+            itemscnt += 1;
+        }
+        return true;
+    });
+
+    return itemscnt;
 }
 
+/**
+ * Clear selection.
+ * 
+ * @public
+ * @function 
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ * 
+ */
 FM.MlHostGenericCollection.prototype.clearSelection = function(sendevent) {
     this.selectedItems = {};
-    $(this.listItemsContainer).find(".fmmlSelected").removeClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
+    var nodes = $(this.listItemsContainer).find(
+            "[data-fmml-list-id='" + this.getID() + "']"
+            ).filter(".fmmlSelected");
+
+    if (nodes.length > 0) {
+        nodes.removeClass("fmmlSelected");
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+    }
 }
 
-FM.MlHostGenericCollection.prototype.addToSelection = function(o, node, sendevent) {    
-    if(this.maxSelected == 0) {
+/**
+ * Add object to selection.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ */
+FM.MlHostGenericCollection.prototype.addToSelection = function(o, sendevent) {
+    if (this.maxSelected == 0) {
         return;
-    } else if(this.maxSelected == 1) {
+    }
+
+    if (FM.isArray(o)) {
+        for (var i = 0; i < o.length; i++) {
+            this.addToSelection(o[i], node, false);
+        }
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+        return;
+    }
+
+    var lst = this.getDmObject();
+    var oid = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            ''
+            ;
+    if (!lst || !lst.get(oid)) {
+        return;
+    }
+
+    if (this.maxSelected == 1) {
         this.clearSelection(false);
-    } else if(this.maxSelected != -1) {
-        var cnt = 0;
-        FM.forEach(this.selectedItems,function(id,obj) {
-            if(obj == true) cnt++;
-            return true;
-        });
-        if(cnt >= this.maxSelected) return;
+    } else if (this.maxSelected != -1) {
+        if (this.getSelectionSize() >= this.maxSelected)
+            return;
     }
-    
-    if(FM.isArray(o)) {
-        for(var i= 0; i < o.length; i++) {
-            this.selectedItems[o[i].getDataID()]=true;
-        }
-    } else {
-        var oid = FM.isset(o) && o ? 
-        (FM.isString(o) ? o : o.getDataID()) :
-        ''
-        ;      
-        this.selectedItems[oid]=true;
+
+    this.selectedItems[oid] = true;
+
+
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
+        $(node).addClass("fmmlSelected");
     }
-    if(FM.isset(node) && node) $(node).addClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
+    if (FM.isset(sendevent) && sendevent) {
+        this.updateAllObservers();
+    }
 }
 
-FM.MlHostGenericCollection.prototype.removeFromSelection = function(o,node,sendevent) { 
-    if(FM.isArray(o)) {
-        for(var i= 0; i < o.length; i++) {
-            if(FM.isset(o[i]) && o[i] && FM.isset(this.selectedItems[o[i].getDataID()])) {
-                this.selectedItems[o[i].getDataID()]=false;
-            }
+/**
+ * Remove object from selection.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ */
+FM.MlHostGenericCollection.prototype.removeFromSelection = function(o, sendevent) {
+    if (FM.isArray(o)) {
+        for (var i = 0; i < o.length; i++) {
+            this.removeFromSelection(o[i], node, false);
         }
-    } else {
-        var oid = FM.isset(o) && o ? 
-        (FM.isString(o) ? o : o.getDataID()) :
-        ''
-        ;      
-        if(FM.isset(this.selectedItems[oid])) this.selectedItems[oid]=false;
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+        return;
     }
-    
-    if(FM.isset(node) && node) $(node).removeClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
-}
 
+    var oid = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            ''
+            ;
+    if (FM.isset(this.selectedItems[oid])) {
+        delete this.selectedItems[oid];
+    }
+
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
+        $(node).removeClass("fmmlSelected");
+    }
+
+    if (FM.isset(sendevent) && sendevent) {
+        this.updateAllObservers();
+    }
+}
+/**
+ * Check if object is selected.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @returns {boolean}
+*/
 FM.MlHostGenericCollection.prototype.isSelected = function(o) {
-    var id = FM.isset(o) && o ? 
-    (FM.isString(o) ? o : o.getDataID()) :
-    '';
-    return(id != '' && FM.isset(this.selectedItems[id]) && this.selectedItems[id]);
+    var id = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            '';
+    return(id != '' && FM.isset(this.selectedItems[id]));
 }
 
+/**
+ * Get number of selected items.
+ * 
+ * @public
+ * @function 
+ * @returns  {number}
+ * 
+ */
 FM.MlHostGenericCollection.prototype.getSelectionSize = function() {
-    var cnt=0;
-    FM.forEach(this.selectedItems,function(id) {
+    var cnt = 0;
+    FM.forEach(this.selectedItems, function() {
         cnt++;
         return true;
     });
-    
+
     return cnt;
 }
 
+/**
+ * Get selected items.
+ * 
+ * @public
+ * @function 
+ * @returns  {Array[FM.DmObject]}
+ * 
+ */
 FM.MlHostGenericCollection.prototype.getSelection = function() {
     var lst = this.getDmObject();
     var sel = [];
-    
-    if(lst) {
-        FM.forEach(this.selectedItems,function(id) {
+
+    if (lst) {
+        FM.forEach(this.selectedItems, function(id) {
             var o = lst.get(id);
-            if(o) sel.push(o);
+            if (o) {
+                sel.push(o);
+            }
             return true;
         });
     }
     return sel;
 }
 
-// eventi
-FM.MlHostGenericCollection.prototype.onChange = function(oSender,evdata) {
-    this._super("onChange",oSender,evdata);
-    
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(
-        oSender && oSender.getClassName && oSender.getClassName() == 'DmList' &&
-        this.getAttr('data-fmml-list-refresh-on-change','true') != 'false'
-        ) {
-        var fromrowAttr = this.getAttr('data-fmml-fromrow-attr-name',"fromrow");
-        if(fromrowAttr != '') {
-            oSender.setAttr(fromrowAttr,'0',false);
+/**
+ * Signal request for selection clearing. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onClearSelection = function(sender) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.clearSelection(true);
+    evCb(true, null);
+}
+
+/**
+ * Signal request for additeng  list item to selection. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID to select.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onSelected = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (!itmObj) {
+        evCb(false, null);
+        return;
+    }
+    if (!this.isSelected(itmObj)) {
+        this.addToSelection(itmObj, true)
+    }
+    if (this.isSelected(itmObj)) {
+        evCb(true, itmObj);
+    } else {
+        evCb(false, null);
+    }
+}
+
+/**
+ * Signal request for removing list item from selection. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID to remove.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onDeselected = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (!itmObj) {
+        evCb(false, null);
+        return;
+    }
+
+    if (this.isSelected(itmObj)) {
+        this.removeFromSelection(itmObj, true)
+    }
+    if (!this.isSelected(itmObj)) {
+        evCb(true, itmObj);
+    } else {
+        evCb(false, null);
+    }
+}
+
+/**
+ * Signal request for altering selection state of list item. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID of list item.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender, evdata) {
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (this.isSelected(itmObj)) {
+        this.onDeselected(oSender, evdata);
+    } else {
+        this.onSelected(oSender, evdata);
+    }
+}
+
+// PAGING
+/**
+ * Signals request for displaying first page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onStartOfList = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.listOffset = 0;
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying last page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onEndOfList = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.listOffset = this.getFilteredCount() - 1;
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for increasing first list index. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onNext = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {});
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(false, null);
+        return;
+    }
+    var itemscnt = this.getFilteredCount();
+
+    var getMoreData = false;
+    this.listOffset++;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = itemscnt - 1;
+        getMoreData = true;
+    }
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+
+    this._refreshItems();
+
+    if (getMoreData && this.getAttr('data-fmml-list-get-more-at-end', 'false') == 'true') {
+        this._getMore();
+    }
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying next page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onNextPage = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(true, null);
+        return;
+    }
+    var itemscnt = this.getFilteredCount();
+
+    var getMoreData = false;
+    var calcListOffset = this.listOffset + this.maxItms;
+    this.listOffset = calcListOffset;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = Math.floor(itemscnt / this.maxItms) * this.maxItms;
+        getMoreData = true;
+    }
+
+    if (this.listOffset >= itemscnt) {
+        this.listOffset = this.listOffset -= this.maxItms;
+        getMoreData = true;
+    }
+    this._refreshItems();
+
+    if (getMoreData && this.getAttr('data-fmml-list-get-more-at-end', 'false') == 'true') {
+        this._getMore();
+    }
+    evCb(true, null);
+}
+
+/**
+ * Signals request for decreasing first list index. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onPrevious = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList || this.listOffset < 1) {
+        evCb(true, null);
+        return;
+    }
+    this.listOffset--;
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying previous page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onPreviousPage = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(true, null);
+        return;
+    }
+
+    var itemscnt = this.getFilteredCount();
+    this.listOffset -= this.maxItms;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = Math.floor(itemscnt / this.maxItms) * this.maxItms;
+    }
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+    this._refreshItems();
+
+    // kraj
+    evCb(true, null);
+}
+
+// DATA (DM) EVENTS
+/**
+ * Fired when change on DM object attributes or properties ocurs.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onChange = function(oSender, evdata) {
+    this._super("onChange", oSender, evdata);
+
+    var evObj = FM.getAttr(evdata, 'object', null);
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    if (
+            oSender == this.getDmObject() &&
+            this.getAttr('data-fmml-list-refresh-on-change', 'true') != 'false'
+            ) {
+        if (this.getAttr('data-fmml-list-clear-selection-on-change', 'true') != 'false') {
+            this.clearSelection(true);
         }
-        this.clearSelection(true);
         this.history.push(oSender.getAttr());
         oSender.getData(false); // novi fetch
     }
-    
+
     // kraj
     return true;
 }
-FM.MlHostGenericCollection.prototype.getMore = function() {
-    var dmList = this.getDmObject();
-    if(dmList && FM.isset(dmList,"getData")) {
-        dmList.getData(true);
-    }    
+
+/**
+ * Signals request for fetching more data from server. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onGetMore = function(oSender) {
+    this._getMore();
 }
 
-FM.MlHostGenericCollection.prototype.onGetMore = function(oSender,evdata) {
-    this.getMore();
-}
+/**
+ * Signals request for refreshing data from server. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
 
-FM.MlHostGenericCollection.prototype.onRefresh = function(oSender,evdata) {
+FM.MlHostGenericCollection.prototype.onRefresh = function(oSender) {
     var dmList = this.getDmObject();
-    if(dmList && FM.isset(dmList,"getData")) {
+    if (dmList && FM.isset(dmList, "getData")) {
         dmList.getData(false);
     }
 }
 
-FM.MlHostGenericCollection.prototype.onHistoryBack = function(oSender,evdata) {
-    if(this.history.length > 1) {
+/**
+ * Signals request for adding new FM.DmObject to list of items. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject} [evdata.object] FM.DmObject to add.
+ */
+FM.MlHostGenericCollection.prototype.onAddObjectToList = function(oSender, evdata) {
+    var oObj = FM.getAttr(evdata, 'object', null);
+    if (!oObj) {
+        return;
+    }
+
+    var dmList = this.getDmObject();
+    if (dmList) {
+        dmList.addToList(oObj, oObj.getDataID(), true);
+    }
+}
+
+// (DM) LIST EVENTS
+/**
+ * Signals start of fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListStart = function(sender) {
+    this._setWaiting();
+    this.sendEventToObservers(sender, "onListStart", {});
+}
+
+/**
+ * Signals end of fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListEnd = function(sender) {
+    this.sendEventToObservers(sender, "onListEnd", {});
+    this.updateAllObservers();
+    this._refreshItems();
+
+}
+
+/**
+ * Signals error condition durring fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListError = function(sender) {
+    this.sendEventToObservers(sender, "onListError", {});
+    this.updateAllObservers();
+    this._setListEmpty();
+}
+
+// HISTORY
+/**
+ * Signals request for repeating previous server request. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onHistoryBack = function(oSender, evdata) {
+    if (this.history.length > 1) {
         var mydata = this.history.pop(); // me
         var data = this.history.pop(); // last
-        
+
         var dmList = this.getDmObject();
-        if(dmList && FM.isset(dmList,"getData")) {
-            FM.forEach(data, function(n,v) {
-                dmList.setAttr(n,v);
+        if (dmList && FM.isset(dmList, "getData")) {
+            FM.forEach(data, function(n, v) {
+                dmList.setAttr(n, v);
                 return true;
             });
-            //dmList.getData(false);
-            dmList.setChanged(true,true);
-            if(this.getAttr('data-fmml-list-refresh-on-change','true') != 'true') {
-                dmList.getData(false);
-            }
-        }        
-        
+            dmList.setChanged(true, true);
+        }
+
     }
 }
 
-FM.MlHostGenericCollection.prototype.onAddObjectToList = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return false;
-    var dmList = this.getDmObject();
-    if(dmList) {
-        dmList.addToList(oObj,oObj.getDataID(),true);
-    }
-    return true;
-}
 
-FM.MlHostGenericCollection.prototype.onOpenObject = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return;    
-    var id = oObj.getAttr('value','');
-    if(id == '') return;    
-    var lst = this.getDmObject();
-    var dmObj = lst ? lst.get(id) : null;
-    if(dmObj && this.getApp().openObject) {
+/**
+ * General purpose event, can be handled in app.
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype.onOpenObject = function(oSender, evdata) {
+    var dmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (dmObj && this.getApp().openObject) {
         this.getApp().openObject(dmObj);
     }
 }
 
-FM.MlHostGenericCollection.prototype.onChangeResource = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return;
-    
-    var resurl = oObj.getAttr('resource_url',oObj.getAttr('value',''));
-    if(resurl != '') {
-        var resResolvFn = this.getAttr('data-fmml-list-attr-resource-parser','');
-        if(resResolvFn !== '') {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype.onChangeResource = function(oSender, evdata) {
+    var oObj = FM.getAttr(evdata, 'object', null);
+    if (!oObj)
+        return;
+
+    // GEnericValue or obj with attr resource_url
+    var resurl = oObj.getAttr('resource_url', oObj.getAttr('value', ''));
+
+    if (resurl != '') {
+        var resResolvFn = this.getAttr('data-fmml-list-attr-resource-parser', '');
+        if (resResolvFn !== '') {
             resResolvFn = FM.stringPtrToObject(resResolvFn, this, this.getApp());
-            if(resResolvFn) {
+            if (resResolvFn) {
                 try {
-                    resurl = resResolvFn(this,resurl);
-                } catch(e) {
-                    this.log(e,FM.logLevels.error,'onChangeResource');
+                    resurl = resResolvFn(this, resurl);
+                } catch (e) {
+                    this.log(e, FM.logLevels.error, 'MlHostGenericCollection.onChangeResource');
                 }
             }
         }
         this.listOffset = 0;
         var dmList = this.getDmObject();
-        if(dmList) {
-            dmList.setAttr('resource_url',resurl,true);
+        if (dmList) {
+            dmList.setAttr('resource_url', resurl, true);
         }
     }
 }
 
-FM.MlHostGenericCollection.prototype.onListStart = function(sender) {    
-    this.setWaiting();
-    this.sendEventToObservers(sender,"onListStart",{});
-    // kraj
-    return true;
-}
-
-
-FM.MlHostGenericCollection.prototype.onListEnd = function(sender) {    
-    this.sendEventToObservers(sender,"onListEnd",{});
-    this.updateAllObservers();
+/**
+ * Signals request for changing layout of list items. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmGenericValue} [evdata.object] FM.DmObject with attribute <i>value</i> containing
+ * list layout name.
+ */
+FM.MlHostGenericCollection.prototype.onChangeListLayout = function(sender, evdata) {
+    var layout = FM.isset(evdata) && FM.isset(evdata.object) ?
+            evdata.object.getAttr('value', 'icon') :
+            'icon'
+            ;
+    this.setAttr('data-fmml-list-items-layout', layout);
     this._refreshItems();
-    // kraj
+}
+
+
+// private
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._getMore = function() {
+    var dmList = this.getDmObject();
+    if (dmList && FM.isset(dmList, "getData")) {
+        dmList.getData(true);
+    }
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._findNodeWithClass = function(parent, cls, def) {
+    var node = $(parent).find("." + cls);
+    return (node && node.length && node.length > 0 ? node[0] : def);
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._clearItems = function() {
+    FM.MlHost.disposeChildNodes(this.listItemsContainer);
+    $(this.listItemsContainer).html("");
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._nodeApplyTemplate = function(node, attrs) {
+    if (FM.isset(node.attributes)) {
+        FM.forEach(node.attributes, function(i, attr) {
+            if (attr.specified == true) {
+                var val = FM.applyTemplate(attrs, attr.value, false, false);
+                if (val != attr.value) {
+                    attr.value = val;
+                }
+            }
+            return true;
+        });
+
+        var me = this;
+        $(node).children().each(function() {
+            me._nodeApplyTemplate(this, attrs);
+            return true;
+        });
+    }
+    return node;
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._refreshItems = function() {
+    this.log("Refresh listi items ...", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
+    this._clearItems();
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        this.log("DmList not found.", FM.logLevels.warn, 'MlHostGenericCollection._refreshItems');
+        return false;
+    }
+    var me = this;
+    var curitm = -1;
+    var itmcnt = 0;
+
+    // first display items
+    dmList.forEachListElement(function(i, oObj) {
+        if (me._filterItemFromDisplay(oObj) == true) {
+            curitm++;
+            if (curitm < me.listOffset) {
+                return true;
+            }
+            var attrs = oObj.getAttr();
+            attrs["objectClass"] = oObj.getSubClassName();
+            attrs["data_id"] = oObj.getDataID();
+            attrs["listIndex"] = curitm + 1;
+            attrs["itemsLayout"] = me.itemsLayout;
+
+            itmcnt++;
+            if (me.listItemsTemplate) {
+                me._createItmNode(oObj, attrs, me.listItemsTemplate);
+            } else {
+                var tname = FM.applyTemplate(attrs, me.itemsTemplateBase, false, true);
+                FM.UtTemplate.getTemplate(me.getApp(), attrs, tname, function(isok, templ) {
+                    if (isok) {
+                        me._createItmNode(oObj, attrs, templ);
+                    }
+                });
+            }
+        }
+
+        return me.maxItms > itmcnt;
+    });
+
+    if (this.maxitms > itmcnt && (this.itemsTemplateEmptyBase != '' || this.listEmptyTemplate)) {
+        if (this.listEmptyTemplate) {
+            while (this.maxItms > itmcnt) {
+                var attrs = {};
+                attrs["objectClass"] = 'unknown';
+                attrs["data_id"] = 'unknown';
+                attrs["listIndex"] = curitm + 1;
+                attrs["itemsLayout"] = me.itemsLayout;
+                curitm++;
+                itmcnt++;
+                this._createItmNode(null, attrs, this.listEmptyTemplate);
+            }
+        } else {
+            var tname = FM.applyTemplate(attrs, this.itemsTemplateEmptyBase, false, true);
+            FM.UtTemplate.getTemplate(this.getApp(), {}, tname, function(isok, templ) {
+                if (isok) {
+                    while (me.maxItms > itmcnt) {
+                        curitm++;
+                        itmcnt++;
+                        var attrs = {
+                            itemsLayout: me.itemsLayout,
+                            objectClass: 'unknown',
+                            data_id: 'unknown',
+                            listIndex: curitm
+                        };
+                        me._createItmNode(null, attrs, templ);
+                    }
+                }
+            });
+        }
+    }
+
+    // empty list
+    if (itmcnt == 0 && this.listEmpty == '') {
+        this._setListEmpty();
+    }
+
+    // send event
+    this.sendEventToObservers(this, 'onListRefreshCompleted');
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._createItmNode = function(oObj, attrs, templ) {
+    var iNode;
+    var curitm = parseInt(FM.getAttr(attrs, 'listIndex', '0'));
+    this.log("Creating " + curitm + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
+    // create node for data (from template)
+    var itm = $(templ);
+    if (!itm) {
+        this.log("Invalid item template.", FM.logLevels.error, 'MlHostGenericCollection._createItmNode');
+        return;
+    }
+
+    // if inner node is defined append itm as child of inner node
+    if (this.listItemsInner) {
+        iNode = $(this.listItemsInner).clone();
+        if (iNode && iNode.length) {
+            iNode = iNode[0];
+        }
+        itm = $(iNode).append(itm);
+    }
+
+    // if wrapper is defined
+    if (this.listItemsWrapper) {
+        var iNode = $(this.listItemsWrapper).clone();
+        if (iNode && iNode.length) {
+            iNode = iNode[0];
+        }
+        itm = $(iNode).append(itm);
+    }
+    itm = itm[0];
+    itm = this._nodeApplyTemplate(itm, attrs);
+
+    $(itm).attr('data-fmml-list-index', curitm);
+    $(itm).attr('data-fmml-list-id', this.getID());
+    $(itm).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
+    $(itm).attr('data-fmml-item-data-id', oObj && oObj.getDataID ? oObj.getDataID() : 'unknown');
+    if (this.isSelected(oObj)) {
+        $(itm).addClass("fmmlSelected");
+    }
+    this.log("" + curitm + ". created. Appending node to dom", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
+    this._appendItmNode(oObj, itm, curitm);
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj, node, index) {
+    this.log("Appending " + index + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    this.log(node, FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    var lastNode = null;
+    var lastNodeIndex = -1;
+    for (var i = index - 1; i >= 0 && lastNodeIndex == -1; i--) {
+        lastNode = $(this.listItemsContainer).children("[data-fmml-list-index='" + i + "']");
+        lastNode = lastNode.length ? lastNode[0] : null;
+        if (lastNode) {
+            lastNodeIndex = i;
+        }
+    }
+    if (lastNode) {
+        $(lastNode).after(node);
+    } else {
+        $(this.listItemsContainer).prepend(node);
+    }
+
+    // ML init
+    //if (oObj) {
+    FM.MlHost.initChildNodes(this.getApp(), node, oObj, this.listItemsWrapper != null);
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    //}
+
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._filterItemFromDisplay = function(oObj) {
     return true;
 }
 
-FM.MlHostGenericCollection.prototype.onListError = function(sender) {
-    this.sendEventToObservers(sender,"onListError",{});
-    this.updateAllObservers();
-    this.setListEmpty();
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.setWaiting = function() {
-    
-    if(this.listWaiting) {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._setWaiting = function() {
+    if (this.listWaiting) {
         var wnode = $(this.listWaiting).clone()[0];
-        if(this.getAttr('data-fmml-list-waiting-fs','true') == 'true') {
-            $(wnode).width('100%');
-            $(wnode).height($(this.listItemsContainer).height());
-            this._clearItems();
-        }                
         $(this.listItemsContainer).append(wnode);
         FM.MlHost.initChildNodes(this.getApp(), wnode, this.getDmObject());
     }
 }
 
-FM.MlHostGenericCollection.prototype.setListEmpty = function() {
-    if(this.listEmpty) {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._setListEmpty = function() {
+    if (this.listEmpty) {
         var enode = $(this.listEmpty).clone()[0];
-        $(enode).width('100%');
-        $(enode).height($(this.listItemsContainer).height());
-        
         this._clearItems();
-        
         $(this.listItemsContainer).append(enode);
         FM.MlHost.initChildNodes(this.getApp(), enode, this.getDmObject());
     }
 }
 
-FM.MlHostGenericCollection.prototype.onChangeListLayout = function(sender,evdata) {    
-    var layout = FM.isset(evdata) && FM.isset(evdata.object) ? 
-    evdata.object.getAttr('value','icon') : 
-    'icon'
-    ;
-    this.setAttr('data-fmml-list-items-layout', layout);
-    this.setRegistryValue("/itemsLayout",layout);
-    
-    this._refreshItems();
-}
-
-FM.MlHostGenericCollection.prototype.getSelectedCount = function() {
-    var cnt = 0;
-    FM.forEach(this.selectedItems,function(id,obj) {
-        if(obj == true) cnt++;
-        return true;
-    });
-
-    // kraj
-    return cnt;
-}
-
-FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return 0;
-    
-    var itemscnt = 0;
-    var me = this;
-
-    dmList.forEachListElement(function(i,oObj) {
-        if (me._filterItemFromDisplay(oObj) == true) {
-            itemscnt += 1;
-        }
-        return true;
-    });
-    
-    return itemscnt;
-}
-
-FM.MlHostGenericCollection.prototype.onSelected = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    if(evObj) this.addToSelection(evObj,this._getNodeListNode(oSender.getNode()), true);
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onDeselected = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(evObj) this.removeFromSelection(evObj,this._getNodeListNode(oSender.getNode()), true);
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    var id = '';
-    if(oSender && evObj) {
-        var inode = this._getNodeListNode(oSender.getNode());
-                
-        if(inode && FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-            id = $(inode).attr('data-fmml-item-data-id');
-        }
-        if(id != '') {
-            if(!this.isSelected(id)) {
-                this.addToSelection(id, inode, true)
-            } else {
-                this.removeFromSelection(id, inode, true);
-            }
-        }
-    }
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype._getNodeListNode = function(node) {
-    var inode = node;
-    var rnode = null;
-    while(inode && !FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-        inode = inode.parentNode;
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._getEventItem = function(oSender, evobj) {
+    var lst = this.getDmObject();
+    if (!lst) {
+        return null;
     }
 
-    if(FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-        rnode = inode;
+    if (evobj.getSubClassName() == 'GenericValue') {
+        return lst.get(evobj.getAttr('value'));
     }
-    
-    return rnode;
+
+    return lst.get(evobj.getDataID());
 }
 
-FM.MlHostGenericCollection.prototype.onClearSelection = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(evObj) this.clearSelection(true);
-    
-    // kraj
-    return true;
-}
+/**
+ * Default number od list items to display (100).
+ * 
+ * @static
+ * @public
+ */
+FM.MlHostGenericCollection.DEF_LIST_SIZE = 100;
 
-FM.MlHostGenericCollection.prototype.onNextPage = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return (true);
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    var itemscnt = this.getFilteredCount();
-    maxitms = FM.isset(maxitms) && maxitms > 0 ? maxitms : 200;
-    var getMoreData = false;
-    var calcListOffset = this.listOffset + maxitms;
-    this.listOffset = calcListOffset;
-    if(this.listOffset > itemscnt) {
-        this.listOffset = Math.floor(itemscnt/maxitms) * maxitms;
-        getMoreData = true;
-    }
-    
-    if(this.listOffset >= itemscnt) {
-        this.listOffset = this.listOffset -= maxitms;
-        getMoreData = true;        
-    }
-    this._refreshItems();
-    
-    if(getMoreData && this.getAttr('data-fmml-list-get-more-at-end','false') == 'true') {
-        var fromrowAttr = this.getAttr('data-fmml-fromrow-attr-name',"fromrow");
-        if(fromrowAttr != '') {
-            dmList.setAttr(fromrowAttr,dmList.getListSize(),false);
-        }
-        this.getMore();
-    }
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onPreviousPage = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return (true);
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    maxitms = FM.isset(maxitms) && maxitms > 0 ? maxitms : 200;
-    var itemscnt = this.getFilteredCount();
-    this.listOffset -= maxitms;
-    if(this.listOffset > itemscnt) {
-        this.listOffset = Math.floor(itemscnt/maxitms) * maxitms;
-    }
-    if(this.listOffset < 0) this.listOffset = 0;
-    this._refreshItems();
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.DEF_LIST_SIZE = 5;
-
-FM.MlHost.addHost("GenericCollection",FM.MlHostGenericCollection,'GLOBAL');
+FM.MlHost.addHost("GenericCollection", FM.MlHostGenericCollection, 'GLOBAL');

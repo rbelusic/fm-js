@@ -81,14 +81,14 @@ FM.MlObserverEvent.prototype.run = function() {
         var evhostid = me.getAttr('data-fmml-event-host','');
         if(evhostid != '') {
             if(evhostid == 'parent' && myhostnode) {
-                me.eventHostNode = FM.findNodeWithAttr(myhostnode.parentNode, "fmmlHost");
+                me.eventHost = FM.findNodeWithAttr(myhostnode.parentNode, "fmmlHost");
+                me.eventHostNode = me.eventHost ? me.eventHost.getNode() : null;
             } else {
                 me.eventHostNode = FM.getNodeWithId(evhostid);
+                me.eventHost = me.eventHostNode && me.eventHostNode.fmmlHost ? 
+                    me.eventHostNode.fmmlHost : null
+                    ;
             }
-            if (me.eventHostNode != null) {
-                me.eventHost = FM.isset(me.eventHostNode.fmmlHost) ? me.eventHostNode.fmmlHost : null;
-            }
-            if(me.eventHost == null) me.eventHostNode = null;            
         } else {
             me.eventHost = myhost;    
             me.eventHostNode = myhostnode;    

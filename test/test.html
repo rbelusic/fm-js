@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../node_modules/yui/yui/yui-min.js"></script>
+        <script src="../build/debug/js/fm-js-all.js"></script>
+    </head>
+    <body>
+        <script>
+            YUI().use('test', function(Y) {
+                var testCase = new Y.Test.Case({
+                    
+                    name: "TestCase Object Events",
+                      
+                    _should: {
+                        error: {
+                            testMessagePassing: false //this test should not throw an error
+                        }
+                    },
+                    setUp: function() {
+                        this.subject = new FM.Object();
+                        this.subjectId = subject.getID();
+                        this.observer = new FM.Object();
+                        this.data = {"a":"b"};
+                    },
+                    tearDown: function() {
+                        delete this.subject;
+                        delete this.subjectId;
+                        delete this.observer;
+                    },
+                    testMessagePassing: function() { 
+                
+                        var subject = new FM.Object();
+                        var subjectId = subject.getID();
+                        var observer = new FM.Object();
+                        
+                        Y.Assert.isNotNull(this.data,"data must not be null");                        
+                        Y.Assert.isNotUndefined(this.data,"data must be defined"); 
+                        Y.Assert.isNotNull(this.subject,"subject must not be null");                        
+                        Y.Assert.isNotUndefined(this.subject,"subject must be defined"); 
+
+                        subject.addListener(observer);
+
+                        observer.onEventName = function(subject,eventData) {
+                            Y.Assert.areSame(subjectId, subject.getID(),"subject must fire the event");
+                            Y.Assert.areSame(eventData, {message:"hello"},"subject send the message correctly");
+                        }
+                        
+                        subject.fireEvent("onEventName", {message:"hello"} );
+                        
+                    },
+                            
+                });
+                Y.Test.Runner.add(testCase);
+                Y.Test.Runner.run();
+            });
+
+        </script>
+    </body>
+</html>
+
+

@@ -1,0 +1,102 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>  
+        <script src="../../../js/fm-js-all.js"></script> 
+
+        <link rel="stylesheet" href="../common/ex-common.css" />
+        <script src="../common/ex-common.js"></script> 
+        <script src="ex-gchost.js"></script>             
+    </head>
+    <body onload="fmdemo.AppFmDemo.startApp()">
+        <h2>FM.MlHostGenericCollection - basic usage</h2>
+        <p>[example description]</p> 
+        <div data-fmml-host="GenericCollection" 
+             data-fmml-list="staticListExample"
+             data-fmml-list-max-items="3"
+             >
+            <div class="fmmlListItems">
+                <div class="fmmlListItemsTemplate"
+                     data-fmml-host="Host"
+                     >
+                    id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+                    name: <span data-fmml-observer="Observer" data-fmml-attr-name="name"></span></br>
+                    description: <span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
+                    <hr />
+                </div>
+            </div>
+        </div>
+
+        <h2>FM.MlHostGenericCollection - same as above with selection enabled (click on items)
+            and selection event observer outside collection item host</h2>
+        <p>[example description]</p>
+        <div data-fmml-host="GenericCollection" 
+             data-fmml-list="staticListExample"
+             data-fmml-list-selection-size="5"
+             data-fmml-list-max-items="3"
+             >
+            Selection size:<span data-fmml-observer="Observer" data-fmml-attr-name="@H.getSelectionSize()">            
+            </span>
+            <div class="fmmlListItems">
+                <div class="fmmlListItemWrapper"
+                     data-fmml-observer="Event" 
+                     data-fmml-event-type="onAlterSelectionState"
+                     data-fmml-event-data="[:data_id]"                     
+                     ></div>
+                <div class="fmmlListItemsTemplate"
+                     data-fmml-host="Host"
+                     >
+                    id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+                    name: <span data-fmml-observer="Observer" data-fmml-attr-name="name"></span></br>
+                    description: <span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
+                    <hr />
+                </div>
+            </div>
+        </div>
+
+
+        <h2>FM.MlHostGenericCollection - same as above with selection enabled (click on items)
+            and selection event observer inside collection item host. Pagginng example.</h2>
+        <p>[example description]</p>
+        <div data-fmml-host="GenericCollection" 
+             data-fmml-list="staticListExample"
+             data-fmml-list-max-items="3"
+             data-fmml-list-selection-size="any"
+             >
+            Selection size:<span data-fmml-observer="Observer" data-fmml-attr-name="@H.getSelectionSize()">            
+            </span>
+            <div class="fmmlListItems">
+                <div class="fmmlListItemsTemplate"
+                     data-fmml-host="Host"
+                     >
+                    id: <span data-fmml-observer="Observer" data-fmml-attr-name="id"></span></br>
+                    name: <span data-fmml-observer="Observer" data-fmml-attr-name="name"></span></br>
+                    description: <span data-fmml-observer="Observer" data-fmml-attr-name="description"></span>
+                    <a href="#"
+                        data-fmml-observer="Event" 
+                        data-fmml-event-type="onAlterSelectionState"
+                        data-fmml-event-host="parent"
+                        >select</a>
+
+                    <hr />
+                </div>
+            </div>
+            <a href=""
+                data-fmml-observer="Event" 
+                data-fmml-event-type="onPreviousPage"
+            >&lt;</a>
+            <a href=""
+                data-fmml-observer="Event" 
+                data-fmml-event-type="onNextPage"
+            >&gt;</a>
+
+        </div>
+
+    </body>
+</html>

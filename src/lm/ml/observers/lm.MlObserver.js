@@ -98,6 +98,15 @@
  *   </tr>
  *  </tbody>
  * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host="Host"&gt;
+        &lt;span 
+            data-fmml-observer=&quot;Observer&quot; 
+            data-fmml-attr-name=&quot;value&quot;
+        &gt;&lt;/span&gt;
+    &lt;/div&gt;
  */
 FM.MlObserver = FM.defineClass('MlObserver', FM.LmObject);
 
@@ -350,7 +359,10 @@ FM.MlObserver.prototype.update = function() {
     var dmObj = this.getDmObject();
     var dtstmp = dmObj ? dmObj.getProperty('timestamp', '0') : '0';
 
-    if (dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')) {
+    if (
+        dmObj && dmObj.isAttr(this.getAttr('data-fmml-attr-name','')) && 
+        dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')
+    ) {
         this.log("Aborting, processed updateTimestamp.", FM.logLevels.debug, 'MlObserver.update');
         return false;
     }
@@ -393,7 +405,7 @@ FM.MlObserver.prototype.update = function() {
         retc = true;
     }
 
-    this.log("Done.", FM.logLevels.warn, 'MlObserver.update');
+    this.log("Done.", FM.logLevels.debug, 'MlObserver.update');
     return retc;
 }
 
@@ -448,6 +460,11 @@ FM.MlObserver.prototype.getValue = function() {
 
 
     // conf
+    if(!this.isAttr('data-fmml-attr-name') && !this.isAttr('data-fmml-attr-default-value')) {
+        this.log("Attribute name is not defined, returning undefined.", FM.logLevels.warn, 'MlObserver.getValue');
+        return undefined;
+    }
+    
     var attrname = this.getAttr('data-fmml-attr-name', '');
     var defval = this.resolveAttrValue('data-fmml-attr-default-value', '');
     var dmobj = this.getDmObject();
@@ -569,7 +586,11 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
 
     // get value
     var nfvalue = this.getValue();
-
+    if(!FM.isset(nfvalue)) {
+        this.log("Undefined value, aborting.", FM.logLevels.warn, 'MlObserver.setNodeValue');
+        return;
+    }
+    
     // formating
     this.log("Formating value [" + nfvalue + "]...", FM.logLevels.debug, 'MlObserver.setNodeValue');
     var value = this._formatValueForRendering(nfvalue);
