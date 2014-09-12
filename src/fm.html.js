@@ -482,5 +482,5 @@ FM.getPreferedLanguage = function() {
  */
 FM.getlocale = function() {
     var larr = (window.navigator.userLanguage || window.navigator.language).split('-');
-    return larr[0].toLowerCase() + "-" + larr[1].toUpperCase();
+    return  larr[0].toLowerCase() + (larr.length > 1 ? "-" + larr[1].toUpperCase() : "");
 }

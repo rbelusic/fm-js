@@ -178,7 +178,7 @@ module.exports = function(grunt) {
         'exec:prepare_release', 'create_releases_list','exec:commit_release'
     ]);
 
-    grunt.registerTask('default', ['build', 'apidoc']);
+    grunt.registerTask('default', ['build'/* , 'apidoc' */]);
     grunt.registerTask('ci', ['default', 'publish']);
 };
 

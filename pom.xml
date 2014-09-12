@@ -59,7 +59,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>grunt</executable>
+                            <executable>grunt.cmd</executable>
                             <workingDirectory>.</workingDirectory>
                             <arguments>
                                 <argument>-verbose</argument>
@@ -73,7 +73,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>grunt</executable>
+                            <executable>grunt.cmd</executable>
                             <workingDirectory>.</workingDirectory>
                             <arguments>
                                 <argument>-verbose</argument>
