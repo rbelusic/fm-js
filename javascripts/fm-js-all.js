@@ -50,6 +50,32 @@ FM.generateNewID = function() {
 }
 
 /**
+ * 
+ * @ignore
+ */
+FM._uuidData = {
+    count: 0,
+    msec: 0,
+    nsec: 0
+};
+
+FM.generateUUID = function() {
+    var msec = new Date().getTime();
+    var clockseq = Math.floor(Math.random() * 1000000) & 0x3fff;
+    
+    // simulate finer time resolution with cont
+    FM._uuidData.count +=1;
+    var nsec = FM._uuidData.count;
+    
+    // Time since last uuid creation (in msecs)
+    var dt = (msec - FM._uuidData.msec) + (nsec - FM._uuidData.nsec)/10000;
+    if (dt < 0) {
+      clockseq = clockseq + 1;
+    }    
+    return '_' +  + "_" + Math.floor(Math.random() * 1000000);
+}
+
+/**
  * For each element in <i>ar</i> 
  * call function <i>doFn(id,elm)</i> 
  * until end of list or <i>false</i> is returned.
@@ -223,8 +249,20 @@ FM.isString = function(v) {
  * @returns {boolean} 
  */
 FM.isNumber = function(v) {
-    return !isNaN(parseFloat(v));
+    return !isNaN(parseFloat(v)) && isFinite(v);
 }
+/**
+ * Determine if a string variable holding number.
+ * 
+ * @static
+ * @function 
+ * @param v The variable to be checked.
+ * @returns {boolean} 
+ */
+FM.isNumeric = function(v) {
+    return !isNaN(parseFloat(v)) && isFinite(v);
+}
+
 /**
  * Determine if a variable is of boolean type.
  * 
@@ -659,7 +697,13 @@ FM.resolveAttrName = function(options, attrName, def, context) {
     // eval ?
     if (FM.isString(attrName) && FM.startsWith(attrName, '@')) {
         v = attrName.substring(FM.startsWith(attrName, '@@') ? 2 : 1);
+        
         context._fn = function() {
+            var estr = "";
+            for(var cprop in context) {
+                estr += "; var " + cprop + "= this." + cprop;
+            }
+            eval(estr);
             return eval(v);
         }
         try {
@@ -694,6 +738,7 @@ FM.nodeToHtml = function(node) {
 }
 
 /**
+ * BAd method name (returning attribute vačue instead node)
  * @ignore
  * 
  */
@@ -1159,14 +1204,8 @@ FM.getPreferedLanguage = function() {
  */
 FM.getlocale = function() {
     var larr = (window.navigator.userLanguage || window.navigator.language).split('-');
-    return larr[0].toLowerCase() + "-" + larr[1].toUpperCase();
+    return  larr[0].toLowerCase() + (larr.length > 1 ? "-" + larr[1].toUpperCase() : "");
 }
-
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 FM.CultureInfos = {
     "en-US": {
@@ -1255,9 +1294,9 @@ FM.dateTimeDivider = ' ';
  */
 FM.dateFormat = function(date, mask, utc) {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-    timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-    timezoneClip = /[^-+\dA-Z]/g,
-    pad = function(val, len) {
+        timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
+        timezoneClip = /[^-+\dA-Z]/g,
+        pad = function(val, len) {
         val = String(val);
         len = len || 2;
         while (val.length < len)
@@ -1266,9 +1305,9 @@ FM.dateFormat = function(date, mask, utc) {
     };
     var dF = FM.dateFormat;
 
-        if(date && !FM.isObject(date) && (FM.isNumber(date) || (FM.isString(date) && !isNaN(parseInt(date))))) {
-            date = new Date(FM.isString(date) ? parseInt(date) : date);
-        }
+    if (date && !FM.isObject(date) && FM.isNumeric(date)) {
+        date = parseInt(date);
+    }
 
     // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
     if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
@@ -1290,16 +1329,16 @@ FM.dateFormat = function(date, mask, utc) {
     }
 
     var _ = utc ? "getUTC" : "get",
-    d = date[_ + "Date"](),
-    D = date[_ + "Day"](),
-    m = date[_ + "Month"](),
-    y = date[_ + "FullYear"](),
-    H = date[_ + "Hours"](),
-    M = date[_ + "Minutes"](),
-    s = date[_ + "Seconds"](),
-    L = date[_ + "Milliseconds"](),
-    o = utc ? 0 : date.getTimezoneOffset(),
-    flags = {
+        d = date[_ + "Date"](),
+        D = date[_ + "Day"](),
+        m = date[_ + "Month"](),
+        y = date[_ + "FullYear"](),
+        H = date[_ + "Hours"](),
+        M = date[_ + "Minutes"](),
+        s = date[_ + "Seconds"](),
+        L = date[_ + "Milliseconds"](),
+        o = utc ? 0 : date.getTimezoneOffset(),
+        flags = {
         d: d,
         dd: pad(d),
         ddd: dF.i18n.dayNames[D],
@@ -1364,30 +1403,32 @@ FM.dateFormat = function(date, mask, utc) {
  * @property {string} fmTime "HH:MM:ss",
  * @property {string} fmUtcTime "UTC:HH:MM:ss",
  * @property {string} isoUtcDateTime "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
-*/
-FM.dateFormat.masks = {    
-    "default": "ddd mmm dd yyyy HH:MM:ss", 
+ */
+FM.dateFormat.masks = {
+    "default": "ddd mmm dd yyyy HH:MM:ss",
     shortDate: "m/d/yy",
-    shortDateTime: "m/d/yy HH:MM:ss",
     mediumDate: "mmm d, yyyy",
-    mediumDateTime: "mmm d, yyyy HH:MM:ss",
     longDate: "mmmm d, yyyy",
-    longDateTime: "mmmm d, yyyy HH:MM:ss",
     fullDate: "dddd, mmmm d, yyyy",
+    isoDate: "yyyy-mm-dd",
+    fmDate: "yyyy-mm-dd",
+    fmUtcDate: "UTC:yyyy-mm-dd",
+
+    shortDateTime: "m/d/yy HH:MM:ss",
+    mediumDateTime: "mmm d, yyyy HH:MM:ss",
+    longDateTime: "mmmm d, yyyy HH:MM:ss",
     fullDateTime: "dddd, mmmm d, yyyy HH:MM:ss",
+    isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
+    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'",
+    fmDateTime: "yyyy-mm-dd HH:MM:ss",
+    fmUtcDateTime: "UTC:yyyy-mm-dd HH:MM:ss",
+    
     shortTime: "h:MM TT",
     mediumTime: "h:MM:ss TT",
     longTime: "h:MM:ss TT Z",
-    isoDate: "yyyy-mm-dd",
     isoTime: "HH:MM:ss",
-    isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
-    fmDateTime: "yyyy-mm-dd HH:MM:ss",
-    fmUtcDateTime: "UTC:yyyy-mm-dd HH:MM:ss",
-    fmDate: "yyyy-mm-dd",
-    fmUtcDate: "UTC:yyyy-mm-dd",
     fmTime: "HH:MM:ss",
-    fmUtcTime: "UTC:HH:MM:ss",
-    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+    fmUtcTime: "UTC:HH:MM:ss"
 };
 
 
@@ -1396,10 +1437,10 @@ FM.dateFormat.masks = {
  * 
  * @ignore
  */
-FM.dateFormat.i18n = 
+FM.dateFormat.i18n =
     FM.isset(FM.CultureInfos[FM.getlocale()]) ?
     FM.CultureInfos[FM.getlocale()] : 'en-US'
-;
+    ;
 
 
 
@@ -1407,34 +1448,34 @@ FM.dateFormat.i18n =
 /**
  * Format date using FM.dateFormat.masks.fmDateTime or FM.dateFormat.masks.fmUtcDateTime mask.
  * 
- * @param {string|Date} [dat=new Date()] Date to format.
+ * @param {string|number|Date} [dat=new Date()] Date to format.
  * @param {boolean} [utc=false] Format UTC values.
  * @param {string} [format="fmUtcDateTime"] Format mask.
  * @returns {string} Returns empty string on error.
  * @see FM.dateFormat.masks
  */
-FM.dateToString = function(dat, utc,format) {
+FM.dateToString = function(dat, utc, format) {
     dat = FM.isset(dat) ? dat : new Date();
-    
+
     try {
         format = FM.isset(format) ? format : (utc ? 'fmUtcDateTime' : 'fmDateTime');
         var s = FM.dateFormat(dat, format);
         return s;
-    } catch(e) {
+    } catch (e) {
         return '';
     }
 }
 
 
 /**
- * Check if string representing date is parsable.
+ * Check if value representing date is parsable.
  * 
- * @param {string} sdate Date string to check.
+ * @param {string|number} sdate Value to check.
  * @returns {boolean} 
  * @see FM.dateFormat.masks
  */
-FM.isDateString = function(sdate) { 
-    if (!FM.isString(sdate)) {
+FM.isDateString = function(sdate) {
+    if (!FM.isString(sdate) && !FM.isNumeric(sdate)) {
         return false;
     }
 
@@ -1442,39 +1483,45 @@ FM.isDateString = function(sdate) {
         var ds = FM.dateFormat(sdate);
         var d = new Date(ds);
         return d ? true : false;
-    } catch(e) {
+    } catch (e) {
         return false;
     }
 }
 
 
 /**
- * Parse date string.
+ * Parse date.
  * 
- * @param {string} sdate String to parse.
+ * @param {string|number} sdate Value to parse.
  * @param {boolean} [utc=false] Date string represents UTC values.
  * @returns {Date} Returns null on error.
  * @see FM.dateFormat.masks
  */
-FM.parseDateString = function(sdate, utc) { 
+FM.parseDateString = function(sdate, utc) {
     if (!FM.isset(sdate) || sdate == null || sdate == '') {
         return(null);
     }
-
+    if(FM.isNumeric(sdate)) {
+        try {
+            return new Date(FM.isString(sdate) ? parseInt(sdate) : sdate);
+        } catch(e){
+            return null;
+        }
+    }
     try {
-        var s = FM.dateFormat((utc && !FM.startsWith(sdate,"UTC:") ? 'UTC:' : '') + sdate);
+        var s = FM.dateFormat((utc && !FM.startsWith(sdate, "UTC:") ? 'UTC:' : '') + sdate);
         var d = new Date(s);
         return d;
-    } catch(e) {
+    } catch (e) {
         return null;
     }
 }
 
 /**
- * Parse local date using.
+ * Parse local date.
  * This function is shortcut for <i>FM.parseDateString(sdate,false)</i>.
  * 
- * @param {string} sdate String to parse.
+ * @param {string|number} sdate Value to parse.
  * @returns {Date} Returns null on error.
  * @see FM.parseDateString
  */
@@ -1484,28 +1531,28 @@ FM.parseLocalDateString = function(sdate) {
 
 
 /**
- * Parses UTC date string, converts it to Date object and returns local date string.
+ * Parses UTC date, converts it to Date object and returns local date string.
  * 
- * @param {string} sdate UTC date string to parse.
+ * @param {string|number} sdate UTC date string to parse.
  * @param {string} [format="fmDateTime"] Format mask.
-
+ 
  * @returns {string}.
  * @see FM.parseDateString
  */
-FM.srv2locDate = function(sdate,format) {
-    return(FM.dateToString(FM.parseDateString(sdate, true), false,format));
+FM.srv2locDate = function(sdate, format) {
+    return(FM.dateToString(FM.parseDateString(sdate, true), false, format));
 }
 
 /**
- * Parses local date string, converts it to Date object and returns UTC date string.
+ * Parses local date, converts it to Date object and returns UTC date string.
  * 
- * @param {string} sdate UTC date string to parse.
+ * @param {string|number} sdate UTC date string to parse.
  * @param {string} [format="fmUtcDateTime"] Format mask.
  * @returns {string}.
  * @see FM.parseDateString
  */
-FM.loc2srvDate = function(sdate,format) {
-    return(FM.dateToString(FM.parseDateString(sdate, false), true,format));
+FM.loc2srvDate = function(sdate, format) {
+    return(FM.dateToString(FM.parseDateString(sdate, false), true, format));
 }
 
 /**
@@ -1516,7 +1563,7 @@ FM.loc2srvDate = function(sdate,format) {
  * @see FM.dateFormat.masks.fmDateTime
  */
 FM.locNow = function(format) {
-    return(FM.dateToString(new Date(), false,format));
+    return(FM.dateToString(new Date(), false, format));
 }
 
 /**
@@ -1527,7 +1574,7 @@ FM.locNow = function(format) {
  * @see FM.dateFormat.masks.fmDateTime
  */
 FM.srvNow = function(format) {
-    return(FM.dateToString(new Date(), true,format));
+    return(FM.dateToString(new Date(), true, format));
 }
 
 /**
@@ -1539,18 +1586,18 @@ FM.srvNow = function(format) {
  */
 FM.timeBetween = function(d1, d2) {
     if (
-        !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) || 
+        !FM.isset(d1) || !d1 || !FM.isset(d1.getTime) ||
         !FM.isset(d2) || !d2 || !FM.isset(d2.getTime)
         ) {
-        return false;    
+        return false;
     }
     // Calculate the difference in milliseconds
-    return (d2.getTime()/1000 - d1.getTime()/1000);
+    return (d2.getTime() / 1000 - d1.getTime() / 1000);
 }
 
 
 /**
- * Returns time difference in seconds between two dates in descriptive sentence.
+ * Returns time difference between two dates in descriptive sentence.
  * Examples:
  *  "3 seconds ago", "3 minutes ago", "3 hours ago", "Yesterday", "3 days ago",
  *  "In 3 seconds", "In 3 minutes", "In 3 hours", "Tomorow", "In 3 days"
@@ -1560,12 +1607,12 @@ FM.timeBetween = function(d1, d2) {
  * @returns {string} On error returns empty string.
  */
 FM.strTimeBetween = function(d1, d2) {
-    var dif = FM.timeBetween(d1,d2);    
+    var dif = FM.timeBetween(d1, d2);
     if (dif == false) {
-        return '';    
+        return '';
     }
     var dif_abs = Math.abs(dif);
-    
+
 
     // The number of milliseconds in one day
     var ONE_DAY = 24;
@@ -1627,14 +1674,14 @@ FM.dateLocalFormat = function(d) {
  * @ignore
  */
 FM.startOfHistory = function() {
-    return FM.dateFormat(new Date(0),'fmUtcDateTime');    
+    return FM.dateFormat(new Date(0), 'fmUtcDateTime');
 }
 
 /**
  * @ignore
  */
 FM.endOfHistory = function() {
-    return FM.dateFormat(new Date(2524608000000),'fmUtcDateTime');
+    return FM.dateFormat(new Date(2524608000000), 'fmUtcDateTime');
 }
 
 
@@ -2518,10 +2565,14 @@ FM.log = function(oObj, msg, level, callerinfo) {
             (FM.isset(FM.log.caller.name) && FM.log.caller.name != '' ? FM.log.caller.name : '<unknown>');
     }
 
-    // formiraj header    
-    console.log(
-        (FM.isset(callerinfo) ? callerinfo : "Unknown") +
-        " [" + FM.getLogTypeName(level) + "]:" +
+    // console method
+    var lfname = FM.getLogTypeName(level).toLowerCase();
+    lfname = FM.isset(console[lfname]) ? lfname : "log";
+    
+    // display message
+    console[lfname](
+        "[" + FM.getLogTypeName(level) + "]:" +
+        (FM.isset(callerinfo) ? callerinfo : "Unknown") + " " +  
         (msg && !FM.isString(msg) ? '' : msg)
         );
 
@@ -2540,15 +2591,83 @@ FM.log = function(oObj, msg, level, callerinfo) {
  */
 
 /**
- * Basic FM class. Provide listeners, attributes, propertyes, logger.
+ * The ob.object is the base class of FM framework. It provides support for:
+ * <ul>
+ * <li>events</li>
+ * <li>attributes</li> 
+ * <li>properties</li>
+ * <li>logging</li>
+ * </ul>
+ * 
+ * <h3>Events</h3>
+ * Every ob.object instance can fire events to all of its dependent observers (registered listeners).
+ * <br/>
+ * Whenever an <code>ob.object</code> instance calls the @link ob.Object#fireEvent method it acts as a subject, and
+ * the event gets propagated to all of the dependent observers. An observer instance reacts to that event if it has
+ * event processing enabled (@see ob.Object#isEnabled)
+ * and an instance method named <i>exactly</i> as the value of the eventName variable of the @link ob.Object#fireEvent method. 
+ * <br/>
+ * The event consists of the event data instance and the subject instance. An object instance gets registered
+ * as an observer by invoking the @link ob.Object#addListener method on the subject instance - the object instance
+ * whose events it wants to be notified of.
+ * <br/>
+ * This is an observer pattern implementation using the described FM events arhitecture.
+ * (@see <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer pattern @ wikipedia</a>)
+ * <br/>
+ * <code>var subject = new FM.Object();<br/>
+ *  var observer = new FM.Object();<br/>
+ *
+ *   subject.addListener(observer);<br/>
+ *   observer.onEventName = function(subject,eventData) {<br/>
+ *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert("onEventName: subject with ID " + subject.getID()+ " sent message: " + eventData["message"]);<br/>
+ *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+ *   subject.fireEvent("onEventName", {"message":"hello"});<br/>
+ * </code>
+ *  <br/>
+ * <h3>State and elementary CRUD support</h3>
+ * Every <code>ob.object</code> instance has an instance ID which is generated by the FM framework and unique across environments. (@TODO explain better)
+ * <br/>
+ * Every <code>ob.object</code> instance has a data model, which consists of:
+ * <ul>
+ * <li>data model ID</li>
+ * <li>attributes</li>
+ * <li>properties</li>
+ * <li>state</li>
+ * </ul>
+ * 
+ * The data model ID is instance ID by default implementation. <br/>
+ * Both attributes and properties are technically plain old Javascript properties, but there exists a thin layer of abstraction which 
+ * reflects in the fact that both properties and attributes must <i>exclusively</i> be mutated (changed) via their corresponding setter methods.<br/>
+ * 
+ * Attributes form the data in the data model. Properties are the metadata of the data model, and the default ones describe the synchronicity of the actual data in the data model with the actual data in some data source.
+ * The default <code>ob.object</code> properties: 
+ * <ul>
+ * <li><code>dirty</code> - set to <code>false</code> upon instantiation</li>
+ * <li><code>timestamp</code> - gets populated with current time upon instantiation</li>
+ * <li><code>fetched</code> - set to <code>true</code> upon instantiation</li>
+ * </ul> 
+ * Whenever a property gets mutated via the @link ob.Object#setProperty method, an <code>onChange</code> event gets fired by default behavior, but it can be done silently.<br/>
+ * <br/>
+ * Whenever an attribute gets mutated via the @link ob.Object#setAttr method its:
+ * <ul>
+ * <li><code>dirty</code> property gets set to <code>true</code></li>
+ * <li>the <code>timestamp</code> property gets updated</li>
+ * <li>by default behavior, <code>onChange</code> event gets fired, but it can be done silently</li>
+ * </ul>
+ * Attributes (the data model) can be defined in a strict manner, by providing an array of attributes' names in the constructor. Such strict data model won't allow adding of new attributes:
+ * 
+ * 
+ * 
+ * <br/>
  * 
  * @class FM.Object
- * @param {object|string|function} attrs List of attribute name and values, 
- *  This parametar can be object, string evaluating to object or function returning object.
- * @param {object} [flds] Allowed attributes,
+ * @param {object|string|function} attrs List of attributes' name and value pairs. 
+ *  This parameter can be an object instance, string evaluation to object instance(__KAKO_OVO_RADI-evaluacija stringa je transparentna za programera?) or a function returning object instances.
+ * @param {object} [flds] restricted model definition - string array of allowed attributes' names.
  * 
  */
 FM.Object = FM.defineClass('Object');
+
 
 FM.Object.prototype._init = function(attrs, flds) {
     // properties    
@@ -2582,7 +2701,7 @@ FM.Object.prototype._init = function(attrs, flds) {
 }
 
 /**
- * Returns name of the class.
+ * Returns the name of the class.
  * 
  * @public     
  * @function 
@@ -2611,7 +2730,7 @@ FM.Object.prototype.getSubClassName = function() {
 
 
 /**
-* Get class instance id.
+* Get instance ID.
 * 
 * @public     
 * @function 
@@ -2624,7 +2743,7 @@ FM.Object.prototype.getID = function() {
 }
 
 /**
- * Returns data ID of the class instance,
+ * Returns the ID of the data model of this instance.
  * 
  * @public     
  * @function 
@@ -2714,8 +2833,9 @@ FM.Object.prototype.removeAllListeners = function() {
  */
 FM.Object.prototype.onEvent = function(sender, ev, data, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
-    if (!this.isEnabled())
+    if (!this.isEnabled() || ev == "onEvent") {
         return false;
+    }
 
     if (FM.isset(this[ev])) {
         this[ev](sender, data);
@@ -2975,7 +3095,7 @@ FM.Object.prototype.forEachProperty = function(doFn) {
 }
 
 /**
- * Start to process events.
+ * Enable event processing.
  * 
  * @public
  * @function 
@@ -2985,7 +3105,7 @@ FM.Object.prototype.enable = function() {
 }
 
 /**
- * Stop processing events.
+ * Disable event processing.
  * 
  * @public
  * @function 
@@ -2996,7 +3116,7 @@ FM.Object.prototype.disable = function() {
 
 
 /**
- * Check if object is enabled.
+ * Determine if event processing is enabled.
  * 
  * @public
  * @function 
@@ -3007,8 +3127,9 @@ FM.Object.prototype.isEnabled = function() {
 }
 
 /**
- *  Log a message.
+ *  Log a message with desired level and caller function name (context).
  * 
+ * @link FM.logLevels
  * @public
  * @function  
  * @param {string|Object|...} msg Variable to be logged.
@@ -3022,6 +3143,7 @@ FM.Object.prototype.log = function(msg, level, callerinfo) {
 /**
  * Set global log level.
  * 
+ * @link FM.logLevels
  * @public
  * @function 
  * @param {string|number} level Log level
@@ -3037,8 +3159,9 @@ FM.Object.prototype.setLogLevel = function(level) {
 }
 
 /**
- * Get global log level,
+ * Get global log level.
  * 
+ * @link FM.logLevels
  * @public
  * @function 
  */
@@ -3048,7 +3171,7 @@ FM.Object.prototype.getLogLevel = function() {
 }
 
 /**
- * Dispose object.
+ * Dispose instance.
  * 
  * @public
  * @function 
@@ -3056,7 +3179,6 @@ FM.Object.prototype.getLogLevel = function() {
 FM.Object.prototype.dispose = function() {
     this.removeAllListeners();
 }
-
 
 /**
 * Ajax class. 
@@ -3297,6 +3419,7 @@ FM.UtTimerJob.prototype.dispose = function() {
 
 
 
+/** @fileoverview http://social.msdn.microsoft.com/Forums/en-US/9944e069-7af7-4854-8773-9b4269d49df2/why-registry-pattern-is-antipattern-and-what-is-alternative-for-it*/
 /**
 * Registry class. 
 * 
@@ -3916,6 +4039,7 @@ FM.DmObject.getConfiguration = function(app,sctype) {
 
 /**
 * Returns new instance of chosen <b>sctype</b> subclass type.
+* 
 * @static
 * @public
 * @function    
@@ -3975,13 +4099,22 @@ FM.DmObject.addSubClassType = function(sctype, clsFn,scapp) {
 
 FM.DmObject.addSubClassType('Object',FM.DmObject,'GLOBAL');
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
 /**
 * Generic value DM class.
 * 
 * @class FM.DmGenericValue
 * @extends FM.DmObject
 * @memberOf FM
-* @param {object} attrs list of attribute name and values
+* @param {object} attrs list of attribute name and values.
+* @param {string} attrs.value Value attribute.
 */    
 
 FM.DmGenericValue = FM.defineClass('DmGenericValue',FM.DmObject);
@@ -3994,11 +4127,26 @@ FM.DmGenericValue.prototype._init = function(attrs) {
     this.objectSubClass = "GenericValue";
 }
         
+/**
+ * Returns data ID of data model. 
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
 FM.DmGenericValue.prototype.getDataID = function() {
     return this.getID();
 }
 
 FM.DmObject.addSubClassType('GenericValue',FM.DmGenericValue,'GLOBAL');
+
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 
 /**
 * Text translation DM class.
@@ -4007,6 +4155,8 @@ FM.DmObject.addSubClassType('GenericValue',FM.DmGenericValue,'GLOBAL');
 * @extends FM.DmObject
 * @memberOf FM
 * @param {object} attrs list of attribute name and values
+* @param {string} attrs.text Original text.
+* @param {string} attrs.translation Text translation.
 */    
 
 FM.DmTranslation = FM.defineClass('DmTranslation',FM.DmObject);
@@ -4019,12 +4169,27 @@ FM.DmTranslation.prototype._init = function(attrs) {
     });
     this.objectSubClass = "Translation";
 }
-        
+
+/**
+ * Returns data ID of data model (<i>text</i> attribute value). 
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
 FM.DmTranslation.prototype.getDataID = function() {
     return this.getAttr("text",'');
 }
 
 FM.DmObject.addSubClassType('Translation',FM.DmTranslation,'GLOBAL');
+
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 
 /**
 * Generic error DM class.
@@ -4033,9 +4198,8 @@ FM.DmObject.addSubClassType('Translation',FM.DmTranslation,'GLOBAL');
 * @extends FM.DmObject
 * @memberOf FM
 * @param {object} attrs list of supported attribute names and values:
-* @param attrs.messageId Error id.
-* @param attrs.text Error message.
-* 
+* @param {string} attrs.messageId Error ID.
+* @param {string} attrs.text Error message.
 * 
 */
 FM.DmGenericError = FM.defineClass('DmGenericError',FM.DmObject);
@@ -4045,27 +4209,60 @@ FM.DmGenericError.prototype._init = function(attrs) {
     this._super("_init", attrs, {messageId: "0",text: "No error"});
     this.objectSubClass = "GenericError";
 }
-        
+
+/**
+ * Returns data ID of data model. 
+ * 
+ * @public     
+ * @function 
+ * @returns {string} 
+ */
 FM.DmGenericError.prototype.getDataID = function() {
     return this.getID();
 }
 
+/**
+ * Returns <i>messageId</i> attribute value.
+ * 
+ * @returns {string}
+ */
 FM.DmGenericError.prototype.getErrorCode = function() {
     return this.getAttr('messageId','0');
 }
 
+/**
+ * Set <i>messageId</i> attribute value.
+ * 
+ * @param {string} ec Error code.
+ */
 FM.DmGenericError.prototype.setErrorCode = function(ec) {
     this.setAttr('messageId',ec);
 }
 
+/**
+ * Returns <i>text</i> attribute value.
+ * 
+ * @returns {string}
+ */
 FM.DmGenericError.prototype.getErrorText = function() {
     return this.getAttr('text','');
 }
 
+/**
+ * Set <i>text</i> attribute value.
+ * 
+ * @param {string} ec Error code.
+ */
 FM.DmGenericError.prototype.setErrorText = function(text) {
     return this.setAttr('text',text);
 }
 
+/**
+ * Check if error is occured. 
+ * Object is in error state when <i>messageId</i> is not equal '0'.
+ * 
+ * @returns {boolean}
+ */
 FM.DmGenericError.prototype.isError = function() {
     var errCode = this.getErrorCode();
     
@@ -4075,35 +4272,58 @@ FM.DmGenericError.prototype.isError = function() {
 
 FM.DmObject.addSubClassType('GenericError',FM.DmGenericError,'GLOBAL');
 
-// -- DM list class ------------------------------------------------------------
-/**
- * DM list holds DM.Objects. 
- * <pre>
- * Config: {
- *  data:
- *  isstatic: true/false
- *  responseClass: somedmobject
- *  getFetchArguments: function({dmList: this, getMore: getMore}),
- *  isErrorResponse: function({dmList: this, utAjax: oAjax, response: response})
- *  errorParser: function({dmList: this, utAjax: oAjax, response: response})
- *  responseParser: function({dmList: this, response: respCol[respId], raw: response})
- *  dataProperty: ''
- *  listType: single/collection/none
- *  validResponseCodes:
- *  url:
- *  pageAttribute,pageSizeAttribute
- *  fromRowAttribute,numRowsAttribute
- * }
- * this.getProperty('config',{})
- * </pre>
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+/** 
+ * DM list holds FM.DmObject's.
  * 
  * @class FM.DmList
  * @extends FM.DmObject
  * @memberOf FM
  * @param {object} attrs List of attribute names and values.
- * @param {object|string} [config] configuration. 
- *  Object or literal presentation of object.
- * 
+ * @param {object|string} config List configuration object, 
+ *  list configuration name or string evaluating to configuration object.
+ *  
+ * @param {string} [config.listname] Name of list configration. Automaticaly set by
+ *  FM.DmList.addConfiguration.
+ * @param {boolean} [config.isstatic=false] Static lists newer requests data.
+ * @param {boolean} [config.cache=false] Cached lists only once requests data.
+ * @param {array} [config.data] Predefined data for static list type 
+ * @param {string} [config.url] URL to fetch data from.
+ * @param {string} [config.method] HTTP method for AJAX call.
+ * @param {string} [config.contentType='application/x-www-form-urlencoded'] HTTP content type for AJAX call.
+ * @param {object} [config.headers] HTTP headers to send with AJAX call.
+ * @param {string} [config.responseFormat='TEXT'] TEXT or JSON.
+ * @param {object} [config.params={}] object containing list of AJAX call arguments (that mus't be valid list attributes).
+ *  The value of property dasn't metter. 
+ * @param {object} [config.auth] Object containing username and password properties.
+ * @param {string} [config.responseClass='Object'] Class name to expect in response.
+ * @param {function|string} [config.getFetchArguments] Function (or string evaluating to function) 
+ *  returning object with fetch arguments and accepting object 
+ *  {dmList: <list>, getMore: true|false} as argument.
+ * @param {function|string} [config.isErrorResponse] Function (or string evaluating to function) 
+ *  for checking responsefor errors (returns true or false)
+ *  and accepting object {dmList: <list>, utAjax: oAjax, response: response} as argument.
+ * @param {function|string} [config.errorParser] Function (or string evaluating to function) 
+ *  responsible for parsing response to some error class instance (GenericError usualy) 
+ *  and accepting object {dmList: <list>, utAjax: oAjax, response: response} as argument.
+ * @param {function|string} [config.responseParser] Function (or string evaluating to function) 
+ *  responsible for parsing part of response to DM object.
+ *  and accepting object {dmList: <list>, response: <response>, raw: <complete response>} as argument.
+ * @param {string} [config.listType='collection'] Determines if AJAX call return single, collection or none of objects.
+ * @param {string} [config.dataProperty] AJAX response JSON data property containing requested objects.
+ * @param {string} [config.validResponseCodes] List of valid HTTP responses separated by comas.
+ * @param {string} [config.pageAttribute] FM.DmList attribute acting as fetch argument for requested page number.
+ * @param {string} [config.pageSizeAttribute] FM.DmList attribute acting as fetch argument for page size.
+ * @param {string} [config.fromRowAttribute] FM.DmList attribute acting as fetch argument for first row to fetch.
+ * @param {string} [config.numRowsAttribute] FM.DmList attribute acting as fetch argument for response size.
+ *  
+ * @param {FM.AppObject} app application object.
  */
 FM.DmList = FM.defineClass('DmList', FM.DmObject);
 
@@ -4143,11 +4363,10 @@ FM.DmList.prototype._init = function(attrs, config, app) {
 }
 
 /**
- * Returns application instance.
+ * Returns object application instance.
  * 
- * @public     
- * @function 
- * @returns {string} 
+ * @returns {FM.AppObject}
+ * 
  */
 FM.DmList.prototype.getApp = function() {
     return this.app;
@@ -4243,23 +4462,23 @@ FM.DmList.prototype.getDataArgs = function(getMore) {
             }
             return true;
         });
-        
+
         // paging
-        if(getMore) {
-            var fromPageAttr = this.getProperty('config.pageAttribute','');
-            if(fromPageAttr != '') {
-                args[fromPageAttr] = parseInt(this.getAttr(fromPageAttr,'0'))+1;
-                var pageSizeAttr = this.getProperty('config.pageSizeAttribute','');
-                if(pageSizeAttr != '') {
-                    args[pageSizeAttr] = parseInt(this.getAttr(pageSizeAttr,'20'));
+        if (getMore) {
+            var fromPageAttr = this.getProperty('config.pageAttribute', '');
+            if (fromPageAttr != '') {
+                args[fromPageAttr] = parseInt(this.getAttr(fromPageAttr, '0')) + 1;
+                var pageSizeAttr = this.getProperty('config.pageSizeAttribute', '');
+                if (pageSizeAttr != '') {
+                    args[pageSizeAttr] = parseInt(this.getAttr(pageSizeAttr, '20'));
                 }
             } else {
-                var fromRowAttr = this.getProperty('config.fromRowAttribute','');
-                if(fromRowAttr != '') {
+                var fromRowAttr = this.getProperty('config.fromRowAttribute', '');
+                if (fromRowAttr != '') {
                     args[fromRowAttr] = this.getListSize();
-                    var numRowsAttr = this.getProperty('config.numRowsAttribute','');
-                    if(numRowsAttr != '') {
-                        args[numRowsAttr] = parseInt(this.getAttr(numRowsAttr,'20'));
+                    var numRowsAttr = this.getProperty('config.numRowsAttribute', '');
+                    if (numRowsAttr != '') {
+                        args[numRowsAttr] = parseInt(this.getAttr(numRowsAttr, '20'));
                     }
                 }
             }
@@ -4282,7 +4501,12 @@ FM.DmList.prototype.getDataArgs = function(getMore) {
 
 
 /**
- * @ignore
+ * Fired on start of AJAX call.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {object} oArgs Ajax call arguments
  */
 FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
     this.log("Starting fetch ...", FM.logLevels.info, 'onAjaxStateStart');
@@ -4290,7 +4514,12 @@ FM.DmList.prototype.onAjaxStateStart = function(oAjax, oArgs) {
 }
 
 /**
- * @ignore
+ * Fired after successfull AJAX call.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {object} response Ajax call response.
  */
 FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
     this.log("Fetch completed.", FM.logLevels.info, 'onAjaxStateEnd');
@@ -4323,7 +4552,12 @@ FM.DmList.prototype.onAjaxStateEnd = function(oAjax, response) {
 }
 
 /**
- * @ignore
+ * Fired on AJAX call error.
+ * 
+ * @event
+ * @public
+ * @param {FM.UtAjax} oAjax Source of event (usualy FM.UtAjax class instance).
+ * @param {string} errTxt Error description.
  */
 FM.DmList.prototype.onAjaxStateError = function(oAjax, errTxt) {
     var errObj = new FM.DmGenericError({
@@ -4372,8 +4606,8 @@ FM.DmList.prototype._checkResponseStatus = function(oAjax) {
 
 /**
  * Get data from server.
- * <i>onListStart</i> and <i>onListEnd</i> or <i>onListError</i> will be fired
- *  on start and completition of AJAX call.
+ * <i>FM.DmList.onListStart</i> and <i>FM.DmList.onListEnd</i> or <i>FM.DmList.onListError</i> 
+ * events will be fired on start and completition of AJAX call.
  *  
  * @public
  * @function    
@@ -4414,7 +4648,7 @@ FM.DmList.prototype.getData = function(getMore) {
     if (args) {
         this._ajaxCall(args);
     }
-    
+
     // end
     return true;
 }
@@ -4429,7 +4663,7 @@ FM.DmList.prototype.getData = function(getMore) {
  * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
  * @param {string} [groupName=null]. 
  */
-FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
+FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupName) {
     var addlst = [];
 
     // ako je lista objekata a ne objekt
@@ -4440,7 +4674,7 @@ FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
             addlst.push(inmember);
     }
 
-    return this.refreshList({Added: addlst, Updated: [], Removed: []}, false, groupid, false, callevent);
+    return this.refreshList({Added: addlst, Updated: [], Removed: []}, false, groupName, false, callevent);
 
     // kraj
     return true;
@@ -4451,12 +4685,12 @@ FM.DmList.prototype.addToList = function(inmember, mid, callevent, groupid) {
  * 
  * @public
  * @function    
- * @param {string|object} id Id of DmObject to remove 
+ * @param {string|object} id Id of FM.DmObject to remove 
  *  or object with list od DmObjects to remove.
  * @param {boolean} [callevent=false] Send <i>onListEnd</i> event.
  * @param {string} [groupName=null]. 
  */
-FM.DmList.prototype.removeFromList = function(id, callevent, groupid) {
+FM.DmList.prototype.removeFromList = function(id, callevent, groupName) {
     var rmlist = {};
     var oOldObj;
 
@@ -4589,8 +4823,9 @@ FM.DmList.prototype.get = function(key, aname) {
     }
 
     // drito u listu pod dataid-u
-    if (FM.isset(this.objectsList[key.toString()])) {
-        return this.objectsList[key.toString()];
+    key = key.toString();
+    if (key && key != '' && FM.isset(this.objectsList[key])) {
+        return this.objectsList[key];
     }
 
     // nije nadjen
@@ -4631,11 +4866,11 @@ FM.DmList.prototype.set = function(member, id, idattr) {
         var onlyExisting = member;
         var olist = id;
         idattr = FM.isset(idattr) && idattr != null ? idattr : null;
-        
+
         for (var k in olist) {
             var obj = olist[k];
             if (FM.isObject(obj) && FM.isset(obj.getDataID)) {
-                var did = idattr ? obj.getAttr(idattr,'') : obj.getDataID();
+                var did = idattr ? obj.getAttr(idattr, '') : obj.getDataID();
                 var oldObj = this.get(did);
                 if (!onlyExisting || oldObj == null) {
                     this.set(obj, did);
@@ -4644,7 +4879,7 @@ FM.DmList.prototype.set = function(member, id, idattr) {
         }
     } else {
         id = FM.isset(id) && id ? id : member.getDataID();
-        
+
         if (!FM.isset(this.objectsList[id.toString()])) {
             this.listIndex.push(id.toString());
         }
@@ -4681,7 +4916,7 @@ FM.DmList.prototype.getList = function() {
  * @param {boolean} [all=false] Return all objects (or only first that match criteria).
  * @param {object} [orderList] List index.
  *  
- * @returns {FM.DmObject|FM.DmObject{}}
+ * @returns {FM.DmObject|{}}
  */
 FM.DmList.prototype.findByAttr = function(aname, value, all, orderList) {
     var getall = (FM.isset(all) ? all : false);
@@ -4736,7 +4971,7 @@ FM.DmList.prototype.findElementIndex = function(attrname, attrval) {
  * @returns {number} 
  */
 FM.DmList.prototype.getListSize = function(filterFn) {
-    return FM.DmList.getListSize(this,filterFn);
+    return FM.DmList.getListSize(this, filterFn);
 }
 
 /**
@@ -4769,7 +5004,8 @@ FM.DmList.prototype.forEachListElement = function(doFn, returnIndex) {
 }
 
 /**
- * Create list filter
+ * Create list filter.
+ * 
  * @public
  * @function    
  * @param {function} callbackFn Callback for creating list
@@ -4796,7 +5032,8 @@ FM.DmList.prototype.createListFilter = function(callbackFn, startFilter) {
 
 
 /**
- * Create list index
+ * Create list index.
+ * 
  * @public
  * @function    
  * @param {string} attr Attribute name 
@@ -4840,26 +5077,17 @@ FM.DmList.prototype.createListIndex = function(attr, attrtype, asc, filterTable)
 
 
 /**
- * Return soprt options from list congig
- * @public
- * @function    
- * @return {array} sortOptions
- */
-FM.DmList.prototype.getSortOptions = function() {
-    this.getProperty('config.sortOptions', {});
-}
-
-/**
- * Add  objects from fetch response to list. Fires <i>onListEnd</i> event.
+ * Add  objects from AJAX call response to list. Fires <i>onListEnd</i> event.
+ * 
  * @public
  * @function
- * @param {object} response Fetch response
+ * @param {object} response AJAX response
  * @param {boolean} onlyExisting Replace only existing object 
- * @param {string} groupid ID od objects group
+ * @param {string} [groupName] Name od objects group
  * @param {boolean} protectDirty Don't change dirty objects
  */
 
-FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupid, protectDirty) {
+FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupName, protectDirty) {
     response =
         FM.isset(response) && response ?
         response : null
@@ -4932,27 +5160,28 @@ FM.DmList.prototype.addResponseToList = function(response, onlyExisting, groupid
     }
 
     return this.refreshList(
-        {Added: added, Updated: updated, Removed: removed}, onlyExisting, groupid, protectDirty
+        {Added: added, Updated: updated, Removed: removed}, onlyExisting, groupName, protectDirty
         );
 }
 
 
 /**
  * Add objects to list. Fires <i>onListEnd</i> event.
+ * 
  * @public
  * @function
  * @param {object} response List of updated, deleted and inserted objects (onListEnd format)
  * @param {boolean} onlyExisting Replace only existing object 
- * @param {string} groupid ID od objects group
+ * @param {string} groupName Name of objects group
  * @param {boolean} protectDirty Ignore changed objects
  * @param {boolean} callEvents Call events  (default is true)
  */
-FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, protectDirty, callEvents) {
+FM.DmList.prototype.refreshList = function(response, onlyExisting, groupName, protectDirty, callEvents) {
     var id, oValue, oOldValue;
 
     // def params
     onlyExisting = FM.isset(onlyExisting) && onlyExisting == true ? true : false;
-    groupid = FM.isset(groupid) && groupid ? groupid : null;
+    groupName = FM.isset(groupName) && groupName ? groupName : null;
     protectDirty = FM.isset(protectDirty) && protectDirty == true ? true : false;
     response =
         FM.isset(response) && response ?
@@ -4973,10 +5202,10 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
         for (id = 0; id < response.Removed.length; id++) {
             oValue = response.Removed[id];
             oOldValue = this.get(oValue.getDataID());
-            if (groupid) {
+            if (groupName) {
                 // makni grupu
-                if (oOldValue.isInGroup(groupid)) {
-                    oOldValue.removeGroup(groupid);
+                if (oOldValue.isInGroup(groupName)) {
+                    oOldValue.removeGroup(groupName);
                 }
                 // micemo ga samo ako je broj grupa 0
                 if (oOldValue.getGroupsCount() < 1) {
@@ -4999,10 +5228,10 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
 
     // dodani
     if (FM.isset(response) && FM.isset(response.Added)) {
-        this._refreshAdd(response.Added, retList, onlyExisting, groupid, protectDirty);
+        this._refreshAdd(response.Added, retList, onlyExisting, groupName, protectDirty);
     }
     if (FM.isset(response) && FM.isset(response.Updated)) {
-        this._refreshAdd(response.Updated, retList, onlyExisting, groupid, protectDirty);
+        this._refreshAdd(response.Updated, retList, onlyExisting, groupName, protectDirty);
     }
 
 
@@ -5029,32 +5258,34 @@ FM.DmList.prototype.refreshList = function(response, onlyExisting, groupid, prot
  * Return the List configuration name
  * @public
  * @function    
- * @return {string} listname
+ * @return {string} list name
  */
 FM.DmList.prototype.getListConfigName = function() {
     return this.getProperty('config.listname', '');
 }
 
 /**
- * Return if the List is Static (cacheable)
+ * Return if the List is static (cacheable).
+ * 
  * @public
  * @function    
- * @return {boolean} isliststatic
+ * @return {boolean} 
  */
 FM.DmList.prototype.isStaticList = function() {
     return this.getProperty('config.isstatic', false) == true ? true : false;
 }
 
 /**
- * Return the static list
+ * Return the static list data.
+ * 
  * @public
  * @function    
- * @return { {} } list
+ * @return {object} 
  */
 FM.DmList.prototype.getStaticList = function() {
     var listconfig = FM.DmList.getConfiguration(this.getApp(), this.getListConfigName());
 
-    if(listconfig) {
+    if (listconfig) {
         if (!FM.isset(listconfig.staticlist) || !FM.isObject(listconfig.staticlist)) {
             listconfig.staticlist = {};
         }
@@ -5065,6 +5296,10 @@ FM.DmList.prototype.getStaticList = function() {
 }
 
 // -- private ------------------------------------------------------------------
+/**
+ * 
+ * @ignore
+ */
 FM.DmList.prototype._resFn = function(value, args) {
     var is = value;
     if (FM.isString(is && is != 'JSON')) { // hack
@@ -5084,10 +5319,8 @@ FM.DmList.prototype._resFn = function(value, args) {
 }
 
 /**
- * Start ajax call. 
- * @private
- * @function    
- * @param {object} args Fetch arguments
+ * 
+ * @ignore
  */
 FM.DmList.prototype._ajaxCall = function(args) {
     var fnargs = {dmList: this, arguments: args};
@@ -5102,22 +5335,22 @@ FM.DmList.prototype._ajaxCall = function(args) {
     for (var hname in hdrs) {
         hdrs[hname] = FM.applyTemplate(
             args, hdrs[hname], false, true
-        ).replace(/\s*\[\:.*?\]\s*/g, "");
+            ).replace(/\s*\[\:.*?\]\s*/g, "");
     }
-    
+
     var url = FM.applyTemplate(
         args,
         this._resFn(
-            this.getProperty('config.url', ''),
-            fnargs
+        this.getProperty('config.url', ''),
+        fnargs
         ),
         false, false
-    ).replace(/\s*\[\:.*?\]\s*/g, "");
+        ).replace(/\s*\[\:.*?\]\s*/g, "");
 
 
     var authArgs = this._resFn(
         this.getProperty('config.auth', {}), fnargs
-    );
+        );
 
     // ajax config
     var utAjax = new FM.UtAjax({
@@ -5144,6 +5377,10 @@ FM.DmList.prototype._ajaxCall = function(args) {
     return true;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList.prototype._refreshAdd = function(list, retList, onlyExisting, groupid, protectDirty) {
     var id, oValue, oOldValue;
 
@@ -5181,7 +5418,8 @@ FM.DmList.configurations = {
 };
 
 /**
- * Add new DmList configuration
+ * Add new FM.DmList configuration.
+ * 
  * @static
  * @function    
  * @param {String} name Name of configuration
@@ -5292,7 +5530,8 @@ FM.DmList.forEachListElement = function(list, doFn, returnIndex, orderList) {
 }
 
 /**
- * Get collection size
+ * Get collection size.
+ * 
  * @static
  * @function    
  * @param {object} list Collection
@@ -5315,6 +5554,10 @@ FM.DmList.getListSize = function(list, filterFn) {
     return n;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._errorParserDef = function(options) {
     var errObj = null;
     var oAjax = FM.getAttr(options, 'utAjax', null);
@@ -5336,6 +5579,10 @@ FM.DmList._errorParserDef = function(options) {
     return errObj;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._isErrorResponseDef = function(options) {
     var oList = FM.getAttr(options, 'dmList');
     var oAjax = FM.getAttr(options, 'utAjax', null);
@@ -5343,7 +5590,10 @@ FM.DmList._isErrorResponseDef = function(options) {
 }
 
 
-
+/**
+ * 
+ * @ignore
+ */
 FM.DmList._parseResponseDef = function(options) {
     var oList = FM.getAttr(options, 'dmList');
     var oData = FM.getAttr(options, 'response', {});
@@ -5389,14 +5639,22 @@ FM.DmList.addConfiguration('getTranslations', {
     listType: 'collection'
 },'GLOBAL');
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 /**
-* Basic LM class. 
+* Basic controler class. Provide execution control methods and registry access.
 * 
 * @class FM.LmObject
 * @extends FM.Object
 * @memberOf FM
-* @param {FM.AppObject} app application object
-* @param {object} [options] Options
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] List of attributes.
+ * 
 */    
 FM.LmObject = FM.defineClass('LmObject',FM.Object);
 
@@ -5405,15 +5663,28 @@ FM.LmObject.prototype._init = function(app,opt) {
     this.setApp(app);
     this.setDmObject();
 
-    this._super("_init",opt);
+    this._super("_init",opt); // all attributes are alowed
     this.objectSubClass = "Object";
 }
 
+
+/**
+ * Run object.
+ * 
+ * @public
+ * @function
+ */
 FM.LmObject.prototype.run = function() {
     this._super("run");
     this.setExecuted(true);
 }
 
+/**
+ * Dispose object.
+ * 
+ * @public
+ * @function 
+ */
 FM.LmObject.prototype.dispose = function() { 
     // reset
     this.setExecuted(false);
@@ -5422,25 +5693,63 @@ FM.LmObject.prototype.dispose = function() {
     this._super("dispose");
 }
 
+/**
+ * Check if object is running.
+ * 
+ * @public     
+ * @function 
+ * @returns {boolean} 
+ */
 FM.LmObject.prototype.isExecuted = function() {
     return this.executed;
 }
+
+
+/**
+ * 
+ * @ignore
+ */
 FM.LmObject.prototype.setExecuted = function(e) {
     this.executed = FM.isset(e) && e == true;
 }
 
+/**
+ * Returns object application instance.
+ * 
+ * @returns {FM.AppObject}
+ * 
+ */
 FM.LmObject.prototype.getApp = function() {
     return this.app;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.LmObject.prototype.setApp = function(a) {
     this.app = FM.isset(a) && a ? a : null;
 }
 
+/**
+ * Returns current DM object.
+ * 
+ * @public
+ * @function
+ * @returns {FM.DmObject}
+ */
 FM.LmObject.prototype.getDmObject = function() {
     return this.dmObject;
 }
 
+/**
+ * Set DM object.
+ * 
+ * @param {FM.DmObject} o New DM object. 
+ * @param {boolean} [addListener=false] Add listener to DM object. 
+ * 
+ * 
+ */
 FM.LmObject.prototype.setDmObject = function(o,addListener) {
     if(o && o === this.dmObject) return;
     
@@ -5457,6 +5766,15 @@ FM.LmObject.prototype.setDmObject = function(o,addListener) {
     }    
 }
 
+/**
+ * Returns registry root key for this subclass,
+ * Format of key is [/[app subclass|APP]/sClass/[my subclass]
+ * 
+ * @public
+ * @function
+
+ * @returns {String} 
+ */
 FM.LmObject.prototype.getRegistryRoot = function() {
     return  "/" + (this.app ? this.app.getSubClassName() : "APP") + 
             "/sClass" +
@@ -5464,6 +5782,16 @@ FM.LmObject.prototype.getRegistryRoot = function() {
     ;    
 }
 
+
+/**
+ * Returns value for given key from registry,
+ * 
+ * @public
+ * @function
+ * @param {string} key Registry key.
+ * @param {...} [dval=""] Default value.
+ * @returns {String} 
+ */
 FM.LmObject.prototype.getRegistryValue = function(key,dval) {
     return this.app ? this.app.appRegistry.get(
          this.getRegistryRoot() +
@@ -5472,6 +5800,15 @@ FM.LmObject.prototype.getRegistryValue = function(key,dval) {
      ) : dval;    
 }
 
+
+/**
+ * Set value in for registry for given key,
+ * 
+ * @public
+ * @function
+ * @param {string} key Registry key.
+ * @param {string} val Value.
+ */
 FM.LmObject.prototype.setRegistryValue = function(key,val) {
     if(this.app) this.app.appRegistry.set(
          this.getRegistryRoot() +
@@ -5480,13 +5817,21 @@ FM.LmObject.prototype.setRegistryValue = function(key,val) {
      );        
 }
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+
 /**
-* Basic application class. 
+* Generic application class. 
 * 
 * @class FM.AppObject
 * @extends FM.LmObject
 * @memberOf FM
-* @param {Object} [opt] Options (application attributes).
+* @param {object} [opt={}] Options (application attributes).
 */
     
 FM.AppObject = FM.defineClass('AppObject',FM.LmObject);
@@ -5503,6 +5848,12 @@ FM.AppObject.prototype._init = function(opt) {
     this.appRegistry = null;
 }
 
+/**
+ * Run application.
+ * 
+ * @public
+ * @function
+ */
 FM.AppObject.prototype.run = function() {
     // err
     this.lastError = FM.DmObject.newObject(this,'GenericError', {});
@@ -5518,38 +5869,84 @@ FM.AppObject.prototype.run = function() {
         
 }
 
+
+/**
+ * Dispose application.
+ * 
+ * @public
+ * @function
+ */
 FM.AppObject.prototype.dispose = function() {    
     $(window).unbind('hashchange.'+this.getID());
     this._super("dispose");    
 }
 
 
-FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr,updChObj) {
+/**
+ * FM.DmList factory function. Function sets list property <i>appFactory.createdAt</i>
+ * to current Unix timestamp with microseconds.
+ * 
+ * @public
+ * @function
+ * @param {object} [dmData={}] List attributes.
+ * @param {object|string} dmConfig List configuration object, 
+ *  list configuration name or string evaluating to configuration object.
+ * @param {boolean} [addlstnr=true] Add application as DM list listener.
+ *  
+ */
+
+FM.AppObject.prototype.dmListFactory = function(dmData,dmConfig,addlstnr) {
     var lst = new FM.DmList(dmData,dmConfig,this);
     if(lst) {
         if(!FM.isset(addlstnr) || addlstnr != false) lst.addListener(this);
+        lst.setProperty('appFactory', {createdAt: FM.l_timestamp()});
     }
-    lst.setProperty('appFactory', {createdAt: new Date().getTime()});
-    lst.setProperty('appFactory.updateChangedObjects',updChObj == true ? "true" : "false");
     return(lst);
 }
 
+
+/**
+ * Dispose DM list.
+ *
+ * @public
+ * @function 
+ * @param {FM.DmList} lst
+ */
 FM.AppObject.prototype.dmListDispose = function(lst) {
     lst.dispose();
     return true;
 }
 
+/**
+ * Process data bindings instructions in part of DOM. Usualy called after insertion od new elements
+ * in DOM.
+ * 
+ * @public
+ * @function
+ * @param {node} [node] DOM node to start from. If ommitted processing will start from 
+ *  document body.
+ * 
+ */
 FM.AppObject.prototype.mlInit = function(node) {
     return FM.MlHost.initChildNodes(this, node);
 }
 
-// create error object from string or return same object
+/**
+ * Create 'GenericError' DM object from string. 
+ * Empty string indicates that there is no error.
+ * 
+ * @public
+ * @function
+ * @param {string|FM.DmGenericError} [oErr=''] Error message or 
+ *  FM.DmGenericError class instance.
+ * @returns {FM.DmGenericError}
+ */
 FM.AppObject.prototype.getErrorObject = function(oErr) {
     oErr = FM.isset(oErr) && oErr ? oErr : '';
     
     if(FM.isString(oErr)) {
         oErr = FM.DmObject.newObject(this,'GenericError', {
-            messageId: '9999',
+            messageId: oErr == '' ? '0' : '9999',
             text: oErr
         });
     }
@@ -5557,24 +5954,114 @@ FM.AppObject.prototype.getErrorObject = function(oErr) {
     return oErr;
 }
 
+/**
+ * Returns application error object.
+ * 
+ * @returns {FM.DmGenericError}
+ */
 FM.AppObject.prototype.getLastError = function() {
     return this.lastError;
 }
 
+/**
+ * Set application error.
+ * 
+ * @param {string|FM.DmGenericError} [oErr=''] Error message or 
+ *  FM.DmGenericError class instance.
+ */
 FM.AppObject.prototype.setLastError = function(oErr) {
-    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = FM.DmObject.newObject(this,'GenericError', {});
+    oErr = this.getErrorObject(oErr);
+    if(!oErr) {
+        return;
     }
+    
     var me = this;
     this.lastError.forEachAttr(function(attr,value) {
         me.lastError.setAttr(attr,oErr.getAttr(attr,''));
         return true;
     });
     this.lastError.setChanged(true,true); // send event
-    return oErr;
+    return;
 }
 
+/**
+ * Creates DM list, executes list getData() method 
+ * and returns first object in reponse if returnList is not equal true.
+ * Return list itself if returnList is true.
+ * 
+ * @public
+ * @function 
+ * @param {string} listId DM list configuration name.
+ * @param {boolean} returnList Return list instead first object.
+ * @param {object} [attrs={}] DM list fetch arguments.
+ * @param {function} cbfn Callback function in form
+ * <i>function(isok,oResponse) {}</i>. 
+ */
+FM.AppObject.prototype.getCustomObject = function(listId,returnList,attrs,cbfn) {
+    listId = FM.isset(listId) && listId && FM.isString(listId) ? listId : '';
+    attrs  = FM.isset(attrs) && attrs && FM.isObject(attrs) ? attrs : {};
+    var me = this;
+    
+    var dmlist = this.dmListFactory(attrs,listId,true);
+    
+    var callbackFn = FM.isset(cbfn) && FM.isFunction(cbfn) ? cbfn : function() {};
 
+    // if returnList == true return list
+    if(returnList == true) {
+        me.log("Returning created dmList.",FM.logLevels.info,'FM.AppObject.getCustomObject');
+        callbackFn(true,dmlist);
+        return;
+    }
+    
+    // create listener 
+    var lstnr = {
+        onListEnd: function(sender,data) {
+            // show some info in console
+            me.log("End of dmList request.",FM.logLevels.info,'FM.AppObject.getCustomObject.onListEnd');
+            // get first object from list
+            var oData = null;
+            FM.forEach(data.Added,function(id, obj) {
+                oData = obj;
+                return false; // exit from loop
+            });
+            
+            sender.dispose(); // dispose dmlist
+            
+            // return data
+            if(oData) {
+                callbackFn(true,oData);
+            } else {
+                me.log("No data returned.",FM.logLevels.warn,'FM.AppObject.getCustomObject.onListEnd');
+                callbackFn(false,null);
+            }
+            return true;
+        },
+        onListError: function(sender,data) {
+            sender.dispose();
+            me.log("Error fetching data." + FM.serialize(data && data.getAttr ?data.getAttr() : {}),FM.logLevels.error, 'FM.AppObject.getCustomObject.onListEnd');
+            callbackFn(false,null);
+            return true;
+        }
+    };
+    // add listener to dmlist and wait for onListEnd or onListError event
+    dmlist.addListener(lstnr);
+    
+    // fetch data from server
+    dmlist.getData();
+}
+
+/**
+ * Submits form defined on sender node. Form action will be overwrited 
+ * (and evaluated before if necessary) with
+ * <i>data-fmml-form-action</i> node attribute value if one is present.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlHost|FM.MlObserver|FM.MlExtension} sender Class instance with <i>getNode</i> 
+ * method. 
+ * @param {...} oObj Data to send back to callback function as second parameter.
+ * @param {function} [callbackFn] Callback function.
+ */
 FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
     
     callbackFn = FM.isset(callbackFn) && callbackFn && FM.isFunction(callbackFn) ? callbackFn : function() {};
@@ -5593,13 +6080,24 @@ FM.AppObject.prototype.submitForm = function(sender,oObj,callbackFn) {
             form.action = action;
         }
         form.submit();
+        callbackFn(true,oObj);
     } else {
-        callbackFn(false,null);
-        return;        
+        callbackFn(false,oObj);
     }
 }
 
-
+/**
+ * Send HTML form request event.
+ * 
+ * @public
+ * @event
+ * 
+ * @param {FM.MlHost|FM.MlObserver|FM.MlExtension} sender Class instance with <i>getNode</i> 
+ * method. 
+ * @param {object} [evdata] Event data: 
+ * @param {...} [evdata.object] Data to send back to callback function as second parameter.
+ * @param {function} [evdata.callback] Callback function.
+ */
 FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     this.submitForm(
         sender,
@@ -5608,9 +6106,50 @@ FM.AppObject.prototype.onSubmitForm = function(sender,evdata) {
     );
 }
 
+/**
+ * Returns application itself.
+ * 
+ * @returns {FM.AppObject}
+ * 
+ */
+FM.AppObject.prototype.getApp = function() {
+    return this;
+}
+
+/**
+ * Returns registry root key for this subclass,
+ * Format of key is [/[app subclass|APP]
+ * 
+ * @public
+ * @function
+
+ * @returns {String} 
+ */
+FM.AppObject.prototype.getRegistryRoot = function() {
+    return  "/" + (this.app ? this.app.getSubClassName() : "APP");    
+}
+
 // static
+/**
+ * 
+ * @ignore
+ */
 FM.AppObject.applicationInstances = {};
 
+/**
+ * Start new application instance. Note that only one instance of 
+ * application class can exists in one page.
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {object} [args={}] Application configuration and options.
+ * @param {string} [args.appClass='FM.AppObject'] Application class.
+ * @param {object} [args.options={}] Options (application attributes).
+ * @param {object|FM.Object} [evHandler] Optional event handler.
+ * 
+ * @returns {FM.AppObject}
+ */
 FM.AppObject.startApp = function(args,evHandler) {
     args = FM.isset(args) && args ? args :{};
     var appClsName = FM.getAttr(args,'appClass','FM.AppObject');
@@ -5637,6 +6176,14 @@ FM.AppObject.startApp = function(args,evHandler) {
     return(app);
 }
 
+/**
+ * Stop application instance. 
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {FM.AppObject} app Application to dispose.
+ */
 FM.AppObject.stopApp = function(app) {
     if(app) {
         FM.forEach(FM.AppObject.applicationInstances, function(i,v) {
@@ -6248,18 +6795,68 @@ FM.TstDmList.fullClassName = 'tst.TstDmList';
 
 
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 /**
-* ML template class. 
+* Generic ML template class. 
 * 
 * @class FM.MlTemplate
 * @memberOf FM
 * @extends FM.LmObject
-* @param {FM.AppObject} app application object
-* @param {object} [attrs] DOM node attributes
-* @param {DOMnode} node DOM node
-* 
-* 
-*/    
+* @param {FM.AppObject} app Application object.
+* @param {object} [attrs] DOM node attributes.
+* @param {node} node DOM node.
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-template-type</td>
+ *    <td>Template type (only "route" is currently supported)</td>
+ *    <td>[...], route</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-template</td>
+ *    <td>Template name</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-template-replace</td>
+ *    <td>
+ *      Replace DOM node instead of his content.
+ *    </td>
+ *    <td>[false], true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-init</td>
+ *    <td>
+ *      Run template after creation.
+ *    </td>
+ *    <td>[true], false</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template (using rote template) --&gt;
+    &lt;a href=&quot;#route1&quot;&gt;First template&lt;/a&gt;
+    &lt;a href=&quot;#route2&quot;&gt;Second template&lt;/a&gt;
+    &lt;p
+        data-fmml-template=&quot;local.[:hash].html&quot;
+        data-fmml-template-type=&quot;route&quot;
+        data-fmml-template-attr-hash=&quot;@FM.getArgs(&#39;_page.hash&#39;,&#39;route1&#39;)&quot;
+     &gt;
+     &lt;/p&gt;
+ */
 FM.MlTemplate = FM.defineClass('MlTemplate',FM.LmObject);
 
 // methods
@@ -6276,16 +6873,34 @@ FM.MlTemplate.prototype._init = function(app,attrs,node) {
 }
 
 
+/**
+ * Dispose template.
+ * 
+ * @public
+ * @function 
+ */
 FM.MlTemplate.prototype.dispose = function() {
     FM.MlHost.disposeChildNodes(this.getNode());
     this._super("dispose");
 }
 
+
+/**
+ * Returns template DOM node.
+ * 
+ * @public
+ * @function
+ * @returns {node}
+ */
 FM.MlTemplate.prototype.getNode = function() {
     return this.node;
 }
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlTemplate.prototype._applyTemplate = function() {
     var me = this;
 
@@ -6325,19 +6940,27 @@ FM.MlTemplate.prototype._applyTemplate = function() {
             if(isok) {
                 me.lastTemplateName = tname;
                 var tmplnode = $(templ);
-                if(me.getAttr('data-fmml-template-replace','') == "true") {
+                var replaced = me.getAttr('data-fmml-template-replace','') == "true";
+                if(replaced) {
                     $(me.getNode()).replaceWith(tmplnode);
                     me.node = tmplnode;
                     me.node.fmmlTemplate = me;
                 } else {
                     $(me.getNode()).html(templ);
                 }
-                FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj);
+                FM.MlHost.initChildNodes(me.getApp(),me.getNode(),oObj,!replaced);
             }
         });
     }
 }
 
+/**
+ * Run template.
+ * 
+ * @public
+ * @function
+ * @param {FM.DmObject} [dmObj] Template DM object.
+ */
 FM.MlTemplate.prototype.run = function(dmObj) {    
     this._super("run"); 
     this.setDmObject(dmObj);
@@ -6346,13 +6969,34 @@ FM.MlTemplate.prototype.run = function(dmObj) {
 
 }
 
-
+/**
+ * Fired when change on hash of window.location object attributes occurs.
+ * If template type is <i>route</i> template will be applyed again.
+ *  
+ * @public
+ * @event
+ * @param {FM.AppObject} sender This event is sent from application.
+ * @param {string} hash New location hash.
+ */
 FM.MlTemplate.prototype.onUrlHashChange = function(sender,hash) {
     if(sender == this.getApp() && this.getAttr('data-fmml-template-type') == 'route') {
         this._applyTemplate();
     }
 }
 
+/**
+* Returns new instance of template.
+* 
+* @static
+* @public
+* @function    
+* @param {FM.AppObject} app Current application.
+* @param {object} attrs Template attributes.
+* @param {node} attrs Template node.
+* @param {FM.DmObject} [oObj=null] DM object to run template with.
+* 
+* @return {FM.MlTemplate} New template instance.
+*/   
 FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
     var obj = new FM.MlTemplate(app,attrs,node);
     if(obj && obj.getAttr('data-fmml-run-on-init','true') != 'false') {
@@ -6361,266 +7005,285 @@ FM.MlTemplate.newTemplate = function(app,attrs,node,oObj) {
     return obj;
 }
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * ovo je flow za kreiranje dmobjekta:
+ * host:
+1. param dmobj (ako je data-fmml-object-class ok ili '') [false]
+	return 
+
+2. data-fmml-object-ref = funkcija koja ce vratiti dmobjekt [true]
+	return
+
+3. data-fmml-master-host (dmobjekt master hosta) [false]
+	return
+
+4. attributi (data-fmml-object-attr-*) 
+5. dodaj attribute iz dmobjekta linked hosta (data-fmml-linked-host)
+6. id = id != '' ? id : true
+  
+7. data-fmml-list != '' && data-fmml-object-id != ''
+    7a. data-fmml-object-class == 'List' - vraca listu
+    7b. data-fmml-object-class != 'List' - vraca prvi nafetchan obj iz listu
+	getCustomObject(...
+            data-fmml-object-id|attrs if id=true
+            ...
+            )
+	return
+
+8. data-fmml-object-class != '' && data-fmml-object-id != ''
+	host|app.get[data-fmml-object-class](data-fmml-object-id|attrs if id=true);
+	true;
+
+9. kreiraj objekt iz atributa
+
+ * -----------------------------------------------------------------------------
+ */
+
 /**
-* ML host class. 
-* 
-* @class FM.MlHost
-* @memberOf FM
-* @extends FM.LmObject
-* @param {FM.AppObject} app application object
-* @param {object} [attrs] DOM node attributes
-* @param {DOMnode} node DOM node
-* 
-* 
-* data-fmml-run-maximized, data-fmml-object-class, data-fmml-object-id,
-* data-fmml-object-ref, data-fmml-object-destroy-on-dispose,
-* data-fmml-master-host, data-fmml-use-global-args,
-* data-fmml-object-attr-*, data-fmml-linked-host,
-* data-fmml-error-host, data-fmml-run-on-update,data-fmml-host-event-*
-* data-fmml-run-on-init
-* 
-*/    
-FM.MlHost = FM.defineClass('MlHost',FM.LmObject);
+ * Generic ML Host class.
+ * 
+ *  
+ * @class FM.MlHost
+ * @memberOf FM
+ * @extends FM.LmObject
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] DOM node attributes.
+ * @param {DOMnode} node DOM node. 
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-run-maximized</td>
+ *    <td>Run host node full screen</td>
+ *    <td>[false],true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-error-host</td>
+ *    <td>DOM node id of error host</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-linked-host</td>
+ *    <td>
+ *      DOM node id of linked host. 
+ *      Attributes of linked host DM object are apended to list of attributes 
+ *      defined with <i>data-fmml-object-attr-&lt;attr name&gt;</i>
+ *      when creating new host DM object    
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-master-host</td>
+ *    <td>
+ *      DOM node id of master host. 
+ *      Master host DM object will be used as this host DM object too.
+ *      If value is <i>true</i> host from first parent DOM node will be used.
+ *    </td>
+ *    <td>[id],true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-update</td>
+ *    <td>
+ *      DOM node id of the host to run on <i>onChange</> event. 
+ *      Current host DM object is sent as argument.
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-destroy-on-dispose</td>
+ *    <td>
+ *      If <i>true</i> host DM object will be disposed on host dispose.
+ *    </td>
+ *    <td>Depends of the way host DM object is obtained.</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-ref</td>
+ *    <td>
+ *      Evaluate content of attribute as host DM object. 
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-class</td>
+ *    <td>
+ *      Restrict host DM object to one with given class.
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-id</td>
+ *    <td>
+ *      if set to <i>true</i>, call fetch function with object containing all
+ *      attributes defined with <i>data-fmml-object-attr-[attr]</i>, otherwise
+ *      fetch DM object with given data ID and <i>data-fmml-object-class</i> class. 
+ *      Function with name 'get[<i>data-fmml-object-class</i>] if one exists in host or application.      
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list</td>
+ *    <td>
+ *      DM object is first object in response returned from named DM list.
+ *      <i>data-fmml-object-id</i> is sent as argument, or object with
+ *      all <i>data-fmml-object-attr-&lt;attr name&gt;</i>atributes defined.      
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-attr-[attr]</td>
+ *    <td>
+ *      Define value of <i>attr<i> DM object attribute. If host can't obtain DM object
+ *      from other sources, new one with defined attributes will be created.
+ *    </td>
+ *    <td></td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-init</td>
+ *    <td>
+ *      Run host after creation.
+ *    </td>
+ *    <td>[true], false</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-host-event-[event]</td>
+ *    <td>
+ *      Evaluate content of attribute on <i>event</i> event.
+ *    </td>
+ *    <td>@...</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host="Host"&gt;...&lt;/div&gt;
+ */
+
+FM.MlHost = FM.defineClass('MlHost', FM.LmObject);
 
 // methods
-FM.MlHost.prototype._init = function(app,attrs,node) {
-    this._super("_init",app,attrs);
+FM.MlHost.prototype._init = function(app, attrs, node) {
+    this._super("_init", app, attrs);
     this.objectSubClass = "Host";
+
+    this.log(attrs, FM.logLevels.debug, 'MlHost._init');
     
-    this.setNode(node);        
+    this.setNode(node);
     this.masterHost = null;
-    this.masterHostDm = null;
-    
+
     this.listOfObservers = {};
-    
-    this.clsParams = {
-        id: '',
-        className: ''
-    }
+
 
     // two way binding
-    this.node.fmmlHost = this;    
+    this.node.fmmlHost = this;
     this.getApp().addListener(this);
     this.addListener(this.getApp());
+    
+    this.log("New host created.", FM.logLevels.debug, 'MlHost._init');
 }
 
+/**
+ * Run host.
+ * 
+ * @public
+ * @function
+ * @param {FM.DmObject} [dmObj] Host DM object.
+ */
 FM.MlHost.prototype.run = function(dmObj) {
-    if(this.getAttr('data-fmml-run-maximized','false') == 'true') {
+    this.log(this.getNode(), FM.logLevels.debug, 'MlHost.run');
+    
+    this._super("run"); // without dmobject, we will chose him later
+    if (this.getAttr('data-fmml-run-maximized', 'false') == 'true') {
+        this.log("Set host fullscreen mode.", FM.logLevels.debug, 'MlHost.run');
         this.onMaximize();
     }
 
-    var id = this.getAttr("data-fmml-object-id",'');
-    var className = this.getAttr("data-fmml-object-class",'');
-    var objRef = this.getAttr("data-fmml-object-ref",'');
-    this.setProperty('dmObjectCreated',this.getAttr("data-fmml-object-destroy-on-dispose",'true'));
-    
-    // object
-    if(FM.isset(dmObj) && dmObj && (className == '' || dmObj.getSubClassName() == className)){
-        this.setProperty('dmObjectCreated','false');
-        this.setDmObject(dmObj);
-    } else if(objRef != '' && FM.startsWith(objRef,'@')) {
-        dmObj = FM.resolveAttrValue(null,"-",objRef,{
-            A: this.getApp(),
-            H: this
-        });
-        this.setProperty('dmObjectCreated','false');
-        this.setDmObject(dmObj);
-    } else {
-        if(this.getAttr('data-fmml-master-host','') != '') {
-            var mhostid = this.getAttr('data-fmml-master-host','');
-            if(mhostid == 'true') {
-                this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
-            } else {            
-                var mhostnode = document.getElementById(mhostid);
-                if(mhostnode && FM.isset(mhostnode.fmmlHost) && mhostnode.fmmlHost) {
-                    this.masterHost = mhostnode.fmmlHost;
-                }
-            }
-            if(this.masterHost) {
-                this.masterHost.addListener(this);
-                this.masterHostDm = this.masterHost.getDmObject();
-                if(this.masterHostDm) this.masterHostDm.addListener(this);
-            }
-        }
-        
-        this._checkMasterReload();        
-    }
+    // determine host dmobject
+    this.log("Select DM object ...", FM.logLevels.debug, 'MlHost.run');
+    this._selectDmObject(dmObj);
 
-    this._super("run");     
-    this.executed = true;
-    
+    // run all observers
+    this.log("Starting all observers ...", FM.logLevels.debug, 'MlHost.run');
     var obsrv = this.listOfObservers;
-    for(var id in obsrv) {
+    for (var id in obsrv) {
         try {
-            obsrv[id].run();            
-        } catch(e) {
-            this.log(e,FM.logLevels.error,'MlHost.run');
+            obsrv[id].run();
+        } catch (e) {
+            this.log(e, FM.logLevels.error, 'MlHost.run');
         }
     }
-}
-
-
-FM.MlHost.prototype._checkMasterReload = function() {
-    var id = this.getAttr("data-fmml-object-id",'');
-    var className = this.getAttr("data-fmml-object-class",'');
     
-    if(this.getAttr('data-fmml-use-global-args') == 'true'){
-        var args = FM.getArgs();
-        if(id == '') id = FM.getAttr(args,'id','');
-        if(className == '') className = FM.getAttr(args,'cls','');        
-    }
-    
-    //FM.resolveAttrValue = function(options,attrName,def,context)
-    if(this.masterHost) {
-        id = FM.resolveAttrValue(null,"-",id,{
-            A: this.masterHost.getApp(),
-            H: this.masterHost, 
-            D: this.masterHostDm
-        });
-        className = FM.resolveAttrValue(null,"-",className,{
-            A: this.masterHost.getApp(),
-            H: this.masterHost, 
-            D: this.masterHostDm
-        });
-    } else {
-        id = FM.resolveAttrValue(null,"-",id,{
-            A: this.getApp(),
-            H: this, 
-            D: this.getDmObject()
-        });
-        className = FM.resolveAttrValue(null,"-",className,{
-            A: this.getApp(),
-            H: this, 
-            D: this.getDmObject()
-        });
-    }
-
-    if(id == this.clsParams.id && className == this.clsParams.className) return;
-    
-    this.clsParams = {
-        id: id,
-        className: className
-    }
-    if(id != '') {
-        var fnName = 'get' + className;
-        if(id != '' && className != '' && FM.isset(this.app[fnName])) {
-            var me = this;
-            
-            this.app[fnName](id,function(isok,oObj) {
-                if(isok) {
-                    me.setDmObject(oObj);
-                    me.setProperty('dmObjectCreated','true');
-                }
-                else {
-                    me.setDmObject(null);
-                }
-            });
-        }
-    } else {
-        if(className != '') {
-            var attrs = {};
-            this.forEachAttr(function(n,v) {
-                if(FM.startsWith(n,'data-fmml-object-attr-')) {
-                    attrs[n.substr(22)] = v;
-                }
-                return true;
-            });
-            var oObj = FM.DmObject.newObject(this.getApp(),className, attrs);
-            this.setProperty('dmObjectCreated','true');
-            this.setDmObject(oObj);
-        }
-    }
-}
-
-FM.MlHost.prototype.dispose = function() {
-    if(this.masterHost) {
-        this.masterHost.removeListener(this);
-        if(this.masterHostDm) this.masterHostDm.removeListener(this);
-    }
-    
-    this.app.removeListener(this);
-    if(this.node) this.node.fmmlHost = null;
-    var obsrv = this.listOfObservers;
-    for(var id in obsrv) {
-        try {
-            obsrv[id].dispose();
-            
-        } catch(e) {
-            this.log(e,FM.logLevels.error,'MlHost.dispose');
-        }
-    }
-    this.listOfObservers = [];
-    this.setDmObject();
-    this.executed = false;
-    
-    this._super("dispose");
+    this.log("New host started.", FM.logLevels.debug, 'MlHost.run');
     return true;
 }
 
-FM.MlHost.prototype.setNode = function(n) {
-    this.node = FM.isset(n) && n ? n : null;
-}
-
-FM.MlHost.prototype.getNode = function() {
-    return this.node;
-}
-
-
-FM.MlHost.prototype.setDmObject = function(o) {
-    this._super('setDmObject',o,true);
-
-    this.updateAllObservers();    
-    this.fireEvent("onSetDmObject",this.dmObject);
-}
-
-
-FM.MlHost.prototype.getLinkedHost = function() {
-    var lhost = this.getAttr('data-fmml-linked-host','');
-    if(lhost != '') {
-        var node = document.getElementById(lhost);
-        if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-            return node.fmmlHost;
-        }
-    }
-    return null;
-}
-
+/**
+ * Add new observer to host. Usualy there is no need to call this function manualy.
+ * 
+ * @param {FM.MlObserver} o Observer to add. 
+ * If host is running observer will be started too.
+ * @returns {Boolean}
+ */
 FM.MlHost.prototype.addObserver = function(o) {
-    if(!FM.isset(o)  || !o || !FM.isset(o.getID)) return false;
+    if (!FM.isset(o) || !o || !FM.isset(o.getID)) {
+        return false;
+    }
     this.listOfObservers[o.getID()] = o;
-    if(this.executed) o.run();
+    if (this.executed) {
+        o.run();
+    }
     this.updateObserver(o);
     return true;
 }
 
+/**
+ * Remove observer from host. 
+ * Usualy there is no need to call this function manualy.
+ * 
+ * @param {FM.MlObserver} o Observer to remove. 
+ * @returns {Boolean}
+ */
 FM.MlHost.prototype.removeObserver = function(o) {
-    if(!FM.isset(o)  || !o || !FM.isset(o.getID)) return false;
+    if (!FM.isset(o) || !o || !FM.isset(o.getID))
+        return false;
 
     var nlist = {};
     var objId = o.getID();
-    if(!objId) return false;
+    if (!objId)
+        return false;
 
-    for(var id in this.listOfObservers) {
-        if(objId != id) nlist[id] = this.listOfObservers[id];
+    for (var id in this.listOfObservers) {
+        if (objId != id) {
+            nlist[id] = this.listOfObservers[id];
+        }
     }
 
     this.listOfObservers = nlist;
-
     return true;
 }
 
 /**
- * Call update of all observers
+ * Call update method of observer.
+ * 
+ * @param {FM.MlObserver} o Observer to update. 
  * @public     
  * @function 
- */   
-
+ */
 FM.MlHost.prototype.updateObserver = function(o) {
-    if(this.executed && FM.isset(o.update) && FM.isFunction(o.update)) {
+    if (this.executed && FM.isset(o.update) && FM.isFunction(o.update)) {
         try {
             o.update(this);
-        } catch(e) {
-            this.log(e,FM.logLevels.error,'MlHost.updateObserver');
+        } catch (e) {
+            this.log(e, FM.logLevels.error, 'MlHost.updateObserver');
         }
     }
 
@@ -6628,8 +7291,15 @@ FM.MlHost.prototype.updateObserver = function(o) {
     return true;
 }
 
+/**
+ * Call update method of all observer.
+ * 
+ * @param {FM.MlObserver} o Observer to update. 
+ * @public     
+ * @function 
+ */
 FM.MlHost.prototype.updateAllObservers = function() {
-    for(var id in this.listOfObservers) {
+    for (var id in this.listOfObservers) {
         this.updateObserver(this.listOfObservers[id]);
     }
 
@@ -6638,25 +7308,50 @@ FM.MlHost.prototype.updateAllObservers = function() {
     return true;
 }
 
+
+/**
+ * Validate all observers.
+ * 
+ * @param {boolean} [force=true] Validate observers even if value is empty.
+ *  
+ * @public     
+ * @function 
+ */
 FM.MlHost.prototype.verifyAllObservers = function(force) {
-    for(var id in this.listOfObservers) {        
-        if(!this.verifyObserver(this.listOfObservers[id],force))
+    for (var id in this.listOfObservers) {
+        if (!this.verifyObserver(this.listOfObservers[id], force)) {
             return false;
+        }
     }
     return true;
 }
 
-FM.MlHost.prototype.verifyObserver = function(o,force) {
+/**
+ * Validate observer.
+ * 
+ * @param {FM.MlObserver} o Observer to validate. 
+ * @public     
+ * @function 
+ */
+FM.MlHost.prototype.verifyObserver = function(o, force) {
     return o.isValid(force);
 }
 
-FM.MlHost.prototype.sendEventToObservers = function(sender,ev,data) {    
-    var fnd=false;
-    for(var id in this.listOfObservers) {
+/**
+ * Send <i>ev</i> event to all observer.
+ * 
+ * @param {FM.Object} sender Source of event. 
+ * @param {string} ev Event. 
+ * @param {..} data Event data. 
+ * @public     
+ * @function 
+ */
+FM.MlHost.prototype.sendEventToObservers = function(sender, ev, data) {
+    var fnd = false;
+    for (var id in this.listOfObservers) {
         var o = this.listOfObservers[id];
-        if(o.executed) {
-            fnd = o.onHostEvent(sender,ev,data);
-        //this.updateObserver(o);
+        if (o.executed) {
+            fnd = o.onHostEvent(sender, ev, data);
         }
     }
 
@@ -6664,66 +7359,183 @@ FM.MlHost.prototype.sendEventToObservers = function(sender,ev,data) {
     return fnd;
 }
 
-FM.MlHost.prototype._getErrorHost = function() {
-    var errnode = document.getElementById(this.getAttr('data-fmml-error-host',''));
-    return (
-        errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
-        errnode.fmmlHost : null
-        );
+/**
+ * Dispose host.
+ * 
+ * @public
+ * @function 
+ */
+FM.MlHost.prototype.dispose = function() {
+    if (this.masterHost) {
+        this.masterHost.removeListener(this);
+    }
+    this.app.removeListener(this);
+    if (this.node)
+        this.node.fmmlHost = null;
+    var obsrv = this.listOfObservers;
+    for (var id in obsrv) {
+        try {
+            obsrv[id].dispose();
+
+        } catch (e) {
+            this.log(e, FM.logLevels.error, 'MlHost.dispose');
+        }
+    }
+    this.listOfObservers = [];
+    this.setDmObject();
+    this.executed = false;
+
+    this._super("dispose");
+    return true;
 }
 
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype.setNode = function(n) {
+    this.node = FM.isset(n) && n ? n : null;
+}
+
+/**
+ * Returns host DOM node.
+ * 
+ * @returns {node}
+ * 
+ */
+FM.MlHost.prototype.getNode = function() {
+    return this.node;
+}
+
+/**
+ * Set host DM object.
+ * 
+ * @param {FM.DmObject} o New host DM object. <i>onSetDmObject</i> event will be fired.
+ * 
+ */
+FM.MlHost.prototype.setDmObject = function(o) {
+    this._super('setDmObject', o, true);
+
+    this.updateAllObservers();
+    this.fireEvent("onSetDmObject", this.dmObject);
+}
+
+
+/**
+ * Returns last eror. 
+ * 
+ * @returns {FM.DmGenericError} 
+ */
 FM.MlHost.prototype.getLastError = function(oErr) {
     var errhost = this._getErrorHost();
     return errhost ? errhost.getDmObject() : null;
 }
 
+
+/**
+ * Set last eror. 
+ * 
+ * @param {FM.DmGenericError|string} oErr Error to set. 
+ * 
+ * @return {FM.DmGenericError} 
+ */
 FM.MlHost.prototype.setLastError = function(oErr) {
     var errhost = this._getErrorHost();
-    if(!errhost) {
+    if (!errhost) {
         return this.getApp() ? this.getApp().setLastError(oErr) : oErr;
     }
-    
-    
-    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {        
-        oErr = new FM.DmGenericError();
+    oErr = FM.isset(oErr) && oErr ? oErr : "";
+
+    if (!FM.isObject(oErr)) {
+        if (FM.isString(oErr)) {
+            oErr = new FM.DmGenericError({"messageId": "GE", "text": oErr});
+        } else {
+            oErr = new FM.DmGenericError();
+        }
     }
-    
-    if(!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = new FM.DmGenericError();
-    }
-    
-    if(!errhost.isExecuted()) {
+
+    if (!errhost.isExecuted()) {
         errhost.run(oErr);
     } else {
         var dmobj = errhost.getDmObject();
-        if(!dmobj) {
+        if (!dmobj) {
             errhost.setDmObject(oErr);
         } else {
-            dmobj.forEachAttr(function(attr,value) {
-                dmobj.setAttr(attr,oErr.getAttr(attr,null));
+            dmobj.forEachAttr(function(attr, value) {
+                dmobj.setAttr(attr, oErr.getAttr(attr, null));
                 return true;
-            });   
-            dmobj.setChanged(true,true);
+            });
+            dmobj.setChanged(true, true);
             oErr = dmobj;
         }
-    }    
-    
+    }
+
     return oErr;
 }
 
-// events
-FM.MlHost.prototype.onChange = function(sender,obj) {
-    if(sender == this.masterHostDm) {
-        this._checkMasterReload();
-    } else if(sender == this.getDmObject()) {
-        this.updateAllObservers();
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype._getErrorHost = function() {
+    var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
+    return (
+            errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
+            errnode.fmmlHost : null
+            );
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype._getHostByIdInAttr = function(attr) {
+    var lhost = this.getAttr(attr, '');
+    if (lhost != '') {
+        var node = document.getElementById(lhost);
+        if (node && FM.isset(node.fmmlHost) && node.fmmlHost) {
+            return node.fmmlHost;
+        }
     }
-    
-    var hostToRun =  this.getAttr('data-fmml-run-on-update','');
-    if(hostToRun != '') {
-        var node = document.getElementById(hostToRun);
-        if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-            node.fmmlHost.run(this.getDmObject());
+    return null;
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype.getLinkedHost = function() {
+    return this._getHostByIdInAttr('data-fmml-linked-host', '');
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype.getMasterHost = function() {
+    return this._getHostByIdInAttr('data-fmml-master-host', '');
+}
+
+
+
+
+/**
+ * Fired when change on DM object attributes or properties ocurs.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHost.prototype.onChange = function(sender, obj) {
+    if (sender == this.getDmObject()) {
+        this.updateAllObservers();
+
+        var hostToRun = this.getAttr('data-fmml-run-on-update', '');
+        if (hostToRun != '') {
+            var node = document.getElementById(hostToRun);
+            if (node && FM.isset(node.fmmlHost) && node.fmmlHost) {
+                node.fmmlHost.run(this.getDmObject());
+            }
         }
     }
 
@@ -6732,285 +7544,559 @@ FM.MlHost.prototype.onChange = function(sender,obj) {
 }
 
 
-
-FM.MlHost.prototype.onSetDmObject = function(sender,obj) {
-    if(sender == this.masterHost) {
-        if(this.masterHostDm) this.masterHostDm.removeListener(this);
-        this.masterHostDm = obj;
-        if(this.masterHostDm) this.masterHostDm.addListener(this);
-        this._checkMasterReload();
+/**
+ * Fired when on host DM object instance change.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {FM.DmObject} obj New DM object
+ */
+FM.MlHost.prototype.onSetDmObject = function(sender, obj) {
+    if (sender == this.masterHost) {
+        this.setDmObject(obj);
     }
-    
+
     return true;
 }
 
-FM.MlHost.prototype.onMaximize = function() {
+/**
+ * Fired when host node is maximized.
+ * 
+ * @event
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHost.prototype.onMaximize = function(sender) {
     FM.expandToFullSCreen(this.node);
-    
+
     // kraj
     return true;
 }
 
-FM.MlHost.prototype.onEvent = function(sender,ev,data,calledlist) {
+/**
+ * Main event processing method.
+ * 
+ * @function
+ * @public
+ * @param {FM.Object} sender Event source.
+ * @param {string} ev Event type.
+ * @param {...} data Event data.
+ * @param {object} [calledlist] Reserved.
+ */
+FM.MlHost.prototype.onEvent = function(sender, ev, data, calledlist) {
     var cl = FM.isset(calledlist) ? calledlist : {};
 
-    if(!this.isEnabled()) return false;
-    
+    if (!this.isEnabled() || ev == "onEvent") {
+        return false;
+    }
     var done = false;
-    
+
     //  ako imaš event fn
-    if(FM.isset(this[ev])) {
-        this[ev](sender,data);
+    if (FM.isset(this[ev])) {
+        this[ev](sender, data);
         cl[this.getID()] = '1';
-        FM.setAttr(cl,'_executed','1'); 
+        FM.setAttr(cl, '_executed', '1');
         done = true;
     }
 
     //  ako imaš event fn u app
-    if(!done && FM.isset(this.app[ev])) {
-        this.app[ev](sender,data);
+    if (!done && FM.isset(this.app[ev])) {
+        this.app[ev](sender, data);
         cl[this.app.getID()] = '1';
-        FM.setAttr(cl,'_executed','1'); 
+        FM.setAttr(cl, '_executed', '1');
         done = true;
     }
-    if(!done) {
-        if(!this.sendEventToObservers(sender,ev, data)) {
-        // proslijedi dalje ako nemas ev fn
-        //cl = this.fireEvent(ev,data,cl);        
+    if (!done) {
+        if (!this.sendEventToObservers(sender, ev, data)) {
+            // proslijedi dalje ako nemas ev fn
+            //cl = this.fireEvent(ev,data,cl);        
         }
         done = true;
     }
-    
+
     // ako ima def trigger u layoutu
-    var evtrg = this.getAttr('data-fmml-host-event-' + ev.toLowerCase(),'');
-    if(evtrg !== '') {
-        FM.resolveAttrValue(null,"-",evtrg,{
+    var evtrg = this.getAttr('data-fmml-host-event-' + ev.toLowerCase(), '');
+    if (evtrg !== '') {
+        FM.resolveAttrValue(null, "-", evtrg, {
             A: this.getApp(),
-            H: this, 
+            H: this,
             D: this.getDmObject()
         });
     }
-    
+
     return cl;
 }
 
-// static
+/**
+ * 
+ * @ignore
+ */
+FM.MlHost.prototype._selectDmObject = function(dmObj) {
+    this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
+
+    // conf
+    var objRef = this.getAttr("data-fmml-object-ref", '');
+    var mhostid = this.getAttr('data-fmml-master-host', '');
+    var id = this.getAttr("data-fmml-object-id", '');
+    var className = this.getAttr("data-fmml-object-class", '');
+    var dmconfName = this.getAttr('data-fmml-list', '');
+    
+    // resolve class name & id
+    id = id == 'true' ? id :
+        FM.resolveAttrValue(null, "-", id, {
+            A: this.getApp(),
+            H: this,
+            D: null
+        });
+
+    className = FM.resolveAttrValue(null, "-", className, {
+        A: this.getApp(),
+        H: this,
+        D: null
+    });
+    
+    // == object is sent (not null, same sc name as data-fmml-object-class or data-fmml-object-class is not defined) ==
+    // disposing depends of data-fmml-object-destroy-on-dispose (def false)
+    if (
+        FM.isset(dmObj) && dmObj &&
+        dmObj.getSubClassName && (className == '' || dmObj.getSubClassName() == className)
+    ) {
+        this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'false'));
+        this.setDmObject(dmObj);
+        return;
+    }
+
+    // == check ref param (data-fmml-object-ref, start with @) =================
+    // disposing depends of data-fmml-object-destroy-on-dispose (def true)
+    if (objRef != '') {
+        dmObj = null;
+        if(FM.startsWith(objRef, '@')) {
+            this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
+            dmObj = FM.resolveAttrValue(null, "-", objRef, {
+                A: this.getApp(),
+                H: this
+            });
+        }
+        this.setDmObject(dmObj);
+        return;
+    }
+
+    // == master host (true - first parent host, or dom node id with host) =====
+    // disposing depends of data-fmml-object-destroy-on-dispose (def false)
+    if (mhostid != '') {
+        dmObj = null;
+        if (mhostid == 'true') {
+            this.masterHost = FM.findNodeWithAttr(this.getNode().parentNode, "fmmlHost");
+        } else {
+            this.masterHost = this.getMasterHost();
+        }
+
+        // if found, add listener & get dmobject
+        if (this.masterHost) {
+            this.masterHost.addListener(this);
+            dmObj = this.masterHost.getDmObject();            
+            this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'false'));            
+        }
+        this.setDmObject(dmObj);
+        return;
+    }
+
+    // fill attrs from node attr and linked host
+    var dmAttrs = {};
+    this.forEachAttr(function(n, v) {
+        if (FM.startsWith(n, 'data-fmml-object-attr-')) {
+            dmAttrs[n.substr(22)] = v;
+        }
+        return true;
+    });
+    
+    var lhost = this.getLinkedHost();
+    if (lhost && lhost.getDmObject()) {
+        var lhostObj = lhost.getDmObject();
+        lhostObj.forEachAttr(function(pname, value) {
+            dmAttrs[pname] = value;
+            return true;
+        });
+    }
+    
+    // remote fetch, cb fn
+    var me = this;
+    var cbfn = function(isok, oObj) {
+        if (isok) {
+            me.setDmObject(oObj);
+        }
+        else {
+            me.setDmObject(null);
+        }
+    };
+    
+    
+    // == get object by list =============================================
+    if (this.getApp() && dmconfName != '' && id != '') {
+        this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));        
+        this.getApp().getCustomObject(
+            dmconfName,
+            className == 'List',
+            id == 'true' ? dmAttrs : {id: id},
+            cbfn
+        );
+        return;
+    }
+    
+    
+    // == get object by class & id =============================================
+    // if class is defined  and id is not empty (real id or true) call getter  
+    // in host or in app
+    // if id == 'true' send obj with attrs to fn or id if it is not
+    if (className != '' && id != '') {
+        this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
+
+        // call args                
+        var fnName = 'get' + className;
+        var args = id == 'true' ? dmAttrs : id;        
+
+        // check for and call get function (first in host, then in app, generic fn in app on end)    
+        if (FM.isset(this[fnName])) {
+            this[fnName](args, cbfn);
+        } else if (this.getApp() && FM.isset(this.getApp()[fnName])) {
+            this.getApp()[fnName](id, cbfn);
+        } 
+        return;
+    }
+
+    // create dmobject from defined attributes (def)
+    var oObj = FM.DmObject.newObject(this.getApp(), className == '' ? 'Object' : className, dmAttrs);
+    this.setProperty('dmObjectCreated', this.getAttr("data-fmml-object-destroy-on-dispose", 'true'));
+    this.setDmObject(oObj);
+}
+
+/**
+ * 
+ * @ignore
+ * 
+ */
 FM.MlHost.hostTypes = {};
 
 /**
- * Returns MlHost <b>config</b> class function for <b>config</b> subclass type
+ * Returns MlHost <b>config</b> class function for <b>config</b> subclass type.
+ * 
  * @static
  * @function    
- * @param {object} app Application
- * @param {String} name Configuration name
- * @return {object} host configuration or null if not found
- */   
-FM.MlHost.getConfiguration = function(app,name) {
+ * @param {Object} app Application
+ * @param {string} name Configuration name
+ * @return {Object} host configuration or null if not found
+ */
+FM.MlHost.getConfiguration = function(app, name) {
     var list = FM.MlHost.hostTypes;
 
     app = FM.isset(app) && app ? app : null;
     var appCls = app ? app.getSubClassName() : null;
     var appCfg = appCls && FM.isset(list[appCls]) ? list[appCls] : null;
-        
+
     var obj = null;
-    if(appCfg && FM.isset(appCfg[name])) {
+    if (appCfg && FM.isset(appCfg[name])) {
         obj = appCfg[name];
-    } else if(app && FM.isArray(app.applicationObjectsSpace)) {
-        FM.forEach(app.applicationObjectsSpace,function(i,ns) {
-            if(FM.isset(list[ns]) && FM.isset(list[ns][name])) {
+    } else if (app && FM.isArray(app.applicationObjectsSpace)) {
+        FM.forEach(app.applicationObjectsSpace, function(i, ns) {
+            if (FM.isset(list[ns]) && FM.isset(list[ns][name])) {
                 obj = list[ns][name];
                 return false;
             }
             return true;
         });
     }
-    
-    if(!obj && FM.isset(list['GLOBAL'][name])) {
+
+    if (!obj && FM.isset(list['GLOBAL'][name])) {
         obj = list['GLOBAL'][name];
     }
-    
+
     return obj;
 }
 
-FM.MlHost.newHost = function(app,attrs,node,type,oObj) {
-    var clsFn = FM.MlHost.getConfiguration(app,type);
-    var obj = clsFn ? new clsFn(app,attrs,node) : null;
-    if(obj && obj.getAttr('data-fmml-run-on-init','true') != 'false') {
-        obj.run(oObj); 
+
+/**
+ * Returns new instance of chosen <b>sctype</b> host type.
+ * 
+ * @static
+ * @public
+ * @function    
+ * @param {FM.AppObject} app Current application.
+ * @param {object} attrs Host attributes.
+ * @param {node} attrs Host node.
+ * @param {String} type Host subclass type.
+ * @param {FM.DmObject} [oObj=null] DM object to run host with.
+ * 
+ * @return {FM.MlHost} New host instance.
+ */
+FM.MlHost.newHost = function(app, attrs, node, type, oObj) {
+    var clsFn = FM.MlHost.getConfiguration(app, type);
+    var obj = clsFn ? new clsFn(app, attrs, node) : null;
+    if (obj && obj.getAttr('data-fmml-run-on-init', 'true') != 'false') {
+        obj.run(oObj);
     }
     return obj;
 }
 
-FM.MlHost.addHost = function(type,hostfn,appCls) {
+/**
+ * Register application host type.
+ *  
+ * @param {string} type name.
+ * @param {FM.MlHost} hostfn Host class function.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ * 
+ * @returns {boolean}
+ */
+FM.MlHost.addHost = function(type, hostfn, appCls) {
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
-    if(!FM.isset(hostfn) || !FM.isFunction(hostfn)) return false;
-    if(!FM.isset(type) || !type || type == '') return false;
-    if(!FM.isset(FM.MlHost.hostTypes[appCls])) {
-        FM.MlHost.hostTypes[appCls]= {};
+    if (!FM.isset(hostfn) || !FM.isFunction(hostfn))
+        return false;
+    if (!FM.isset(type) || !type || type == '')
+        return false;
+    if (!FM.isset(FM.MlHost.hostTypes[appCls])) {
+        FM.MlHost.hostTypes[appCls] = {};
     }
     FM.MlHost.hostTypes[appCls][type] = hostfn;
     return true;
 }
 
-FM.MlHost.translateNode = function(app,node) {
+/**
+ * Translate node body or attribute values. 
+ * List of attributes to translate is readed from <i>data-fmml-translate</i> attributes.
+ * Attribute names must be separated by comma. Use <i>_body</i> keyword to request dom node
+ * content translation.
+ * 
+ * @function
+ * @static
+ * @param {FM.AppObject} app Current application.
+ * @param {node} node Node to translate. 
+ * 
+ */
+FM.MlHost.translateNode = function(app, node) {
     // what to translate
     var txtattrs = $(node).attr('data-fmml-translate');
     var attrs = txtattrs.split(",");
     var txttotranslate;
-    FM.forEach(attrs, function(i,name) {
+    FM.forEach(attrs, function(i, name) {
         name = FM.trim(name);
-        if(name == 'body') {
-            txttotranslate = $(node).text(); 
-            if(FM.isset(txttotranslate)) {
-                $(node).text(_T(txttotranslate,app));
+        if (name == 'body') {
+            txttotranslate = $(node).text();
+            if (FM.isset(txttotranslate)) {
+                $(node).text(_T(txttotranslate, app));
             }
         } else {
-            txttotranslate = $(node).attr(i); 
-            if(FM.isset(txttotranslate)) {
-                $(node).attr(name,_T(txttotranslate,app));
+            txttotranslate = $(node).attr(i);
+            if (FM.isset(txttotranslate)) {
+                $(node).attr(name, _T(txttotranslate, app));
             }
         }
         return true;
     });
 }
-    
-// radi update child nodova - promjena na dom nodu koji je nosioc
-FM.MlHost.initChildNodes = function(app,checknode,oObj,childsOnly) {
+
+/**
+ * Init all DOM nodes with <i>fmml</i> attributes.
+ * <i>@@</i> will be processed before creation od FM objects.
+ * 
+ * @static
+ * @function
+ * 
+ * @param {FM.AppObject} app Current application. Note that all node attributes begining with.
+ * @param {node} checknode Start node.
+ * @param {FM.DmObject} [oObj=null] Contextual FM.DmObject. All templates will be applied with his data,
+ * @param {boolean} [childsOnly=true] Process only child nodes.
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-host</td>
+ *    <td>Host type name to run host on this node</td>
+ *    <td>Host</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-observer</td>
+ *    <td>Observer type name to run on this node</td>
+ *    <td>Observer</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-extensions</td>
+ *    <td>Extension type names separated by space to run on this node. NOte that you can run more then one extension on single node (and Observer)</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-template</td>
+ *    <td>Template name to load,</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-app</td>
+ *    <td>Restrict access to DOM node to application with given subclass name,</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-translate</td>
+ *    <td>List of node attributes to translate separated by coma,</td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-init</td>
+ *    <td>Run host automaticaly after creation,</td>
+ *    <td>[true], false</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ */
+FM.MlHost.initChildNodes = function(app, checknode, oObj, childsOnly) {
     childsOnly = FM.isset(childsOnly) && childsOnly == false ? false : true;
     checknode = FM.isset(checknode) && checknode ? checknode : $('body')[0];
     var appsc = app.getSubClassName();
-    var nodeList = childsOnly ? $(checknode).children() : $(checknode);    
-    
+    var nodeList = childsOnly ? $(checknode).children() : $(checknode);
+
     nodeList.each(function(index) {
-        var domobj = this;        
+        var domobj = this;
         var jqobj = $(this);
-        if(!jqobj) return;
-        if(
-            (!FM.isset(domobj.fmmlHost)) &&
-            (!FM.isset(domobj.fmmlObserver)) &&                
-            (
-                jqobj.attr('data-fmml-host') || 
-                jqobj.attr('data-fmml-observer') || 
-                jqobj.attr('data-fmml-extensions') ||
-                jqobj.attr('data-fmml-template') ||
-                jqobj.attr('data-fmml-translate')
-                )
-            ) {
+        if (!jqobj)
+            return;
+        if (
+                (!FM.isset(domobj.fmmlHost)) &&
+                (!FM.isset(domobj.fmmlObserver)) &&
+                (
+                        jqobj.attr('data-fmml-host') ||
+                        jqobj.attr('data-fmml-observer') ||
+                        jqobj.attr('data-fmml-extensions') ||
+                        jqobj.attr('data-fmml-template') ||
+                        jqobj.attr('data-fmml-translate')
+                        )
+                ) {
             var mlAppCls = jqobj.attr('data-fmml-app');
-            if(!mlAppCls && !app.strictApplicationObjectsSpace) {
+            if (!mlAppCls && !app.strictApplicationObjectsSpace) {
                 mlAppCls = app.getSubClassName();
             }
-            if(mlAppCls == appsc) {  
+            if (mlAppCls == appsc) {
                 // pokupi atribute 
                 var attrlist = {};
-                $.each(this.attributes, function(i, attrib){
-                    if(FM.isString(attrib.value) && FM.startsWith(attrib.value,'@@')) { 
+                $.each(this.attributes, function(i, attrib) {
+                    if (FM.isString(attrib.value) && FM.startsWith(attrib.value, '@@')) {
                         try {
-                            attrlist[attrib.name] = FM.resolveAttrValue(null,"-",attrib.value,{
+                            attrlist[attrib.name] = FM.resolveAttrValue(null, "-", attrib.value, {
                                 A: app,
                                 D: oObj
                             });
-                        } catch(e) {
-                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
+                        } catch (e) {
+                            FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
                         }
                     } else {
                         attrlist[attrib.name] = attrib.value;
                     }
                 });
-                
-                
+
+
                 // ako je observer
-                if(jqobj.attr('data-fmml-observer')) { 
+                if (jqobj.attr('data-fmml-observer')) {
                     try {
-                        obs = FM.MlObserver.newObserver(app,attrlist,domobj,jqobj.attr('data-fmml-observer'));
-                        if(obs) {
-                            if(obs.getHost()) {
+                        var obs = FM.MlObserver.newObserver(app, attrlist, domobj, jqobj.attr('data-fmml-observer'));
+                        if (obs) {
+                            if (obs.getHost()) {
                                 obs.getHost().addObserver(obs);
                             }
                         }
-                    } catch(e) {
-                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
-                    };
+                    } catch (e) {
+                        FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
+                    }
+                    ;
                 }
-                
+
                 // extenzije
-                if(jqobj.attr('data-fmml-extensions')) { // ako je observer
+                if (jqobj.attr('data-fmml-extensions')) { // ako je observer
                     var extarr = jqobj.attr('data-fmml-extensions').split(" ");
-                    for(var i = 0; i < extarr.length; i++) {
+                    for (var i = 0; i < extarr.length; i++) {
                         var otype = extarr[i].toString();
                         try {
-                            var oExt = FM.MlExtension.newExtension(app,attrlist,domobj,otype);
-                            if(oExt && domobj.fmmlObserver) domobj.fmmlObserver.addExtension(oExt);
-                        } catch(e) {
-                            FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
-                        };
+                            var oExt = FM.MlExtension.newExtension(app, attrlist, domobj, otype);
+                            if (oExt && domobj.fmmlObserver)
+                                domobj.fmmlObserver.addExtension(oExt);
+                        } catch (e) {
+                            FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
+                        }
+                        ;
                     }
                 }
 
                 // ako je host
-                if(jqobj.attr('data-fmml-host')) {
+                if (jqobj.attr('data-fmml-host')) {
                     try {
-                        FM.MlHost.newHost(app,attrlist,domobj,jqobj.attr('data-fmml-host'),oObj);
-                    } catch(e) {
-                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
-                    }                  
-                } 
+                        FM.MlHost.newHost(app, attrlist, domobj, jqobj.attr('data-fmml-host'), oObj);
+                    } catch (e) {
+                        FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
+                    }
+                }
 
                 // ako je translation
-                if(jqobj.attr('data-fmml-translate')) {
+                if (jqobj.attr('data-fmml-translate')) {
                     try {
-                        FM.MlHost.translateNode(app,domobj);
-                    } catch(e) {
-                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
-                    }                  
-                } 
+                        FM.MlHost.translateNode(app, domobj);
+                    } catch (e) {
+                        FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
+                    }
+                }
 
                 // ako je template                
-                if(jqobj.attr('data-fmml-template')) { // begin
+                if (jqobj.attr('data-fmml-template')) { // begin
                     try {
-                        FM.MlTemplate.newTemplate(app,attrlist,domobj,oObj);
-                    } catch(e) {
-                        FM.log(null,e,FM.logLevels.error,'FM.MlHost.initChildNodes');
-                    }                  
+                        FM.MlTemplate.newTemplate(app, attrlist, domobj, oObj);
+                    } catch (e) {
+                        FM.log(null, e, FM.logLevels.error, 'FM.MlHost.initChildNodes');
+                    }
                 }
                 // end
-            }            
+            }
         }
-        
+
         // napravi isto na child nodovima
-        FM.MlHost.initChildNodes(app,this,oObj);
+        FM.MlHost.initChildNodes(app, this, oObj);
     });
-    
+
     return true;
 }
 
-// radi update child nodova - promjena na dom nodu koji je nosioc
-FM.MlHost.disposeChildNodes = function(checknode,childsOnly) {
-    if(FM.isString(checknode)) {
+/**
+ * Dispose all bindings on child nodes.
+ *  
+ * @static
+ * @function
+ * @param {node|string} checknode Node or node id to start from.
+ * @param {boolean} [childsOnly=true] Process only child nodes.
+ */
+FM.MlHost.disposeChildNodes = function(checknode, childsOnly) {
+    if (FM.isString(checknode)) {
         checknode = $('#' + checknode);
         checknode = checknode.length > 0 ? checknode[0] : null;
-    }    
+    }
     childsOnly = FM.isset(childsOnly) && childsOnly == false ? false : true;
     var nodes = $(checknode).find("[data-fmml-host],[data-fmml-template]");
-    if(!childsOnly && $(checknode).is("[data-fmml-host],[data-fmml-template]")) {
+    if (!childsOnly && $(checknode).is("[data-fmml-host],[data-fmml-template]")) {
         nodes = nodes.add(checknode);
     }
-    
-    nodes.each(function(i, n){
-        if(FM.isset(n.fmmlTemplate) && n.fmmlTemplate) {
+
+    nodes.each(function(i, n) {
+        if (FM.isset(n.fmmlTemplate) && n.fmmlTemplate) {
             n.fmmlTemplate.dispose();
-        }        
-        if(FM.isset(n.fmmlHost) && n.fmmlHost) {
+        }
+        if (FM.isset(n.fmmlHost) && n.fmmlHost) {
             n.fmmlHost.dispose();
-        }        
+        }
     });
 }
 
 //
-FM.MlHost.addHost("Host",FM.MlHost,"GLOBAL");
+FM.MlHost.addHost("Host", FM.MlHost, "GLOBAL");
 
 /**
-* HTTP request query parameters host class. 
+* Current page query parameters host class. 
 * 
 * @class FM.MlHostQueryParams
 * @memberOf FM
@@ -7036,761 +8122,1322 @@ FM.MlHostQueryParams.prototype.run = function() {
 FM.MlHost.addHost("QueryParams",FM.MlHostQueryParams,'GLOBAL');
 
 /**
- * ML generic collection host class. 
+ * Generic collection ML Host class. Use it to display list of items.
  * 
+ * <ul>
+ * <li>All list items will be inserted in node with <i>fmmlListItems</i> CSS class.
+ * If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemWrapper</i> CSS class all
+ * items will be wrapped inside this node before insertion.
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemInner</i> CSS class all
+ * items will be wrapped inside this node before insertion in (posibly) <i>fmmlListItemWrapper</i>
+ * and <i>fmmlListItems</i> node.
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListItemsTemplate</i> CSS class it 
+ * will be used as list items template. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListEmptyTemplate</i> CSS class it 
+ * will be used as placeholder for empty rows. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListEmpty</i> CSS class it 
+ * will be used as <i>fmmlListItems</i> node content when items list is empty. 
+ * </li>
+ * <li>If inside <i>fmmlListItems</i> node exists node with <i>fmmlListWaiting</i> CSS class it 
+ * will be used as <i>fmmlListItems</i> node content during AJAX calls. 
+ * </li>
+ * <ul>
+ *  
  * @class FM.MlHostGenericCollection
  * @memberOf FM
  * @extends FM.MlHost
- * @param {FM.AppObject} app application object
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] DOM node attributes.
+ * @param {DOMnode} node DOM node. 
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-list-max-items</td>
+ *    <td>Maximum number of list items to disply at once.</td>
+ *    <td>FM.MlHostGenericCollection.DEF_LIST_SIZE</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-selection-size</td>
+ *    <td>Maximum number of selectable items.</td>
+ *    <td>[any],0,1,,,n</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-template-base</td>
+ *    <td>
+ *      Items template (used if node with <i>listItemsTemplate</i> class is not defined).
+ *    </td>
+ *    <td>ui.layouts.dm.[:objectClass].[:itemsLayout].html</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-layout</td>
+ *    <td>
+ *      Items layout. Use it for template name selection in template name (see <i>data-fmml-list-items-template-base</i>),      
+ *    </td>
+ *    <td>icon</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-items-template-empty</td>
+ *    <td>
+ *      Empty list placeholder template (used if node with <i>listEmptyTemplate</i> class is not defined)).
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-fetch-on-run</td>
+ *    <td>
+ *      Get list data on host run.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-get-more-at-end</td>
+ *    <td>
+ *      Get more data if end of list is reached on <i>onNext</i> and <i>onNextPage</i> events processiog. 
+ *    </td>
+ *    <td>false</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-refresh-on-change</td>
+ *    <td>
+ *      Refresh list data on <i>onChange</i> event.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-list-clear-selection-on-change</td>
+ *    <td>
+ *      Clear sellection on <i>onChange</i> event.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-class</td>
+ *    <td>
+ *      Restrict host DM object to one with given class. This value is olways <i>List</i> for this host type.
+ *    </td>
+ *    <td>List</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-object-id</td>
+ *    <td>
+ *      This value is allways <i>true</i> for this host type: call fetch function with object containing all
+ *      attributes defined with <i>data-fmml-object-attr-[attr]</i>. 
+ *      See <i>data-fmml-list</i> attribute to learn how to define FM.DmList configuration.
+ *    </td>
+ *    <td>true</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
  * 
- * data-fmml-list-max-items, 'data-fmml-list-items-template-base,
- * data-fmml-list-items-template-empty, data-fmml-list-items-layout,
- * data-fmml-list, data-fmml-list-attr-*,data-fmml-list-fetch-on-run,
- * data-fmml-list-refresh-on-change,data-fmml-fromrow-attr-name,
- * data-fmml-list-attr-resource-parser, data-fmml-list-waiting-fs,
- * data-fmml-list-get-more-at-end
- *  
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host=&quot;GenericCollection&quot; data-fmml-list=&quot;list_configuration_name&quot;&gt;
+        &lt;div class=&quot;fmmlListItems&quot;&gt;
+            &lt;div class=&quot;fmmlListItemWrapper&quot; data-fmml-observer=&quot;Event&quot; data-fmml-event-type=&quot;onAlterSelectionState&quot; data-fmml-event-data=&quot;[:data_id]&quot;&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;fmmlListItemsTemplate&quot; data-fmml-host=&quot;Host&quot;&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr1&quot;&gt;&lt;/span&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr2&quot;&gt;&lt;/span&gt;
+               &lt;span data-fmml-observer=&quot;Observer&quot; data-fmml-attr-name=&quot;atr3&quot;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
  */
-FM.MlHostGenericCollection = FM.defineClass('MlHostGenericCollection',FM.MlHost);
 
-FM.MlHostGenericCollection.prototype._init = function(app,attrs,node) {            
-    this._super("_init",app,attrs,node);
-    this.objectSubClass ="GenericCollection";
+FM.MlHostGenericCollection = FM.defineClass('MlHostGenericCollection', FM.MlHost);
+
+
+FM.MlHostGenericCollection.prototype._init = function(app, attrs, node) {
+    this._super("_init", app, attrs, node);
+    this.objectSubClass = "GenericCollection";
+
+    // important, app.getCustomObject()!
+    this.setAttr('data-fmml-object-class', 'List');
+    this.setAttr('data-fmml-object-id', 'true');
+
+    // pagging
+    this.listOffset = 0;
+
+    // maximum number of items display
+    this.maxItms = FM.MlHostGenericCollection.DEF_LIST_SIZE;
+    try {
+        this.maxItms = parseInt(
+                this.getAttr(
+                        'data-fmml-list-max-items',
+                        FM.MlHostGenericCollection.DEF_LIST_SIZE
+                        )
+                );
+    } catch (e) {
+        // log error
+    }
+    this.maxItms = this.maxItms && this.maxItms > 0 ?
+            this.maxItms :
+            FM.MlHostGenericCollection.DEF_LIST_SIZE
+            ;
 
     // selection
     this.selectedItems = {};
-    this.maxSelected = -1;
-    this.listOffset = 0;
 
-    this.listItemsTemplate = null;
-    this.listEmptyTemplate = null;
-
-    // find items container
-    this.listItemsContainer = this.node;
-    var itmCont = $(this.node).find(".fmmlListItems");
-    if(FM.isset(itmCont) && itmCont && FM.isset(itmCont[0])) {
-        this.listItemsContainer = itmCont[0];
-        var itmTempl = $(this.listItemsContainer).find(".fmmlListItemsTemplate");
-        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
-            this.listItemsTemplate = FM.nodeToHtml(itmTempl[0]);
-        }
-        itmTempl = $(this.listItemsContainer).find(".fmmlListEmptyTemplate");
-        if(FM.isset(itmTempl) && itmTempl && FM.isset(itmTempl[0])) {
-            this.listEmptyTemplate = FM.nodeToHtml(itmTempl[0]);
-        }
+    // maximum number of items to select
+    try {
+        this.maxSelected = parseInt(
+                this.getAttr('data-fmml-list-selection-size', '0') == 'any' ?
+                -1 : this.getAttr('data-fmml-list-selection-size', '0')
+                );
+    } catch (e) {
+        // log error
+        this.maxSelected = 0;
+        this.log(e, FM.logLevels.error, 'MlHostGenericCollection._init');
     }
 
-    // find list empty ode
-    this.listEmpty = null;
-    var itmWrp = $(this.listItemsContainer).find(".fmmlListEmpty");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listEmpty = itmWrp[0];
-    }
 
-    // find list waiting ode
-    this.listWaiting = null;
-    var itmWrp = $(this.listItemsContainer).find(".fmmlListWaiting");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listWaiting = itmWrp[0];
-    }
+    // items layout (use it for template name selection in template)
+    this.itemsLayout = this.getAttr('data-fmml-list-items-layout', 'icon');
 
-    // find items wrapper
-    this.listItemsWrapper = null; //$("<div></div>");
-    itmWrp = $(this.listItemsContainer).find(".fmmlListItemWrapper");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listItemsWrapper = itmWrp[0];
-    }
+    // items template (used if listItemsTemplate node is not defined)
+    this.itemsTemplateBase = this.getAttr(
+            'data-fmml-list-items-template-base',
+            "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
+            );
 
-    // fmmlListItemInner
-    this.listItemsInner = null;
-    itmWrp = $(this.listItemsWrapper).find(".fmmlListItemInner");
-    if(FM.isset(itmWrp) && itmWrp && FM.isset(itmWrp[0])) {
-        this.listItemsInner = itmWrp[0];
-    }
-    $(this.listItemsWrapper).html("");
+    // empty item template (used if listEmptyTemplate is not defined)
+    this.itemsTemplateEmptyBase = this.getAttr('data-fmml-list-items-template-empty', '');
+
+    // find items container if exists, otherwise this.node is container
+    this.listItemsContainer = this._findNodeWithClass(this.node, 'fmmlListItems', this.node);
+
+    // find items template node if exists
+    var itmTempl = this._findNodeWithClass(this.listItemsContainer, 'fmmlListItemsTemplate', null);
+    this.listItemsTemplate = itmTempl ? FM.nodeToHtml(itmTempl) : null;
+
+    // find items empty template node if exists
+    var itmTempl = this._findNodeWithClass(this.listItemsContainer, 'fmmlListEmptyTemplate', null);
+    this.listEmptyTemplate = itmTempl ? FM.nodeToHtml(itmTempl) : null;
+
+    // find list empty node if exists
+    this.listEmpty = this._findNodeWithClass(this.listItemsContainer, 'fmmlListEmpty', null);
+
+    // find list waiting node if exists
+    this.listWaiting = this._findNodeWithClass(this.listItemsContainer, 'fmmlListWaiting', null);
+
+    // find items wrapper. if fond all items will be wrapped inside before adding to container
+    this.listItemsWrapper = this._findNodeWithClass(this.listItemsContainer, 'fmmlListItemWrapper', null);
+
+    // fmmlListItemInner (if found inside this.listItemsWrapper)
+    this.listItemsInner = this.listItemsWrapper ?
+            this._findNodeWithClass(this.listItemsWrapper, 'fmmlListItemInner', null) :
+            null
+            ;
 
     // clear
     this._clearItems();
-}    
-
-FM.MlHostGenericCollection.prototype._clearItems = function() {
-    FM.MlHost.disposeChildNodes(this.listItemsContainer);
-    $(this.listItemsContainer).html("");
 }
 
-FM.MlHostGenericCollection.prototype._nodeApplyTemplate = function(node,attrs) {
-    FM.forEach(node.attributes, function(i,attr) {
-        if (attr.specified == true) {
-            var val = FM.applyTemplate(attrs, attr.value, false, false);
-            if(val != attr.value) {
-                attr.value = val;
-            }
-        }
-        return true;
-    });
-    
-}
-
-FM.MlHostGenericCollection.prototype._refreshItems = function() {
-    this._clearItems();
-    var dmList = this.getDmObject();
-    if(!dmList) return false;
-    var me = this;    
-    var curitm = -1;
-    var itmcnt = 0;
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    maxitms = FM.isset(maxitms) ? maxitms : 200;
-    dmList.forEachListElement(function(i,oObj) {                
-        var layout = me.getRegistryValue(
-            "/itemsLayout",
-            me.getAttr('data-fmml-list-items-layout','icon')
-            );
-        
-        var attrs = {
-            itemsLayout: layout
-        };
-        if (me._filterItemFromDisplay(oObj) == true) {
-            curitm++;
-            if(curitm < me.listOffset) return true;
-        
-            oObj.forEachAttr(function(pname,value) {
-                attrs[pname] = value;
-                return true;
-            });
-            attrs["objectClass"] = oObj.getSubClassName();
-            attrs["data_id"] = oObj.getDataID();
-            attrs["listIndex"] = curitm+1;
-            
-            itmcnt++;
-            if(me.listItemsTemplate) {
-                me._createItmNode(oObj,attrs,me.listItemsTemplate);
-            } else {
-                var tname = me.getAttr(
-                    'data-fmml-list-items-template-base',
-                    "ui.layouts.dm.[:objectClass].[:itemsLayout].html"
-                    );
-                tname = FM.applyTemplate(attrs,tname,false,true);
-                FM.UtTemplate.getTemplate(me.getApp(),attrs,tname,function(isok,templ) {            
-                    if(isok) {                
-                        me._createItmNode(oObj,attrs,templ);
-                    }
-                });
-            }
-        }
-    
-        return maxitms > itmcnt;
-    });
-
-    var emptyTempl = this.getAttr('data-fmml-list-items-template-empty','');
-    if(maxitms > itmcnt && (emptyTempl != '' || this.listEmptyTemplate)) {
-        curitm++;
-        if(this.listEmptyTemplate) {
-            while(maxitms > itmcnt) {
-                curitm++;
-                itmcnt++;
-                var attrs = {
-                    itemsLayout: 'unknown',
-                    objectClass: 'unknown',
-                    data_id: 'unknown',
-                    listIndex: curitm
-                };
-                this._createItmNode(null,attrs,this.listEmptyTemplate);                                        
-            }            
-        } else {        
-            FM.UtTemplate.getTemplate(this.getApp(),{},emptyTempl,function(isok,templ) {                    
-                if(isok) {
-                    while(maxitms > itmcnt) {
-                        curitm++;
-                        itmcnt++;
-                        var attrs = {
-                            itemsLayout: 'unknown',
-                            objectClass: 'unknown',
-                            data_id: 'unknown',
-                            listIndex: curitm
-                        };
-                        me._createItmNode(null,attrs,templ);                                        
-                    }
-                }
-            });
-        }
-    }
-    
-    // empty list
-    if(itmcnt == 0 && emptyTempl == '') this.setListEmpty();
-    
-    // send event
-    this.sendEventToObservers(this,'onListRefreshCompleted');
-}
-
-FM.MlHostGenericCollection.prototype._createItmNode = function(oObj,attrs,templ) {
-    var curitm = parseInt(FM.getAttr(attrs,'listIndex','0'));
-    
-    var itm = $(templ);
-    if(itm) {
-        if(this.listItemsInner) {
-            var iNode = $(this.listItemsInner).clone();
-            if(FM.isset(iNode) && iNode && FM.isset(iNode[0])) {
-                iNode = iNode[0];
-            }
-            this._nodeApplyTemplate(iNode,attrs);
-            $(iNode).append(itm);
-            itm = iNode;
-        }
-
-        if(this.listItemsWrapper) {
-            var newNode = $(this.listItemsWrapper).clone();
-            if(FM.isset(newNode) && newNode && FM.isset(newNode[0])) {
-                newNode = newNode[0];
-            }
-            this._nodeApplyTemplate(newNode,attrs);
-            $(newNode).append(itm);
-        } else {
-            newNode = itm;
-        }
-
-
-        $(newNode).attr('data-fmml-list-index',curitm);   
-        $(newNode).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
-        $(newNode).attr('data-fmml-item-data-id',oObj ? oObj.getDataID() : 'unknown');
-        
-        this._appendItmNode(oObj,newNode,attrs);                        
-    }
-}
-
-FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj,node,attrs) {
-    var index = attrs["listIndex"];
-    var lastNode = null;
-    var lastNodeIndex = -1;
-    for(var i = index-1; i >=0 && lastNodeIndex == -1; i--) {
-        lastNode = $("[data-fmml-list-index='" + i + "']");
-        lastNode = lastNode.length ? lastNode[0]: null;
-        if(lastNode) {
-            lastNodeIndex = i;
-        }
-    }
-    if(lastNode) {
-        $(lastNode).after(node[0]);
-    } else {
-        $(this.listItemsContainer).prepend(node);
-    }
-    if(oObj) {
-        FM.MlHost.initChildNodes(this.getApp(),node,oObj,this.listItemsWrapper != null);
-    }
-}
-
-FM.MlHostGenericCollection.prototype._filterItemFromDisplay = function(oObj) {
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype._createList = function(oObj) {
-    var dmconfName = this.getAttr('data-fmml-list','');
-    var listOpt = {};
-    var pref = 'data-fmml-list-attr-';
-    var prefLen = pref.length;
-    
-    this.forEachAttr(function(pname,value) {
-        if(FM.startsWith(pname,pref)) {
-            listOpt[pname.substring(prefLen)] = value;
-        }                    
-        return true;
-    });
-    
-    // input param
-    oObj = FM.isset(oObj) && oObj ? oObj : null;
-    if(!oObj) {        
-        var lhost = this.getLinkedHost();
-        if(lhost) {
-            var node = document.getElementById(lhost);
-            if( node && FM.isset(node.fmmlHost) && node.fmmlHost) {
-                oObj = node.fmmlHost.getDmObject();
-            }         
-        }
-    }
-    
-    if(FM.isset(oObj) && oObj && FM.isset(oObj.forEachAttr)) { // fm obect
-        oObj.forEachAttr(function(pname,value) {
-            listOpt[pname] = value;
-            return true;
-        });
-        listOpt["objectClass"] = oObj.getSubClassName();
-    } else if(FM.isArray(oObj) || FM.isObject(oObj)) { // array
-        FM.forEach(oObj, function(pname,value) {
-            listOpt[pname] = value;
-            return true;
-        });        
-    }
-    
-    dmconfName = FM.resolveAttrValue(null,"-",dmconfName,{
-        A: this.getApp(),
-        H: this
-    });
-    var dmList = FM.isObject(dmconfName) && dmconfName ? 
-        dmconfName :
-        new FM.DmList(listOpt,dmconfName,this.getApp())
-    ;
-    
-    return dmList;
-}
-
+/**
+ * Run host.
+ * 
+ * @public
+ * @function
+ * @param {FM.DmObject} [dmObj] Host DM object.
+ */
 FM.MlHostGenericCollection.prototype.run = function(oObj) {
-    this._super("run");
     this.clearSelection(false);
     this.history = [];
-    
-    // get data
-    
-    var dmlist = FM.isset(oObj) && oObj && oObj.getClassName && oObj.getClassName() == 'DmList' ?
-    oObj :  this._createList(oObj)
-    ;
-              
-    this.setDmObject(dmlist);  
-    
-    if(this.getAttr('data-fmml-list-fetch-on-run','true') != 'false') {
-        this.history.push(dmlist.getAttr());
-        dmlist.getData();
+
+    this._super("run", oObj); // list will be created
+}
+
+/**
+ * Dispose host.
+ * 
+ * @public
+ * @function 
+ */
+FM.MlHostGenericCollection.prototype.dispose = function() {
+    this.maxSelected = 0;
+    this.selectedItems = {};
+    this._clearItems();
+    this._super("dispose");
+}
+
+/**
+ * Set host DM object.
+ * 
+ * @public
+ * @function 
+ * @param {FM.DmObject} o New host DM object. <i>onSetDmObject</i> event will be fired. 
+ */
+FM.MlHostGenericCollection.prototype.setDmObject = function(o) {
+    o = o && o.getData ? o : null;
+
+    this._super('setDmObject', o);
+    if (o && this.getAttr('data-fmml-list-fetch-on-run', 'true') != 'false') {
+        this.history.push(o.getAttr());
+        o.getData();
     } else {
         this._refreshItems();
     }
 }
 
-FM.MlHostGenericCollection.prototype.dispose = function() {
-    this.maxSelected = 0;
-    this.selectedItems = {};
-    this._clearItems();    
-    this._super("dispose");
+/**
+ * Get number of items to display.
+ * 
+ * @public
+ * @function 
+ * @returns  {number}
+ * 
+ */
+FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
+    var dmList = this.getDmObject();
+    if (!dmList)
+        return 0;
+
+    var itemscnt = 0;
+    var me = this;
+
+    dmList.forEachListElement(function(i, oObj) {
+        if (me._filterItemFromDisplay(oObj) == true) {
+            itemscnt += 1;
+        }
+        return true;
+    });
+
+    return itemscnt;
 }
 
+/**
+ * Clear selection.
+ * 
+ * @public
+ * @function 
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ * 
+ */
 FM.MlHostGenericCollection.prototype.clearSelection = function(sendevent) {
     this.selectedItems = {};
-    $(this.listItemsContainer).find(".fmmlSelected").removeClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
+    var nodes = $(this.listItemsContainer).find(
+            "[data-fmml-list-id='" + this.getID() + "']"
+            ).filter(".fmmlSelected");
+
+    if (nodes.length > 0) {
+        nodes.removeClass("fmmlSelected");
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+    }
 }
 
-FM.MlHostGenericCollection.prototype.addToSelection = function(o, node, sendevent) {    
-    if(this.maxSelected == 0) {
+/**
+ * Add object to selection.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ */
+FM.MlHostGenericCollection.prototype.addToSelection = function(o, sendevent) {
+    if (this.maxSelected == 0) {
         return;
-    } else if(this.maxSelected == 1) {
+    }
+
+    if (FM.isArray(o)) {
+        for (var i = 0; i < o.length; i++) {
+            this.addToSelection(o[i], node, false);
+        }
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+        return;
+    }
+
+    var lst = this.getDmObject();
+    var oid = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            ''
+            ;
+    if (!lst || !lst.get(oid)) {
+        return;
+    }
+
+    if (this.maxSelected == 1) {
         this.clearSelection(false);
-    } else if(this.maxSelected != -1) {
-        var cnt = 0;
-        FM.forEach(this.selectedItems,function(id,obj) {
-            if(obj == true) cnt++;
-            return true;
-        });
-        if(cnt >= this.maxSelected) return;
+    } else if (this.maxSelected != -1) {
+        if (this.getSelectionSize() >= this.maxSelected)
+            return;
     }
-    
-    if(FM.isArray(o)) {
-        for(var i= 0; i < o.length; i++) {
-            this.selectedItems[o[i].getDataID()]=true;
-        }
-    } else {
-        var oid = FM.isset(o) && o ? 
-        (FM.isString(o) ? o : o.getDataID()) :
-        ''
-        ;      
-        this.selectedItems[oid]=true;
+
+    this.selectedItems[oid] = true;
+
+
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
+        $(node).addClass("fmmlSelected");
     }
-    if(FM.isset(node) && node) $(node).addClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
+    if (FM.isset(sendevent) && sendevent) {
+        this.updateAllObservers();
+    }
 }
 
-FM.MlHostGenericCollection.prototype.removeFromSelection = function(o,node,sendevent) { 
-    if(FM.isArray(o)) {
-        for(var i= 0; i < o.length; i++) {
-            if(FM.isset(o[i]) && o[i] && FM.isset(this.selectedItems[o[i].getDataID()])) {
-                this.selectedItems[o[i].getDataID()]=false;
-            }
+/**
+ * Remove object from selection.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @param {boolean} [sendevent=false] Update observers after selection change.
+ */
+FM.MlHostGenericCollection.prototype.removeFromSelection = function(o, sendevent) {
+    if (FM.isArray(o)) {
+        for (var i = 0; i < o.length; i++) {
+            this.removeFromSelection(o[i], node, false);
         }
-    } else {
-        var oid = FM.isset(o) && o ? 
-        (FM.isString(o) ? o : o.getDataID()) :
-        ''
-        ;      
-        if(FM.isset(this.selectedItems[oid])) this.selectedItems[oid]=false;
+        if (FM.isset(sendevent) && sendevent) {
+            this.updateAllObservers();
+        }
+        return;
     }
-    
-    if(FM.isset(node) && node) $(node).removeClass("fmmlSelected");
-    if(FM.isset(sendevent) && sendevent) this.updateAllObservers();
-}
 
+    var oid = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            ''
+            ;
+    if (FM.isset(this.selectedItems[oid])) {
+        delete this.selectedItems[oid];
+    }
+
+    var node = $(this.listItemsContainer).children("[data-fmml-item-data-id='" + oid + "']");
+    node = node && node.length ? node[0] : null;
+
+    if (FM.isset(node) && node) {
+        $(node).removeClass("fmmlSelected");
+    }
+
+    if (FM.isset(sendevent) && sendevent) {
+        this.updateAllObservers();
+    }
+}
+/**
+ * Check if object is selected.
+ * 
+ * @function
+ * @public
+ * @param {string|FM.Object} o DM object or DM object data ID.
+ * @returns {boolean}
+*/
 FM.MlHostGenericCollection.prototype.isSelected = function(o) {
-    var id = FM.isset(o) && o ? 
-    (FM.isString(o) ? o : o.getDataID()) :
-    '';
-    return(id != '' && FM.isset(this.selectedItems[id]) && this.selectedItems[id]);
+    var id = FM.isset(o) && o ?
+            (FM.isString(o) ? o : o.getDataID()) :
+            '';
+    return(id != '' && FM.isset(this.selectedItems[id]));
 }
 
+/**
+ * Get number of selected items.
+ * 
+ * @public
+ * @function 
+ * @returns  {number}
+ * 
+ */
 FM.MlHostGenericCollection.prototype.getSelectionSize = function() {
-    var cnt=0;
-    FM.forEach(this.selectedItems,function(id) {
+    var cnt = 0;
+    FM.forEach(this.selectedItems, function() {
         cnt++;
         return true;
     });
-    
+
     return cnt;
 }
 
+/**
+ * Get selected items.
+ * 
+ * @public
+ * @function 
+ * @returns  {Array[FM.DmObject]}
+ * 
+ */
 FM.MlHostGenericCollection.prototype.getSelection = function() {
     var lst = this.getDmObject();
     var sel = [];
-    
-    if(lst) {
-        FM.forEach(this.selectedItems,function(id) {
+
+    if (lst) {
+        FM.forEach(this.selectedItems, function(id) {
             var o = lst.get(id);
-            if(o) sel.push(o);
+            if (o) {
+                sel.push(o);
+            }
             return true;
         });
     }
     return sel;
 }
 
-// eventi
-FM.MlHostGenericCollection.prototype.onChange = function(oSender,evdata) {
-    this._super("onChange",oSender,evdata);
-    
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(
-        oSender && oSender.getClassName && oSender.getClassName() == 'DmList' &&
-        this.getAttr('data-fmml-list-refresh-on-change','true') != 'false'
-        ) {
-        var fromrowAttr = this.getAttr('data-fmml-fromrow-attr-name',"fromrow");
-        if(fromrowAttr != '') {
-            oSender.setAttr(fromrowAttr,'0',false);
+/**
+ * Signal request for selection clearing. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onClearSelection = function(sender) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.clearSelection(true);
+    evCb(true, null);
+}
+
+/**
+ * Signal request for additeng  list item to selection. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID to select.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onSelected = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (!itmObj) {
+        evCb(false, null);
+        return;
+    }
+    if (!this.isSelected(itmObj)) {
+        this.addToSelection(itmObj, true)
+    }
+    if (this.isSelected(itmObj)) {
+        evCb(true, itmObj);
+    } else {
+        evCb(false, null);
+    }
+}
+
+/**
+ * Signal request for removing list item from selection. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID to remove.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onDeselected = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (!itmObj) {
+        evCb(false, null);
+        return;
+    }
+
+    if (this.isSelected(itmObj)) {
+        this.removeFromSelection(itmObj, true)
+    }
+    if (!this.isSelected(itmObj)) {
+        evCb(true, itmObj);
+    } else {
+        evCb(false, null);
+    }
+}
+
+/**
+ * Signal request for altering selection state of list item. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject|string} [evdata.object] FM.DmObject or data ID of list item.
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender, evdata) {
+    var itmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (this.isSelected(itmObj)) {
+        this.onDeselected(oSender, evdata);
+    } else {
+        this.onSelected(oSender, evdata);
+    }
+}
+
+// PAGING
+/**
+ * Signals request for displaying first page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onStartOfList = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.listOffset = 0;
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying last page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onEndOfList = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    this.listOffset = this.getFilteredCount() - 1;
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for increasing first list index. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onNext = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {});
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(false, null);
+        return;
+    }
+    var itemscnt = this.getFilteredCount();
+
+    var getMoreData = false;
+    this.listOffset++;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = itemscnt - 1;
+        getMoreData = true;
+    }
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+
+    this._refreshItems();
+
+    if (getMoreData && this.getAttr('data-fmml-list-get-more-at-end', 'false') == 'true') {
+        this._getMore();
+    }
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying next page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onNextPage = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(true, null);
+        return;
+    }
+    var itemscnt = this.getFilteredCount();
+
+    var getMoreData = false;
+    var calcListOffset = this.listOffset + this.maxItms;
+    this.listOffset = calcListOffset;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = Math.floor(itemscnt / this.maxItms) * this.maxItms;
+        getMoreData = true;
+    }
+
+    if (this.listOffset >= itemscnt) {
+        this.listOffset = this.listOffset -= this.maxItms;
+        getMoreData = true;
+    }
+    this._refreshItems();
+
+    if (getMoreData && this.getAttr('data-fmml-list-get-more-at-end', 'false') == 'true') {
+        this._getMore();
+    }
+    evCb(true, null);
+}
+
+/**
+ * Signals request for decreasing first list index. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onPrevious = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList || this.listOffset < 1) {
+        evCb(true, null);
+        return;
+    }
+    this.listOffset--;
+    this._refreshItems();
+    evCb(true, null);
+}
+
+/**
+ * Signals request for displaying previous page of the list. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {function} [evdata.callback] Callback function.
+ */
+FM.MlHostGenericCollection.prototype.onPreviousPage = function(oSender, evdata) {
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        evCb(true, null);
+        return;
+    }
+
+    var itemscnt = this.getFilteredCount();
+    this.listOffset -= this.maxItms;
+    if (this.listOffset > itemscnt) {
+        this.listOffset = Math.floor(itemscnt / this.maxItms) * this.maxItms;
+    }
+    if (this.listOffset < 0) {
+        this.listOffset = 0;
+    }
+    this._refreshItems();
+
+    // kraj
+    evCb(true, null);
+}
+
+// DATA (DM) EVENTS
+/**
+ * Fired when change on DM object attributes or properties ocurs.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onChange = function(oSender, evdata) {
+    this._super("onChange", oSender, evdata);
+
+    var evObj = FM.getAttr(evdata, 'object', null);
+    var evCb = FM.getAttr(evdata, 'callback', function() {
+    });
+
+    if (
+            oSender == this.getDmObject() &&
+            this.getAttr('data-fmml-list-refresh-on-change', 'true') != 'false'
+            ) {
+        if (this.getAttr('data-fmml-list-clear-selection-on-change', 'true') != 'false') {
+            this.clearSelection(true);
         }
-        this.clearSelection(true);
         this.history.push(oSender.getAttr());
         oSender.getData(false); // novi fetch
     }
-    
+
     // kraj
     return true;
 }
-FM.MlHostGenericCollection.prototype.getMore = function() {
-    var dmList = this.getDmObject();
-    if(dmList && FM.isset(dmList,"getData")) {
-        dmList.getData(true);
-    }    
+
+/**
+ * Signals request for fetching more data from server. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onGetMore = function(oSender) {
+    this._getMore();
 }
 
-FM.MlHostGenericCollection.prototype.onGetMore = function(oSender,evdata) {
-    this.getMore();
-}
+/**
+ * Signals request for refreshing data from server. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
 
-FM.MlHostGenericCollection.prototype.onRefresh = function(oSender,evdata) {
+FM.MlHostGenericCollection.prototype.onRefresh = function(oSender) {
     var dmList = this.getDmObject();
-    if(dmList && FM.isset(dmList,"getData")) {
+    if (dmList && FM.isset(dmList, "getData")) {
         dmList.getData(false);
     }
 }
 
-FM.MlHostGenericCollection.prototype.onHistoryBack = function(oSender,evdata) {
-    if(this.history.length > 1) {
+/**
+ * Signals request for adding new FM.DmObject to list of items. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmObject} [evdata.object] FM.DmObject to add.
+ */
+FM.MlHostGenericCollection.prototype.onAddObjectToList = function(oSender, evdata) {
+    var oObj = FM.getAttr(evdata, 'object', null);
+    if (!oObj) {
+        return;
+    }
+
+    var dmList = this.getDmObject();
+    if (dmList) {
+        dmList.addToList(oObj, oObj.getDataID(), true);
+    }
+}
+
+// (DM) LIST EVENTS
+/**
+ * Signals start of fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListStart = function(sender) {
+    this._setWaiting();
+    this.sendEventToObservers(sender, "onListStart", {});
+}
+
+/**
+ * Signals end of fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListEnd = function(sender) {
+    this.sendEventToObservers(sender, "onListEnd", {});
+    this.updateAllObservers();
+    this._refreshItems();
+
+}
+
+/**
+ * Signals error condition durring fetching data from server. Usualy sent from FM.DmList.
+ * 
+ * @event
+ * @public
+ * @param {FM.DmList} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onListError = function(sender) {
+    this.sendEventToObservers(sender, "onListError", {});
+    this.updateAllObservers();
+    this._setListEmpty();
+}
+
+// HISTORY
+/**
+ * Signals request for repeating previous server request. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ */
+FM.MlHostGenericCollection.prototype.onHistoryBack = function(oSender, evdata) {
+    if (this.history.length > 1) {
         var mydata = this.history.pop(); // me
         var data = this.history.pop(); // last
-        
+
         var dmList = this.getDmObject();
-        if(dmList && FM.isset(dmList,"getData")) {
-            FM.forEach(data, function(n,v) {
-                dmList.setAttr(n,v);
+        if (dmList && FM.isset(dmList, "getData")) {
+            FM.forEach(data, function(n, v) {
+                dmList.setAttr(n, v);
                 return true;
             });
-            //dmList.getData(false);
-            dmList.setChanged(true,true);
-            if(this.getAttr('data-fmml-list-refresh-on-change','true') != 'true') {
-                dmList.getData(false);
-            }
-        }        
-        
+            dmList.setChanged(true, true);
+        }
+
     }
 }
 
-FM.MlHostGenericCollection.prototype.onAddObjectToList = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return false;
-    var dmList = this.getDmObject();
-    if(dmList) {
-        dmList.addToList(oObj,oObj.getDataID(),true);
-    }
-    return true;
-}
 
-FM.MlHostGenericCollection.prototype.onOpenObject = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return;    
-    var id = oObj.getAttr('value','');
-    if(id == '') return;    
-    var lst = this.getDmObject();
-    var dmObj = lst ? lst.get(id) : null;
-    if(dmObj && this.getApp().openObject) {
+/**
+ * General purpose event, can be handled in app.
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype.onOpenObject = function(oSender, evdata) {
+    var dmObj = this._getEventItem(oSender, FM.getAttr(evdata, 'object', null));
+    if (dmObj && this.getApp().openObject) {
         this.getApp().openObject(dmObj);
     }
 }
 
-FM.MlHostGenericCollection.prototype.onChangeResource = function(oSender,evdata) {
-    var oObj = FM.getAttr(evdata,'object',null);
-    if(!oObj) return;
-    
-    var resurl = oObj.getAttr('resource_url',oObj.getAttr('value',''));
-    if(resurl != '') {
-        var resResolvFn = this.getAttr('data-fmml-list-attr-resource-parser','');
-        if(resResolvFn !== '') {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype.onChangeResource = function(oSender, evdata) {
+    var oObj = FM.getAttr(evdata, 'object', null);
+    if (!oObj)
+        return;
+
+    // GEnericValue or obj with attr resource_url
+    var resurl = oObj.getAttr('resource_url', oObj.getAttr('value', ''));
+
+    if (resurl != '') {
+        var resResolvFn = this.getAttr('data-fmml-list-attr-resource-parser', '');
+        if (resResolvFn !== '') {
             resResolvFn = FM.stringPtrToObject(resResolvFn, this, this.getApp());
-            if(resResolvFn) {
+            if (resResolvFn) {
                 try {
-                    resurl = resResolvFn(this,resurl);
-                } catch(e) {
-                    this.log(e,FM.logLevels.error,'onChangeResource');
+                    resurl = resResolvFn(this, resurl);
+                } catch (e) {
+                    this.log(e, FM.logLevels.error, 'MlHostGenericCollection.onChangeResource');
                 }
             }
         }
         this.listOffset = 0;
         var dmList = this.getDmObject();
-        if(dmList) {
-            dmList.setAttr('resource_url',resurl,true);
+        if (dmList) {
+            dmList.setAttr('resource_url', resurl, true);
         }
     }
 }
 
-FM.MlHostGenericCollection.prototype.onListStart = function(sender) {    
-    this.setWaiting();
-    this.sendEventToObservers(sender,"onListStart",{});
-    // kraj
-    return true;
-}
-
-
-FM.MlHostGenericCollection.prototype.onListEnd = function(sender) {    
-    this.sendEventToObservers(sender,"onListEnd",{});
-    this.updateAllObservers();
+/**
+ * Signals request for changing layout of list items. Usualy sent to host fom Event observer.
+ * 
+ * @event
+ * @public
+ * @param {FM.Object} sender Source of event.
+ * @param {object} [evdata] Event data: 
+ * @param {FM.DmGenericValue} [evdata.object] FM.DmObject with attribute <i>value</i> containing
+ * list layout name.
+ */
+FM.MlHostGenericCollection.prototype.onChangeListLayout = function(sender, evdata) {
+    var layout = FM.isset(evdata) && FM.isset(evdata.object) ?
+            evdata.object.getAttr('value', 'icon') :
+            'icon'
+            ;
+    this.setAttr('data-fmml-list-items-layout', layout);
     this._refreshItems();
-    // kraj
+}
+
+
+// private
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._getMore = function() {
+    var dmList = this.getDmObject();
+    if (dmList && FM.isset(dmList, "getData")) {
+        dmList.getData(true);
+    }
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._findNodeWithClass = function(parent, cls, def) {
+    var node = $(parent).find("." + cls);
+    return (node && node.length && node.length > 0 ? node[0] : def);
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._clearItems = function() {
+    FM.MlHost.disposeChildNodes(this.listItemsContainer);
+    $(this.listItemsContainer).html("");
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._nodeApplyTemplate = function(node, attrs) {
+    if (FM.isset(node.attributes)) {
+        FM.forEach(node.attributes, function(i, attr) {
+            if (attr.specified == true) {
+                var val = FM.applyTemplate(attrs, attr.value, false, false);
+                if (val != attr.value) {
+                    attr.value = val;
+                }
+            }
+            return true;
+        });
+
+        var me = this;
+        $(node).children().each(function() {
+            me._nodeApplyTemplate(this, attrs);
+            return true;
+        });
+    }
+    return node;
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._refreshItems = function() {
+    this.log("Refresh listi items ...", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
+    this._clearItems();
+    var dmList = this.getDmObject();
+    if (!dmList) {
+        this.log("DmList not found.", FM.logLevels.warn, 'MlHostGenericCollection._refreshItems');
+        return false;
+    }
+    var me = this;
+    var curitm = -1;
+    var itmcnt = 0;
+
+    // first display items
+    dmList.forEachListElement(function(i, oObj) {
+        if (me._filterItemFromDisplay(oObj) == true) {
+            curitm++;
+            if (curitm < me.listOffset) {
+                return true;
+            }
+            var attrs = oObj.getAttr();
+            attrs["objectClass"] = oObj.getSubClassName();
+            attrs["data_id"] = oObj.getDataID();
+            attrs["listIndex"] = curitm + 1;
+            attrs["itemsLayout"] = me.itemsLayout;
+
+            itmcnt++;
+            if (me.listItemsTemplate) {
+                me._createItmNode(oObj, attrs, me.listItemsTemplate);
+            } else {
+                var tname = FM.applyTemplate(attrs, me.itemsTemplateBase, false, true);
+                FM.UtTemplate.getTemplate(me.getApp(), attrs, tname, function(isok, templ) {
+                    if (isok) {
+                        me._createItmNode(oObj, attrs, templ);
+                    }
+                });
+            }
+        }
+
+        return me.maxItms > itmcnt;
+    });
+
+    if (this.maxitms > itmcnt && (this.itemsTemplateEmptyBase != '' || this.listEmptyTemplate)) {
+        if (this.listEmptyTemplate) {
+            while (this.maxItms > itmcnt) {
+                var attrs = {};
+                attrs["objectClass"] = 'unknown';
+                attrs["data_id"] = 'unknown';
+                attrs["listIndex"] = curitm + 1;
+                attrs["itemsLayout"] = me.itemsLayout;
+                curitm++;
+                itmcnt++;
+                this._createItmNode(null, attrs, this.listEmptyTemplate);
+            }
+        } else {
+            var tname = FM.applyTemplate(attrs, this.itemsTemplateEmptyBase, false, true);
+            FM.UtTemplate.getTemplate(this.getApp(), {}, tname, function(isok, templ) {
+                if (isok) {
+                    while (me.maxItms > itmcnt) {
+                        curitm++;
+                        itmcnt++;
+                        var attrs = {
+                            itemsLayout: me.itemsLayout,
+                            objectClass: 'unknown',
+                            data_id: 'unknown',
+                            listIndex: curitm
+                        };
+                        me._createItmNode(null, attrs, templ);
+                    }
+                }
+            });
+        }
+    }
+
+    // empty list
+    if (itmcnt == 0 && this.listEmpty == '') {
+        this._setListEmpty();
+    }
+
+    // send event
+    this.sendEventToObservers(this, 'onListRefreshCompleted');
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._refreshItems');
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._createItmNode = function(oObj, attrs, templ) {
+    var iNode;
+    var curitm = parseInt(FM.getAttr(attrs, 'listIndex', '0'));
+    this.log("Creating " + curitm + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
+    // create node for data (from template)
+    var itm = $(templ);
+    if (!itm) {
+        this.log("Invalid item template.", FM.logLevels.error, 'MlHostGenericCollection._createItmNode');
+        return;
+    }
+
+    // if inner node is defined append itm as child of inner node
+    if (this.listItemsInner) {
+        iNode = $(this.listItemsInner).clone();
+        if (iNode && iNode.length) {
+            iNode = iNode[0];
+        }
+        itm = $(iNode).append(itm);
+    }
+
+    // if wrapper is defined
+    if (this.listItemsWrapper) {
+        var iNode = $(this.listItemsWrapper).clone();
+        if (iNode && iNode.length) {
+            iNode = iNode[0];
+        }
+        itm = $(iNode).append(itm);
+    }
+    itm = itm[0];
+    itm = this._nodeApplyTemplate(itm, attrs);
+
+    $(itm).attr('data-fmml-list-index', curitm);
+    $(itm).attr('data-fmml-list-id', this.getID());
+    $(itm).addClass(curitm & 1 ? 'fmmlRowOdd' : 'fmmlRowEven');
+    $(itm).attr('data-fmml-item-data-id', oObj && oObj.getDataID ? oObj.getDataID() : 'unknown');
+    if (this.isSelected(oObj)) {
+        $(itm).addClass("fmmlSelected");
+    }
+    this.log("" + curitm + ". created. Appending node to dom", FM.logLevels.debug, 'MlHostGenericCollection._createItmNode');
+    this._appendItmNode(oObj, itm, curitm);
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._appendItmNode = function(oObj, node, index) {
+    this.log("Appending " + index + ". item ...", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    this.log(node, FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    var lastNode = null;
+    var lastNodeIndex = -1;
+    for (var i = index - 1; i >= 0 && lastNodeIndex == -1; i--) {
+        lastNode = $(this.listItemsContainer).children("[data-fmml-list-index='" + i + "']");
+        lastNode = lastNode.length ? lastNode[0] : null;
+        if (lastNode) {
+            lastNodeIndex = i;
+        }
+    }
+    if (lastNode) {
+        $(lastNode).after(node);
+    } else {
+        $(this.listItemsContainer).prepend(node);
+    }
+
+    // ML init
+    //if (oObj) {
+    FM.MlHost.initChildNodes(this.getApp(), node, oObj, this.listItemsWrapper != null);
+    this.log("Done.", FM.logLevels.debug, 'MlHostGenericCollection._appendItmNode');
+    //}
+
+}
+
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._filterItemFromDisplay = function(oObj) {
     return true;
 }
 
-FM.MlHostGenericCollection.prototype.onListError = function(sender) {
-    this.sendEventToObservers(sender,"onListError",{});
-    this.updateAllObservers();
-    this.setListEmpty();
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.setWaiting = function() {
-    
-    if(this.listWaiting) {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._setWaiting = function() {
+    if (this.listWaiting) {
         var wnode = $(this.listWaiting).clone()[0];
-        if(this.getAttr('data-fmml-list-waiting-fs','true') == 'true') {
-            $(wnode).width('100%');
-            $(wnode).height($(this.listItemsContainer).height());
-            this._clearItems();
-        }                
         $(this.listItemsContainer).append(wnode);
         FM.MlHost.initChildNodes(this.getApp(), wnode, this.getDmObject());
     }
 }
 
-FM.MlHostGenericCollection.prototype.setListEmpty = function() {
-    if(this.listEmpty) {
+/**
+ * 
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._setListEmpty = function() {
+    if (this.listEmpty) {
         var enode = $(this.listEmpty).clone()[0];
-        $(enode).width('100%');
-        $(enode).height($(this.listItemsContainer).height());
-        
         this._clearItems();
-        
         $(this.listItemsContainer).append(enode);
         FM.MlHost.initChildNodes(this.getApp(), enode, this.getDmObject());
     }
 }
 
-FM.MlHostGenericCollection.prototype.onChangeListLayout = function(sender,evdata) {    
-    var layout = FM.isset(evdata) && FM.isset(evdata.object) ? 
-    evdata.object.getAttr('value','icon') : 
-    'icon'
-    ;
-    this.setAttr('data-fmml-list-items-layout', layout);
-    this.setRegistryValue("/itemsLayout",layout);
-    
-    this._refreshItems();
-}
-
-FM.MlHostGenericCollection.prototype.getSelectedCount = function() {
-    var cnt = 0;
-    FM.forEach(this.selectedItems,function(id,obj) {
-        if(obj == true) cnt++;
-        return true;
-    });
-
-    // kraj
-    return cnt;
-}
-
-FM.MlHostGenericCollection.prototype.getFilteredCount = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return 0;
-    
-    var itemscnt = 0;
-    var me = this;
-
-    dmList.forEachListElement(function(i,oObj) {
-        if (me._filterItemFromDisplay(oObj) == true) {
-            itemscnt += 1;
-        }
-        return true;
-    });
-    
-    return itemscnt;
-}
-
-FM.MlHostGenericCollection.prototype.onSelected = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    if(evObj) this.addToSelection(evObj,this._getNodeListNode(oSender.getNode()), true);
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onDeselected = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(evObj) this.removeFromSelection(evObj,this._getNodeListNode(oSender.getNode()), true);
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onAlterSelectionState = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    var id = '';
-    if(oSender && evObj) {
-        var inode = this._getNodeListNode(oSender.getNode());
-                
-        if(inode && FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-            id = $(inode).attr('data-fmml-item-data-id');
-        }
-        if(id != '') {
-            if(!this.isSelected(id)) {
-                this.addToSelection(id, inode, true)
-            } else {
-                this.removeFromSelection(id, inode, true);
-            }
-        }
-    }
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype._getNodeListNode = function(node) {
-    var inode = node;
-    var rnode = null;
-    while(inode && !FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-        inode = inode.parentNode;
-    }
-
-    if(FM.isset($(inode).attr('data-fmml-item-data-id'))) {
-        rnode = inode;
-    }
-    
-    return rnode;
-}
-
-FM.MlHostGenericCollection.prototype.onClearSelection = function(oSender,evdata) {
-    var evObj = FM.getAttr(evdata,'object',null);
-    var evCb = FM.getAttr(evdata,'callback',function(){});
-    
-    if(evObj) this.clearSelection(true);
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onNextPage = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return (true);
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    var itemscnt = this.getFilteredCount();
-    maxitms = FM.isset(maxitms) && maxitms > 0 ? maxitms : 200;
-    var getMoreData = false;
-    var calcListOffset = this.listOffset + maxitms;
-    this.listOffset = calcListOffset;
-    if(this.listOffset > itemscnt) {
-        this.listOffset = Math.floor(itemscnt/maxitms) * maxitms;
-        getMoreData = true;
-    }
-    
-    if(this.listOffset >= itemscnt) {
-        this.listOffset = this.listOffset -= maxitms;
-        getMoreData = true;        
-    }
-    this._refreshItems();
-    
-    if(getMoreData && this.getAttr('data-fmml-list-get-more-at-end','false') == 'true') {
-        var fromrowAttr = this.getAttr('data-fmml-fromrow-attr-name',"fromrow");
-        if(fromrowAttr != '') {
-            dmList.setAttr(fromrowAttr,dmList.getListSize(),false);
-        }
-        this.getMore();
-    }
-    
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.prototype.onPreviousPage = function() {
-    var dmList = this.getDmObject();
-    if(!dmList) return (true);
-    var maxitms = parseInt(this.getAttr('data-fmml-list-max-items','200'));
-    maxitms = FM.isset(maxitms) && maxitms > 0 ? maxitms : 200;
-    var itemscnt = this.getFilteredCount();
-    this.listOffset -= maxitms;
-    if(this.listOffset > itemscnt) {
-        this.listOffset = Math.floor(itemscnt/maxitms) * maxitms;
-    }
-    if(this.listOffset < 0) this.listOffset = 0;
-    this._refreshItems();
-    // kraj
-    return true;
-}
-
-FM.MlHostGenericCollection.DEF_LIST_SIZE = 5;
-
-FM.MlHost.addHost("GenericCollection",FM.MlHostGenericCollection,'GLOBAL');
-
 /**
  * 
- * Basic ML observer class. 
- *   
- * <table>
- * <th>List of ML node attributes</th>
- * <tr><td>data-fmml-attr-name</td><td>name of attribute</td></tr>
- * <tr><td>data-fmml-attr-default-value</td><td>default value of attribute</td></tr>
- * <tr><td>data-fmml-attr-type</td><td>type of attribute (string, number, date)</td></tr>
- * <tr><td>data-fmml-attr-decimals</td><td>round value to number of decimals</td></tr>
- * <tr><td>data-fmml-date-is-utc</td><td>set true if dates is in UTC</td></tr>
- * <tr><td>data-fmml-date-display-as</td><td>display dates in provided format (date, datetime, time, ago, local)</td></tr>
- * <tr><td>data-fmml-nuber-display-decimals</td><td>display value rounded to number of decimals</td></tr>
- * <tr><td>data-fmml-validation-rules</td><td>validation rules for observer</td></tr>
- * <tr><td>data-fmml-validation-message</td><td>validation error message</td></tr>
- * <tr><td>data-fmml-force-validation</td><td>force validation on value change if value is empty too</td></tr>
- * <tr><td>data-fmml-run-on-update</td><td>node id of host to run on update</td></tr>
- * </table>
+ * @ignore
+ */
+FM.MlHostGenericCollection.prototype._getEventItem = function(oSender, evobj) {
+    var lst = this.getDmObject();
+    if (!lst) {
+        return null;
+    }
+
+    if (evobj.getSubClassName() == 'GenericValue') {
+        return lst.get(evobj.getAttr('value'));
+    }
+
+    return lst.get(evobj.getDataID());
+}
+
+/**
+ * Default number od list items to display (100).
  * 
- * <table>
- * <th>List of ML CSS classes</th>
- * <tr><td>fmmlInvalidValue</td><td>attribute value is invalid</td></tr>
- * </table>
+ * @static
+ * @public
+ */
+FM.MlHostGenericCollection.DEF_LIST_SIZE = 100;
+
+FM.MlHost.addHost("GenericCollection", FM.MlHostGenericCollection, 'GLOBAL');
+
+/** 
+ * -----------------------------------------------------------------------------
  * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
+/**
+ * Generic ML MlObserver class.  
+ * 
+ *  
  * @class FM.MlObserver
+ * @memberOf FM
  * @extends FM.LmObject
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
+ * @param {FM.AppObject} app application object.
+ * @param {object} [attrs] DOM node attributes.
+ * @param {node} node DOM node. 
+ * List of DOM attributes (check inherited attributes too):
+ * <table class="fm-mlattrs">
+ *  <thead>
+ *   <tr>
+ *    <th>Name</th><th>description</th><th>Default</th>
+ *   </tr>
+ *  </thead>
+ *  <tbody>
+ *   <tr>
+ *    <td>data-fmml-attr-name</td>
+ *    <td>Host DM.Object attribute to observe.</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-type</td>
+ *    <td>Host DM.Object attribute type.</td>
+ *    <td>[string], number, date</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-decimals</td>
+ *    <td>Number of decimals to display. Applies only if attribute type is <i>number</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-format</td>
+ *    <td>Date format of attribute value. Applies only if attribute type is <i>date</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-is-utc</td>
+ *    <td>Attribute value representing date is UTC. Applies only if attribute type is <i>date</i>.</td>
+ *    <td>[true], false</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-attr-default-value</td>
+ *    <td>Default attribute value.</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-date-display-as</td>
+ *    <td>Display date in given format. Applies only if attribute type is <i>date</i>.</td>
+ *    <td></td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-error-host</td>
+ *    <td>DOM node id of error host</td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-validation-rules</td>
+ *    <td>
+ *      Observer validation rules. Using FM macros (if rules starts with @) or JavaScript eval.
+ *      Macro validation rules are separated by semicolon.
+ *      Eval method must return <i>true</i> to consider observer value valid. Expression is evaluated
+ *      in FM context: this.A (application), this.H (host), this.O (observer), this.D (DM object)
+ *    </td>
+ *    <td>-</td>
+ *   </tr>  
+ *   <tr>
+ *    <td>data-fmml-validation-message</td>
+ *    <td>
+ *      Error message if validation fails.
+ *    </td>
+ *    <td>Invalid value.</td>
+ *   </tr>
+ *   <tr>
+ *   <tr>
+ *    <td>data-fmml-force-validation</td>
+ *    <td>
+ *      Validate observer even if attribute value is empty.
+ *    </td>
+ *    <td>[id],true</td>
+ *   </tr>
+ *   <tr>
+ *    <td>data-fmml-run-on-update</td>
+ *    <td>
+ *      DOM node id of the host to run on attribute update. 
+ *      Current host DM object is sent as argument.
+ *    </td>
+ *    <td>-</td>
+ *   </tr>
+ *  </tbody>
+ * </table>
+ * 
+ * @example 
+    &lt;!-- example of HTML template --&gt;
+    &lt;div data-fmml-host="Host"&gt;
+        &lt;span 
+            data-fmml-observer=&quot;Observer&quot; 
+            data-fmml-attr-name=&quot;value&quot;
+        &gt;&lt;/span&gt;
+    &lt;/div&gt;
  */
 FM.MlObserver = FM.defineClass('MlObserver', FM.LmObject);
 
@@ -7801,9 +9448,7 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     this.log(attrs, FM.logLevels.debug, 'MlObserver._init');
 
-    this.executed = false;
-    this.node = node;
-    
+    this.node = node ? node : null;
     this.node.fmmlObserver = this;
     this.lastValue = null;
 
@@ -7814,16 +9459,20 @@ FM.MlObserver.prototype._init = function(app, attrs, node) {
 
     // find error host
     this.errorObject = this.getAttr('data-fmml-error-host', '') != '' ?
-        new FM.DmGenericError({
-        id: '',
-        text: ''
-    }) :
-        null
-        ;
+            new FM.DmGenericError({
+                id: '',
+                text: ''
+            }) : null;
 
     this.log("New observer created.", FM.logLevels.debug, 'MlObserver._init');
 }
 
+/**
+ * Run observer.
+ * 
+ * @public
+ * @function
+ */
 FM.MlObserver.prototype.run = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.run');
 
@@ -7845,6 +9494,12 @@ FM.MlObserver.prototype.run = function() {
 }
 
 
+/**
+ * Dispose observer.
+ * 
+ * @public
+ * @function 
+ */
 FM.MlObserver.prototype.dispose = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.dispose');
 
@@ -7883,29 +9538,40 @@ FM.MlObserver.prototype.dispose = function() {
 }
 
 
-FM.MlObserver.prototype._getErrorHost = function() {
-    var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
-    return (
-        errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
-        errnode.fmmlHost : null
-        );
-}
-
+/**
+ * Returns last eror. 
+ * 
+ * @returns {FM.DmGenericError} 
+ */
 FM.MlObserver.prototype.getLastError = function() {
     var errhost = this._getErrorHost();
     return errhost ? errhost.getDmObject() : null;
 }
 
+/**
+ * Set last eror. 
+ * 
+ * @param {FM.DmGenericError|string} oErr Error to set. 
+ * 
+ * @return {FM.DmGenericError} 
+ */
 FM.MlObserver.prototype.setLastError = function(oErr) {
     var errhost = this._getErrorHost();
     if (!errhost) {
-        return oErr;
+        return this.getHost() ? this.getHost().setLastError(oErr) :
+            (this.getApp() ? this.getApp().setLastError(oErr) : oErr)
+        ;
     }
+    oErr = FM.isset(oErr) && oErr ? oErr : "";
 
-    if (!FM.isset(oErr) || !oErr || !FM.isObject(oErr)) {
-        oErr = new FM.DmGenericError();
+    if (!FM.isObject(oErr)) {
+        if (FM.isString(oErr)) {
+            oErr = new FM.DmGenericError({"messageId": "GE", "text": oErr});
+        } else {
+            oErr = new FM.DmGenericError();
+        }
     }
-
+    
     if (!errhost.isExecuted()) {
         errhost.run(oErr);
     } else {
@@ -7925,6 +9591,14 @@ FM.MlObserver.prototype.setLastError = function(oErr) {
     return oErr;
 }
 
+/**
+ * Check if observer is valid.
+ *  
+ * @pulbic
+ * @function
+ * @param {boolean} [force=false] Validate even if value is null or empty string.
+ * @returns {boolean}
+ */
 FM.MlObserver.prototype.isValid = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.isValid');
 
@@ -7933,13 +9607,25 @@ FM.MlObserver.prototype.isValid = function(force) {
     var value = this.getValue();
 
     if (rules != '') {
-        force = FM.isset(force) ? force : 
-            (
-                this.getAttr('data-fmml-force-validation','false') == 'true' ? 
-                true : false
-            );
-        
+        force = FM.isset(force) ? force :
+                (
+                        this.getAttr('data-fmml-force-validation', 'false') == 'true' ?
+                        true : false
+                        );
+
         if (force || value != "") {
+            // eval
+            if (FM.startsWith(rules, "@")) {
+                var value = FM.resolveAttrName({}, rules, false, {
+                    A: this.getApp(),
+                    H: this.getHost(),
+                    O: this,
+                    D: this.getDmObject()
+                });
+                return (value == true);
+            }
+
+            // predefined (old way)
             var allRules = rules != null && rules != '' ? rules.split(";") : [];
 
             for (var i = 0; i < allRules.length; i++) {
@@ -7982,14 +9668,19 @@ FM.MlObserver.prototype.isValid = function(force) {
     }
 
     this.log(
-        response ? "Observer is valid" : "Validation failed: " + ruleOperator,
-        FM.logLevels.debug, 'MlObserver.isValid'
-        );
+            response ? "Observer is valid" : "Validation failed: " + ruleOperator,
+            FM.logLevels.debug, 'MlObserver.isValid'
+            );
     return response; //no rules
 }
 
-FM.MlObserver.prototype.lastUpdate;
-
+/**
+ * Called by host to signal change of data model,
+ *
+ * @public
+ * @function 
+ *
+ */
 FM.MlObserver.prototype.update = function() {
     if (!this.isExecuted()) {
         return false;
@@ -7999,7 +9690,10 @@ FM.MlObserver.prototype.update = function() {
     var dmObj = this.getDmObject();
     var dtstmp = dmObj ? dmObj.getProperty('timestamp', '0') : '0';
 
-    if (dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')) {
+    if (
+        dmObj && dmObj.isAttr(this.getAttr('data-fmml-attr-name','')) && 
+        dtstmp != '0' && dtstmp == this.getProperty('updateTimestamp', '0')
+    ) {
         this.log("Aborting, processed updateTimestamp.", FM.logLevels.debug, 'MlObserver.update');
         return false;
     }
@@ -8042,10 +9736,17 @@ FM.MlObserver.prototype.update = function() {
         retc = true;
     }
 
-    this.log("Done.", FM.logLevels.warn, 'MlObserver.update');
+    this.log("Done.", FM.logLevels.debug, 'MlObserver.update');
     return retc;
 }
 
+/**
+ * Set observer current value.
+ * 
+ * @public
+ * @function
+ * @param {...} value New value.
+ */
 FM.MlObserver.prototype.setValue = function(value) {
     if (!this.isExecuted()) {
         return false;
@@ -8073,6 +9774,13 @@ FM.MlObserver.prototype.setValue = function(value) {
     return true;
 }
 
+/**
+ * Returns observer current value.
+ * 
+ * @public
+ * @function
+ * @returns {...}
+ */
 FM.MlObserver.prototype.getValue = function() {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.getValue');
 
@@ -8083,6 +9791,11 @@ FM.MlObserver.prototype.getValue = function() {
 
 
     // conf
+    if(!this.isAttr('data-fmml-attr-name') && !this.isAttr('data-fmml-attr-default-value')) {
+        this.log("Attribute name is not defined, returning undefined.", FM.logLevels.warn, 'MlObserver.getValue');
+        return undefined;
+    }
+    
     var attrname = this.getAttr('data-fmml-attr-name', '');
     var defval = this.resolveAttrValue('data-fmml-attr-default-value', '');
     var dmobj = this.getDmObject();
@@ -8101,18 +9814,35 @@ FM.MlObserver.prototype.getValue = function() {
     return value;
 }
 
+/**
+ * 
+ * @ignore
+ */
+FM.MlObserver.prototype._getErrorHost = function() {
+    var errnode = document.getElementById(this.getAttr('data-fmml-error-host', ''));
+    return (
+            errnode && FM.isset(errnode.fmmlHost) && errnode.fmmlHost ?
+            errnode.fmmlHost : null
+            );
+}
+
+
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._formatValue = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
-    var dateFormat = this.getAttr('data-fmml-date-format', 
-        this.getApp().getAttr('fm_templates_date_format',undefined))
-    ;
+    var dateFormat = this.getAttr('data-fmml-date-format',
+            this.getApp().getAttr('fm_date_format', undefined))
+            ;
 
 // dates
     if (attrtype == "date") {
         var dateObj = null;
-        if(FM.isObject(value) && FM.isset(value.getTime)) {
+        if (FM.isObject(value) && FM.isset(value.getTime)) {
             dateObj = value;
         } else if (FM.isDateString(value)) {
             dateObj = FM.parseDateString(value, dateIsUtc);
@@ -8121,7 +9851,7 @@ FM.MlObserver.prototype._formatValue = function(value) {
         }
 
         if (dateObj) {
-            value = FM.dateToString(dateObj, dateIsUtc,dateFormat);
+            value = FM.dateToString(dateObj, dateIsUtc, dateFormat);
         }
     } else if (attrtype == "number") {
         value = parseFloat(0.0 + value);
@@ -8133,21 +9863,19 @@ FM.MlObserver.prototype._formatValue = function(value) {
     return value;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._formatValueForRendering = function(value) {
     var attrtype = this.getAttr('data-fmml-attr-type', 'string');
     var dateIsUtc = this.getAttr('data-fmml-date-is-utc', 'true') != 'false';
     var dateFormat = this.getAttr(
-        'data-fmml-date-display-as', 
-        this.getApp().getAttr('fm_templates_date_display_as',undefined)
-    );
+            'data-fmml-date-display-as',
+            this.getApp().getAttr('fm_date_display_as', undefined)
+            );
+    var decplaces = parseInt(this.getAttr('data-fmml-attr-decimals', '-1'));
 
-    var decplaces = parseInt(
-        this.getAttr(
-        'data-fmml-nuber-display-decimals',
-        this.getAttr('data-fmml-attr-decimals', '-1')
-        )
-        );
-    // var attrtemplate = this.getAttr('data-fmml-attr-template', '');
 
 // dates
     if (attrtype == "date") {
@@ -8178,13 +9906,22 @@ FM.MlObserver.prototype._formatValueForRendering = function(value) {
     return value;
 }
 
+/**
+ * Render observer value in DOM node using current renderer.
+ * 
+ * @param {boolean} force Render event of value is not changed.
+ */
 FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.setNodeValue');
     force = FM.isset(force) && force == true ? true : false;
-    
+
     // get value
     var nfvalue = this.getValue();
-
+    if(!FM.isset(nfvalue)) {
+        this.log("Undefined value, aborting.", FM.logLevels.warn, 'MlObserver.setNodeValue');
+        return;
+    }
+    
     // formating
     this.log("Formating value [" + nfvalue + "]...", FM.logLevels.debug, 'MlObserver.setNodeValue');
     var value = this._formatValueForRendering(nfvalue);
@@ -8208,18 +9945,18 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     }
 
     // def render
-    var doSelection =false;
+    var doSelection = false;
     try {
         doSelection = this.node.selectionStart ? true : false;
-    } catch(e){
-        
+    } catch (e) {
+
     }
-    var selStart = 0,selEnd = 0;
+    var selStart = 0, selEnd = 0;
     if (doSelection) {
         selStart = this.node.selectionStart;
         selEnd = this.node.selectionEnd;
     }
-    
+
     if (this.node.nodeName == 'INPUT' || this.node.nodeName == 'TEXTAREA') {
         if ($(this.node).is(':checkbox')) {
             if (value && value != '' && value.toLowerCase() != 'false') {
@@ -8233,9 +9970,9 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
             $(this.node).val(value);
         }
     } else if (this.node.nodeName == 'IMG') {
-        $(this.node).attr("src",value);
+        $(this.node).attr("src", value);
     } else if (this.node.nodeName == 'A') {
-        $(this.node).attr("href",value);
+        $(this.node).attr("href", value);
     } else if (FM.isset(this.node.value)) {
         $(this.node).val(value);
     } else {
@@ -8251,6 +9988,13 @@ FM.MlObserver.prototype.setNodeValue = function(force) {
     this.log("Done.", FM.logLevels.debug, 'MlObserver.setNodeValue');
 }
 
+/**
+ * Add extension.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to add. Usualy there is no need to call this function manualy.
+ */
 FM.MlObserver.prototype.addExtension = function(extObj) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.addExtension');
     this.log("Adding extension:", FM.logLevels.debug, 'MlObserver.addExtension');
@@ -8269,6 +10013,13 @@ FM.MlObserver.prototype.addExtension = function(extObj) {
     return true;
 }
 
+/**
+ * Remove extension.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to remove. Usualy there is no need to call this function manualy.
+ */
 FM.MlObserver.prototype.removeExtension = function(extObj) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.removeExtension');
     this.log("Removing extension:", FM.logLevels.debug, 'MlObserver.removeExtension');
@@ -8288,20 +10039,48 @@ FM.MlObserver.prototype.removeExtension = function(extObj) {
     return false;
 }
 
+/**
+ * Run extension. Usualy there is no need to call this function manualy.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlExtension} extObj Extension to run.
+ */
 FM.MlObserver.prototype.runExtension = function(extObj) {
     if (FM.isset(extObj.run)) {
         extObj.run(this);
     }
 }
 
+/**
+ * Returns observer DOM node.
+ * 
+ * @public
+ * @function
+ * @returns {node}
+ */
 FM.MlObserver.prototype.getNode = function() {
     return this.node;
 }
 
+/**
+ * Returns current observer DM object.
+ * 
+ * @public
+ * @function
+ * @returns {FM.DmObject}
+ */
 FM.MlObserver.prototype.getDmObject = function() {
     return(this.getHost() ? this.getHost().getDmObject(this.node) : null);
 }
 
+/**
+ * Returns host this observer belongs to.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlHost}
+ */
 FM.MlObserver.prototype.getHost = function() {
     if (this.host)
         return(this.host);
@@ -8309,6 +10088,10 @@ FM.MlObserver.prototype.getHost = function() {
     return(this.host);
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype.onHostEvent = function(sender, ev, evdata) {
     this.log(this.getNode(), FM.logLevels.debug, 'MlObserver.onHostEvent');
     this.log("Event:" + ev, FM.logLevels.debug, 'MlObserver.onHostEvent');
@@ -8347,7 +10130,10 @@ FM.MlObserver.prototype.onHostEvent = function(sender, ev, evdata) {
     return fnd;
 }
 
-
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype.resolveAttrValue = function(val, defv) {
     val = FM.resolveAttrValue(this.options, val, defv, {
         A: this.getApp(),
@@ -8360,12 +10146,21 @@ FM.MlObserver.prototype.resolveAttrValue = function(val, defv) {
 }
 
 
-// renderer 
-
+/**
+ * Returns current renderer.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlExtension}
+ */
 FM.MlObserver.prototype.getCurrentRenderer = function() {
     return this.currentRenderer;
 }
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.prototype._checkCurrentRenderer = function() {
     for (var i = this.extensions.length - 1; i > -1; i--) {
         var ext = this.extensions[i];
@@ -8378,6 +10173,14 @@ FM.MlObserver.prototype._checkCurrentRenderer = function() {
     return this.currentRenderer;
 }
 
+/**
+ * Add extension to list of available renderers. 
+ * Last registered extension is active renderer.
+ 
+ * @public 
+ * @function
+ * @param {FM.MlExtension} renderer Renderer to add.
+ */
 FM.MlObserver.prototype.addRenderer = function(r) {
     if (!r)
         return;
@@ -8393,6 +10196,13 @@ FM.MlObserver.prototype.addRenderer = function(r) {
     }
 }
 
+/**
+ * Remove extension from list of available renderers.
+ 
+ * @public 
+ * @function
+ * @param {FM.MlExtension} renderer Renderer to remove.
+ */
 FM.MlObserver.prototype.removeRenderer = function(r) {
     if (!r)
         return;
@@ -8410,20 +10220,42 @@ FM.MlObserver.prototype.removeRenderer = function(r) {
     }
 }
 
-// -- static --
 
-// pronadji u dom tree na dolje node koji ima fmmlDmObject - to je tvoj dm
-// vrati null ako ne nadjes
+/**
+ * Search for first child node with FM.MlHost instance.
+ * 
+ * @public
+ * @static
+ * @function
+ * @param {node} node DOM node to start searching from.
+ * @returns {FM.MlHost|null}
+ */
 FM.MlObserver.findHost = function(node) {
     return FM.findNodeWithAttr(node, "fmmlHost");
 }
 
 
+/**
+ * 
+ * @ignore
+ */
 FM.MlObserver.observerTypes = {
     GLOBAL: {}
 };
 
 
+/**
+ * Register application observer type.
+ *  
+ * @public
+ * @static
+ * @function
+ * @param {string} type name.
+ * @param {FM.MlHost} fn Observer class function.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ * 
+ * @returns {boolean}
+ */
 FM.MlObserver.addObserver = function(type, fn, appCls) {
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
     if (!FM.isset(fn) || !FM.isFunction(fn))
@@ -8439,12 +10271,14 @@ FM.MlObserver.addObserver = function(type, fn, appCls) {
 }
 
 /**
- * Returns MlObserver <b>config</b> class function for <b>config</b> subclass type
+ * Returns MlObserver <b>config</b> class function for <b>config</b> subclass type.
+ * 
+ * @public
  * @static
  * @function    
- * @param {object} app Application
- * @param {String} name Configuration name
- * @return {object} observer configuration or null if not found
+ * @param {FM.AppObject} app Current application.
+ * @param {String} type Observer subclass type.
+ * @return {FM.MlObserver} Class function. 
  */
 FM.MlObserver.getConfiguration = function(app, name) {
     var list = FM.MlObserver.observerTypes;
@@ -8473,6 +10307,19 @@ FM.MlObserver.getConfiguration = function(app, name) {
     return obj;
 }
 
+/**
+ * Returns new instance of chosen <b>sctype</b> observer type.
+ 
+ * @static
+ * @public
+ * @function    
+ * @param {FM.AppObject} app Current application.
+ * @param {object} attrs Observer attributes.
+ * @param {node} node Observer node.
+ * @param {String} type Observer subclass type.
+ * 
+ * @return {FM.MlObserver} New observer instance.
+ */
 FM.MlObserver.newObserver = function(app, attrs, node, type) {
     var clsFn = FM.MlObserver.getConfiguration(app, type);
     return clsFn ? new clsFn(app, attrs, node) : null;
@@ -8481,11 +10328,26 @@ FM.MlObserver.newObserver = function(app, attrs, node, type) {
 FM.MlObserver.addObserver("Observer", FM.MlObserver, 'GLOBAL');
 
 /**
+ * Validation rules. 
  * 
  * @namespace
  */
 FM.MlObserver.validationRules = {
+    /**
+     * Global validation rules. Available to all applications.
+     * 
+     * @namespace
+     */
     GLOBAL: {
+        /**
+         * Equal validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         equal: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -8508,6 +10370,15 @@ FM.MlObserver.validationRules = {
 
             return true;
         },
+        /**
+         * Greather then validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         gt: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -8530,6 +10401,15 @@ FM.MlObserver.validationRules = {
 
             return false;
         },
+        /**
+         * Less then rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         lt: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (ruleParams.length < 1)
@@ -8552,6 +10432,15 @@ FM.MlObserver.validationRules = {
 
             return false;
         },
+        /**
+         * Empty validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         empty: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (value == null || value == '') {
@@ -8559,6 +10448,15 @@ FM.MlObserver.validationRules = {
             }
             return false;
         },
+        /**
+         * validEmail validation rule.
+         * Example: 
+         *  
+         * @param {FM.MlObserver} observer Observer.
+         * @param {array} ruleParams Rule parameters.
+         * 
+         * @returns {boolean}
+         */
         validEmail: function(observer, ruleParams, cbFn) {
             var value = observer.getValue();
             if (value == null || value == '') {
@@ -8571,6 +10469,15 @@ FM.MlObserver.validationRules = {
     }
 }
 
+/**
+ * Returns requested validation rule function.
+ * 
+ * @public
+ * @static
+ * @param {type} app Current application.
+ * @param {type} name Validation rule name.
+ * @returns {function} 
+ */
 FM.MlObserver.getValidationRule = function(app, name) {
     var list = FM.MlObserver.validationRules;
 
@@ -8598,6 +10505,17 @@ FM.MlObserver.getValidationRule = function(app, name) {
     return obj;
 }
 
+/**
+ * Register new validation rule.
+ * 
+ * @public
+ * @static
+ * @param {string} name Validation rule name.
+ * @param {function} fn Validation rule function. 
+ * Function receives two arguments (observer instance and array of rule parameters)
+ *  and returns <i>true</i> or <i>false</i>.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ */
 FM.MlObserver.addValidationRule = function(name, fn, appCls) {
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
     if (!FM.isset(name) || !name || name == '')
@@ -8799,14 +10717,14 @@ FM.MlObserverEvent.prototype.run = function() {
         var evhostid = me.getAttr('data-fmml-event-host','');
         if(evhostid != '') {
             if(evhostid == 'parent' && myhostnode) {
-                me.eventHostNode = FM.findNodeWithAttr(myhostnode.parentNode, "fmmlHost");
+                me.eventHost = FM.findNodeWithAttr(myhostnode.parentNode, "fmmlHost");
+                me.eventHostNode = me.eventHost ? me.eventHost.getNode() : null;
             } else {
                 me.eventHostNode = FM.getNodeWithId(evhostid);
+                me.eventHost = me.eventHostNode && me.eventHostNode.fmmlHost ? 
+                    me.eventHostNode.fmmlHost : null
+                    ;
             }
-            if (me.eventHostNode != null) {
-                me.eventHost = FM.isset(me.eventHostNode.fmmlHost) ? me.eventHostNode.fmmlHost : null;
-            }
-            if(me.eventHost == null) me.eventHostNode = null;            
         } else {
             me.eventHost = myhost;    
             me.eventHostNode = myhostnode;    
@@ -9129,74 +11047,181 @@ FM.MlObserverListOrder.prototype.setNodeValue = function() {
 
 FM.MlObserver.addObserver("ListOrder",FM.MlObserverListOrder,'GLOBAL');
 
+/** 
+ * -----------------------------------------------------------------------------
+ * 
+ * @review isipka
+ * 
+ * -----------------------------------------------------------------------------
+ */
 /**
-* Basic ML extensions class. 
+* Basic ML extensions class. Extensions purpose is rendering of observer value,
+* implementation of input methods, etc.
 * 
 * @class FM.MlExtension
-* @extends FM.Object
- * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
+* @extends FM.LmObject
+* @param {FM.AppObject} app Current application.
+* @param {object} [attrs] DOM node attributes
+
 */
-FM.MlExtension = FM.defineClass('MlExtension',FM.Object);
+FM.MlExtension = FM.defineClass('MlExtension',FM.LmObject);
 
 
 // methods
-FM.MlExtension.prototype._init = function(attrs,node) {
-    this._super("_init",attrs);
+FM.MlExtension.prototype._init = function(app,attrs) {
+    this._super("_init",app,attrs);
     this.objectSubClass = "Extension";
-    this.node = node ? node : null;
-    this.executed = false;
+    
+    this.log(attrs, FM.logLevels.debug, 'MlExtension._init');
+
     this.defaultRenderer = false;
     
+    this.log("New extension created.", FM.logLevels.debug, 'MlExtension._init');
 }
 
+/**
+ * Run extension.
+ * 
+ * @public
+ * @function
+ * @param {FM.MlObserver} [obs] Observer extension belongs to.
+ */
 FM.MlExtension.prototype.run = function(obs) {
-    this._super("run");
     this.observer = obs ? obs : null;
-    this.executed = true;
+    this._super("run");
 }
 
+/**
+ * Dispose extension.
+ * 
+ * @public
+ * @function  
+ * @param {FM.MlObserver} [obs] Observer extension belongs to.
+ */
 FM.MlExtension.prototype.dispose = function(obs) {    
     this._super("dispose");
-    this.executed = false;
 }
 
+
+/**
+ * Called by observer to signal change of data model,
+ *
+ * @public
+ * @function 
+ * @param {FM.MlObserver} obs Observer extension belongs to.
+ */
 FM.MlExtension.prototype.update = function(obs) {
 }
+
+
+/**
+ * Returns observer this extension belongs to.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlObserver}
+ */
 
 FM.MlExtension.prototype.getObserver = function() {
     return this.observer ? this.observer : null;
 }
 
+/**
+ * Returns host this extension belongs to.
+ * 
+ * @public
+ * @function
+ * @returns {FM.MlHost}
+ */
 FM.MlExtension.prototype.getHost = function() {
     return this.observer ? this.observer.getHost() : null;
 }
 
+/**
+ * Returns extension application instance.
+ * 
+ * @returns {FM.AppObject}
+ * 
+ */
 FM.MlExtension.prototype.getApp = function() {
     return this.observer ? this.observer.getApp() : null;
 }
 
+/**
+ * Returns current DM object.
+ * 
+ * @public
+ * @function
+ * @returns {FM.DmObject}
+ */
 FM.MlExtension.prototype.getDmObject = function() {
     return this.observer ? this.observer.getDmObject() : null;
 }
 
+/**
+ * Set extension DM object. This method in FM.MlExtension have no efect.
+ * Extension DM object is always provided from observer extension is registred to.
+ * 
+ * @param {FM.DmObject} o New extension DM object. <i>onSetDmObject</i> event will be fired.
+ * 
+ */
+FM.MlExtension.prototype.setDmObject = function(o) {
+}
+
+/**
+ * Returns extension DOM node.
+ * 
+ * @returns {node}
+ * 
+ */
 FM.MlExtension.prototype.getNode = function() {
-    return this.node;
+    return this.observer ? this.observer.getNode() : null;
 }
 
 // renderer interface
+/**
+ * Reender observer value in DOM node.
+ * This method is called by observer when extension is default renderer.
+ * 
+ * @public
+ * @function
+ */
 FM.MlExtension.prototype.render = function() {
-    // TODO
+    // abstract
 }
 
+/**
+ * Check if extension is default renderer.
+ * 
+ * @public
+ * @function
+ * @returns {boolean} 
+ */
 FM.MlExtension.prototype.isRendererEnabled = function() {
     return this.defaultRenderer;
 }
+
+
+/**
+ * Enable renderer. 
+ * This method is called by observer when extension become default renderer.
+ * 
+ * @public
+ * @function
+ */
 FM.MlExtension.prototype.enableRenderer = function() {
     if(this.defaultRenderer != true) {
         this.defaultRenderer = true;
     }
 }
+
+/**
+ * Disable renderer. 
+ * This method is called by observer when extension is not default renderer any more.
+ * 
+ * @public
+ * @function
+ */
 
 FM.MlExtension.prototype.disableRenderer = function() {
     if(this.defaultRenderer != false) {
@@ -9210,6 +11235,18 @@ FM.MlExtension.extensionTypes = {
     GLOBAL: {}
 };
 
+/**
+ * Register application extension type.
+ *  
+ * @public
+ * @static
+ * @function
+ * @param {string} type name.
+ * @param {FM.MlExtension} fn Extension class function.
+ * @param {string} [appCls='GLOBAL'] Application subclass type.
+ * 
+ * @returns {boolean}
+ */
 FM.MlExtension.addExtensionType = function(type,fn,appCls) {    
     if(!FM.isset(fn) || !FM.isFunction(fn)) return false;
     appCls = FM.isset(appCls) && FM.isString(appCls) && appCls != '' ? appCls : 'GLOBAL';
@@ -9224,12 +11261,13 @@ FM.MlExtension.addExtensionType = function(type,fn,appCls) {
 
 
 /**
-* Returns MlExtension <b>config</b> class function for <b>config</b> subclass type
+* Returns MlExtension <b>config</b> class function for <b>config</b> subclass type.
+* 
 * @static
 * @function    
-* @param {object} app Application
-* @param {String} name Configuration name
-* @return {object} extension configuration or null if not found
+ * @param {FM.AppObject} app Current application.
+ * @param {String} name Extension subclass type.
+ * @return {FM.MlExtension} Class function. 
 */   
 FM.MlExtension.getConfiguration = function(app,name) {
     var list = FM.MlExtension.extensionTypes;
@@ -9258,24 +11296,38 @@ FM.MlExtension.getConfiguration = function(app,name) {
     return obj;
 }
 
+/**
+ * Returns new instance of chosen <b>sctype</b> extension type.
+ 
+ * @static
+ * @public
+ * @function    
+ * @param {FM.AppObject} app Current application.
+ * @param {object} attrs Extension attributes.
+ * @param {node} node Extension node.
+ * @param {String} type Extension subclass type.
+ * 
+ * @return {FM.MlExtension} New extension instance.
+ */
 FM.MlExtension.newExtension = function(app,attrs,node,type) {
     var clsFn = FM.MlExtension.getConfiguration(app,type);
-    return clsFn ? new clsFn(attrs,node) : null;
+    return clsFn ? new clsFn(app,attrs) : null;
 }
+
 
 /**
  * ML observer value edit extensions class. 
  * 
  * @class FM.MlEdit
  * @extends FM.MlExtension
+ * @param {FM.AppObject} app Current application.
  * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
  */
 FM.MlEdit = FM.defineClass('MlEdit', FM.MlExtension);
 
 // methods
-FM.MlEdit.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlEdit.prototype._init = function(app,attrs) {
+    this._super("_init", app, attrs);
     this.objectSubClass = "Edit";
     this.triggerEvent = this.getAttr('data-fmml-update-condition', 'blur') +
         ".fmMlEdit"
@@ -9296,7 +11348,7 @@ FM.MlEdit.prototype.dispose = function(obs) {
         this.getObserver().removeRenderer(this);
     }
 
-    this._super("dispose");
+    this._super("dispose",obs);
 }
 
 // methods
@@ -9321,7 +11373,7 @@ FM.MlEdit.prototype._setNodeValue = function(node, value) {
             } else {
                 $(node).removeAttr('checked');
             }
-        } else if ($(this.node).is(':radio')) {
+        } else if ($(node).is(':radio')) {
             $("input:radio[name ='" + $(node).attr("name") + "']").val([value]);
         } else {
             $(node).val(value);
@@ -9440,7 +11492,7 @@ FM.MlEdit.prototype.render = function(value) {
     if (this.editWidget) {
         this._setNodeValue(this.editWidget, value);
     }
-    this._setNodeValue(this.node, value);
+    this._setNodeValue(this.getNode(), value);
 }
 
 FM.MlEdit.prototype.enableRenderer = function() {
@@ -9468,15 +11520,15 @@ FM.MlExtension.addExtensionType('Edit', FM.MlEdit);
  * 
  * @class FM.MlDateEdit
  * @extends FM.MlExtension
+ * @param {FM.AppObject} app Current application.
  * @param {object} [attrs] DOM node attributes
- * @param {DOMnode} node DOM node
- * @requires http://api.jqueryui.com/datepicker/
+ * @requires <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a>
  * @description You can use other plugins instead jquery ui by replacing initWidget() method
  */
 FM.MlDateEdit = FM.defineClass('MlDateEdit', FM.MlEdit);
 
-FM.MlDateEdit.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlDateEdit.prototype._init = function(app,attrs) {
+    this._super("_init", app, attrs);
     this.objectSubClass = "DateEdit";
     this.editWidgetDate =  null;
 }
@@ -9485,7 +11537,7 @@ FM.MlDateEdit.prototype._init = function(attrs, node) {
 FM.MlDateEdit.prototype.initWidget = function() {
     this._super("initWidget");
     this.editWidgetDate = $("<input style='display:none;'></input>")[0];
-    $(this.editWidget? this.editWidget : this.node).after(this.editWidgetDate);
+    $(this.editWidget? this.editWidget : this.getNode()).after(this.editWidgetDate);
     var me = this;
         
     $(this.editWidgetDate).val(this.getObserver().getValue());
@@ -9494,8 +11546,9 @@ FM.MlDateEdit.prototype.initWidget = function() {
         dateFormat: "yy-mm-dd",
          showOn: "both",
         onSelect: function(dateText, oDp) {
+            var obs = me.getObserver();
             if (obs) {
-                me.getObserver().setValue(dateText);
+                obs.setValue(dateText);
             }
             return true;
         }
@@ -9562,8 +11615,8 @@ FM.MlExtension.addExtensionType('DateEdit', FM.MlDateEdit);
 FM.MlListOfValues = FM.defineClass('MlListOfValues', FM.MlEdit);
 
 // methods
-FM.MlListOfValues.prototype._init = function(attrs, node) {
-    this._super("_init", attrs, node);
+FM.MlListOfValues.prototype._init = function(app,attrs) {
+    this._super("_init", app,attrs);
     this.objectSubClass = "ListOfValues";
 
     // LOV
@@ -9923,10 +11976,6 @@ FM.MlListOfValues.prototype.initWidget = function() {
             });
         }
     }
-}
-
-FM.MlListOfValues.prototype.dispose = function(obs) {
-    this._super("dispose");
 }
 
 FM.MlListOfValues.prototype.update = function(obs) {
